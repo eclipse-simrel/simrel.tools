@@ -1,0 +1,18 @@
+<project
+    default="createcomposite"
+    basedir=".">
+    <target
+        description="Manual task, used rarely, to remove a repo location from common composite repo."
+        name="createcomposite">
+        <p2.composite.repository>
+            <repository
+                location="file:/home/data/httpd/download.eclipse.org/releases/juno/"
+                name="Eclipse Juno repository"/>
+            <remove>
+                <repository
+                    location="201005070900"/>
+            </remove>
+        </p2.composite.repository>
+    </target>
+</project>
+

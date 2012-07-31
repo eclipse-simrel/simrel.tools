@@ -1,0 +1,17 @@
+<project
+    default="createcomposite"
+    basedir=".">
+    <target description="Add a child location to common repository. Repo is created, if it does not already exist."
+        name="createcomposite">
+        <p2.composite.repository>
+            <repository
+                location="file:/home/data/httpd/download.eclipse.org/releases/juno/"
+                name="Eclipse Juno repository"/>
+            <add>
+                <repository
+                    location="201108190900" />
+            </add>
+        </p2.composite.repository>
+    </target>
+</project>
+

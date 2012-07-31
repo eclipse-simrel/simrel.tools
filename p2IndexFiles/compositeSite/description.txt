@@ -1,0 +1,6 @@
+This p2.index file is used in main URL, such as .../releases/juno or .../releases/indigo, 
+where both metadata files are composites. 
+
+It needs to be "manually" added, but should not ever have to change. 
+
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=347448
