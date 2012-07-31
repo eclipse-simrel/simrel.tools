@@ -162,17 +162,17 @@
         depends="init"
         unless="modelRetrived">
         <echo
-            message="  removing all of previous model project ..."/>
+            message="  removing all of previous model project: ${BUILD_MODEL_DIR}"/>
         <delete
             dir="${BUILD_MODEL_DIR}"
             failonerror="false"/>
     	
-        <get src="http://davidw.com/git/org.eclipse.simrel.build/snapshot/master.zip" dest="${basedir}" verbose="true" />
+        <get src="http://davidw.com/git/org.eclipse.simrel.build/snapshot/master.zip" dest="${BUILD_HOME}" verbose="true" />
          
-         <unzip src="master.zip" dest="${basedir}/sbbuild"/>
+         <unzip src="master.zip" dest="${BUILD_HOME}/sbbuild"/>
          
-         <copy todir="${BUILD_HOME}">
-             <fileset dir="${basedir}/sbbuild/master" includes="*" />
+         <copy todir="${BUILD_MODEL_DIR}">
+             <fileset dir="${BUILD_HOME}/sbbuild/master" includes="*" />
          </copy>
 
     	<!--
