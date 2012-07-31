@@ -167,10 +167,20 @@
             dir="${BUILD_MODEL_DIR}"
             failonerror="false"/>
     	
+        <echo
+            message="  removing previous master.zip if it exists, in ${BUILD_HOME}"/>
+    	
+    	<delete file="${BUILD_HOME}/master.zip" failonerror="false" />
+    	
         <get src="http://davidw.com/git/org.eclipse.simrel.build/snapshot/master.zip" dest="${BUILD_HOME}" verbose="true" />
          
          <unzip src="master.zip" dest="${BUILD_HOME}/sbbuild"/>
          
+        <echo
+            message="  copy aggregator files to ${BUILD_MODEL_DIR}"/>
+        <echo
+            message="     from ${BUILD_HOME}/sbbuild/master"/>
+ 
          <copy todir="${BUILD_MODEL_DIR}">
              <fileset dir="${BUILD_HOME}/sbbuild/master" includes="*" />
          </copy>
