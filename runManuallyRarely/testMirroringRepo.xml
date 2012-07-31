@@ -2,7 +2,7 @@
     default="p2Mirror"
     basedir=".">
 	<!-- for misc manual tests only -->
-    <property name="todir" value="/shared/juno/temp" />
+    <property name="todir" value="/home/shared/juno/temp" />
     <target
         name="p2Mirror">
         <p2.mirror ignoreErrors="true" log="${todir}/mirrorlog.txt">

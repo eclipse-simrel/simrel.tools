@@ -9,8 +9,8 @@ devworkspace=./workspace
 # Java should be configured per machine, 
 # so this variable point to valid installs
 # we "share" with orbits versions
-JAVA_5_HOME=/shared/orbit/apps/ibm-java2-i386-50
-JAVA_6_HOME=/shared/orbit/apps/ibm-java-i386-60
+JAVA_5_HOME=/home/shared/orbit/apps/ibm-java2-i386-50
+JAVA_6_HOME=/home/shared/orbit/apps/ibm-java-i386-60
 JAVA_HOME=${JAVA_6_HOME}
 devJRE=$JAVA_HOME/jre/bin/java
 
@@ -28,7 +28,7 @@ echo
 $devJRE -version
 echo
 
-ECLIPSE_INSTALL=/shared/webtools/apps/eclipse36RC3/eclipse
+ECLIPSE_INSTALL=/home/shared/webtools/apps/eclipse36RC3/eclipse
 
 $ECLIPSE_INSTALL/eclipse  -debug -nosplash -consolelog -console -data $devworkspace -application ${APP_NAME} ${OTHER_ARGS} -vm $devJRE -vmargs $devArgs
 
