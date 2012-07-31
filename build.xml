@@ -174,7 +174,7 @@
     	
         <get src="http://davidw.com/git/org.eclipse.simrel.build/snapshot/master.zip" dest="${BUILD_HOME}" verbose="true" />
          
-         <unzip src="master.zip" dest="${BUILD_HOME}/sbbuild"/>
+         <unzip src="${BUILD_HOME}/master.zip" dest="${BUILD_HOME}/sbbuild"/>
          
         <echo
             message="  copy aggregator files to ${BUILD_MODEL_DIR}"/>
