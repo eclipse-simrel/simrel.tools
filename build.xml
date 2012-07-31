@@ -111,12 +111,12 @@
     	<!-- wget http://git.eclipse.org/c/simrel/simrel.git/org.eclipse.simrel.tests/snapshot/master.zip && unzip master.zip -d sr && rsync -r sb/master/ org.eclipse.simrel.tests 
     	-->
     	
-    	<get src="http://davidw.com/git/org.eclipse.simrel.tests/snapshot/master.zip" dest="${basedir}" verbose="true" />
+    	<get src="http://davidw.com/git/org.eclipse.simrel.tests/snapshot/master.zip" dest="${BUILD_HOME}" verbose="true" />
     	
-    	<unzip src="master.zip" dest="${basedir}/sbtests"/>
+    	<unzip src="master.zip" dest="${BUILD_HOME}/sbtests"/>
     	
     	<copy todir="${ECLIPSE_HOME_TEST}/eclipse/dropins/org.eclipse.simrel.tests">
-    		<fileset dir="${basedir}/sbtests/master" includes="*" />
+    		<fileset dir="${BUILD_HOME}/sbtests/master" includes="*" />
     	</copy>
     	
     	<!--

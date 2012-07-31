@@ -55,7 +55,10 @@ controltag=HEAD
 #fi
 
 #cvs -Q -f -d ${CVS_INFO}/cvsroot/callisto  export -d ${RELENG_TOOLS} -r $controltag ${RELENG_TOOLS}
-wget http://davidw.com/git/org.eclipse.simrel.tools/snapshot/master.zip && unzip master.zip -d sbtools && rsync -r sbtoolstests/master/ ${RELENG_TOOLS}
+
+rm master.zip*
+rm -fr ${RELENG_TOOLS}
+wget http://davidw.com/git/org.eclipse.simrel.tools/snapshot/master.zip && unzip -o master.zip -d sbtools && rsync -r sbtools/master/ ${RELENG_TOOLS}
 
 echo "    making sure releng control files are executable and have proper EOL ..."
 dos2unix ${RELENG_TOOLS}/*.sh* ${RELENG_TOOLS}/*.properties ${RELENG_TOOLS}/*.xml >/dev/null 2>>/dev/null
