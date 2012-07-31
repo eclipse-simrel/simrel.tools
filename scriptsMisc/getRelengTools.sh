@@ -47,15 +47,15 @@ mkdir -p "${RELENG_TOOLS}"
 
 #controltag=david_williams_tempBranch3
 controltag=HEAD
-echo "    checking out $controltag of ${RELENG_TOOLS} from cvs ..."
+#echo "    checking out $controltag of ${RELENG_TOOLS} from cvs ..."
 
-export CVS_RSH=SSH
-if [ -z ${CVS_INFO} ] ; then
-   CVS_INFO=:pserver:anonymous@dev.eclipse.org:
-fi
+#export CVS_RSH=SSH
+#if [ -z ${CVS_INFO} ] ; then
+#   CVS_INFO=:pserver:anonymous@dev.eclipse.org:
+#fi
 
-cvs -Q -f -d ${CVS_INFO}/cvsroot/callisto  export -d ${RELENG_TOOLS} -r $controltag ${RELENG_TOOLS}
-
+#cvs -Q -f -d ${CVS_INFO}/cvsroot/callisto  export -d ${RELENG_TOOLS} -r $controltag ${RELENG_TOOLS}
+wget http://davidw.com/git/org.eclipse.simrel.tools/snapshot/master.zip && unzip master.zip -d sbtools && rsync -r sbtoolstests/master/ ${RELENG_TOOLS}
 
 echo "    making sure releng control files are executable and have proper EOL ..."
 dos2unix ${RELENG_TOOLS}/*.sh* ${RELENG_TOOLS}/*.properties ${RELENG_TOOLS}/*.xml >/dev/null 2>>/dev/null
