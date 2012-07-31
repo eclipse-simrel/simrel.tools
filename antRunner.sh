@@ -2,7 +2,8 @@
 
 source aggr_properties.shsource
 
-# specify devworkspace and JRE to use to runEclipse
+# specify devworkspace 
+# and JRE to use to runEclipse
 
 
 devworkspace="${BUILD_HOME}"/antRunnerWorkspace
