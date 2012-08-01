@@ -47,15 +47,33 @@ mkdir -p "${BUILD_TOOLS}"
 
 BRANCH_TOOLS=master
 TMPDIR_TOOLS=sbtools
-CGITURL=http://davidw.com/git/
+CGITURL=http://davidw.com/git
 
 rm ${BRANCH_TOOLS}.zip*
 rm -fr ${BUILD_TOOLS}
 wget --no-verbose -O ${BRANCH_TOOLS}.zip ${CGITURL}/${BUILD_TOOLS}/snapshot/${BRANCH_TOOLS}.zip 2>&1
+RC=$?
+if [[ $RC? != 0 ]] 
+then
+	printf "/n/t%s/t%s/n" "ERROR:" "Failed to get ${BRANCH_TOOLS}.zip from  ${CGITURL}/${BUILD_TOOLS}/snapshot/${BRANCH_TOOLS}.zip"
+ exit $RC
+fi
 
 unzip -o ${BRANCH_TOOLS}.zip -d ${TMPDIR_TOOLS} 
+RC=$?
+if [[ $RC? != 0 ]] 
+then
+	printf "/n/t%s/t%s/n" "ERROR:" "Failed to unzip ${BRANCH_TOOLS}.zip to ${TMPDIR_TOOLS}"
+ exit $RC
+fi
 
 rsync -r ${TMPDIR_TOOLS}/${BRANCH_TOOLS}/ ${BUILD_TOOLS}
+RC=$?
+if [[ $RC? != 0 ]] 
+then
+	printf "/n/t%s/t%s/n" "ERROR:" "Failed to copy ${BUILD_TOOLS} to ${TMPDIR_TOOLS}/${BRANCH_TOOLS}/"
+ exit $RC
+fi
 
 echo "    making sure releng control files are executable and have proper EOL ..."
 dos2unix ${BUILD_TOOLS}/*.sh* ${BUILD_TOOLS}/*.properties ${BUILD_TOOLS}/*.xml >/dev/null 2>>/dev/null
