@@ -113,7 +113,7 @@
     	<unzip src="${BUILD_HOME}/${BRANCH_TESTS}.zip" dest="${BUILD_HOME}/${TMPDIR_TESTS}"/>
     	
     	<copy todir="${ECLIPSE_HOME_TEST}/eclipse/dropins/${RELENG_TESTS}">
-    		<fileset dir="${BUILD_HOME}/${TMPDIR_TESTS}/${BRANCH_TESTS}" includes="*" />
+    		<fileset dir="${BUILD_HOME}/${TMPDIR_TESTS}/${BRANCH_TESTS}" includes="**/*" />
     	</copy>
  
     </target>
@@ -166,7 +166,7 @@
             message="     from ${BUILD_HOME}/${TMPDIR_BUILD}/${BRANCH_BUILD}"/>
  
          <copy todir="${BUILD_MODEL_DIR}">
-             <fileset dir="${BUILD_HOME}/${TMPDIR_BUILD}/${BRANCH_BUILD}" includes="*" />
+             <fileset dir="${BUILD_HOME}/${TMPDIR_BUILD}/${BRANCH_BUILD}" includes="**/*" />
          </copy> 
             
         <property
