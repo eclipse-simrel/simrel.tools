@@ -107,30 +107,14 @@
             verbose="true"/>
 
     	<!-- get raw files from git -->
-    	
-    	<!-- wget http://git.eclipse.org/c/simrel/simrel.git/org.eclipse.simrel.tests/snapshot/master.zip && unzip master.zip -d sr && rsync -r sb/master/ org.eclipse.simrel.tests 
-    	-->
-    	
-    	<get src="http://davidw.com/git/org.eclipse.simrel.tests/snapshot/master.zip" dest="${BUILD_HOME}" verbose="true" />
+    	  	
+    	<get src="${CGITURL}/${RELENG_TESTS}/snapshot/master.zip" dest="${BUILD_HOME}" verbose="true" />
     	
     	<unzip src="master.zip" dest="${BUILD_HOME}/sbtests"/>
     	
-    	<copy todir="${ECLIPSE_HOME_TEST}/eclipse/dropins/org.eclipse.simrel.tests">
-    		<fileset dir="${BUILD_HOME}/sbtests/master" includes="*" />
+    	<copy todir="${ECLIPSE_HOME_TEST}/eclipse/dropins/${RELENG_TESTS}">
+    		<fileset dir="${BUILD_HOME}/${TMPDIR_TESTS}/${BRANCH_TESTS}" includes="*" />
     	</copy>
-    	
-    	<!--
-    	wget http://davidw.com/git/org.eclipse.simrel.tests/snapshot/master.zip && unzip master.zip -d sb && rsync -r sb/master/ ${ECLIPSE_HOME_TEST}/eclipse/dropins/org.eclipse.simrel.tests
-    	-->
-    	<!--
-        <cvs
-            failonerror="true"
-            cvsRoot="${CVS_INFO}/cvsroot/callisto"
-            package="${RELENG_TESTS}"
-            dest="${ECLIPSE_HOME_TEST}/eclipse/dropins"
-            command="export"
-            tag="HEAD"/>
-         -->
  
     </target>
     <target
@@ -168,36 +152,22 @@
             failonerror="false"/>
     	
         <echo
-            message="  removing previous master.zip if it exists, in ${BUILD_HOME}"/>
+            message="  removing previous ${BRANCH_BUILD}.zip if it exists, in ${BUILD_HOME}"/>
     	
-    	<delete file="${BUILD_HOME}/master.zip" failonerror="false" />
+    	<delete file="${BUILD_HOME}/${BRANCH_BUILD}.zip" failonerror="false" />
     	
-        <get src="http://davidw.com/git/org.eclipse.simrel.build/snapshot/master.zip" dest="${BUILD_HOME}" verbose="true" />
+        <get src="${CGITURL}/${BUILD_MODEL}/snapshot/${BRANCH_BUILD}.zip" dest="${BUILD_HOME}" verbose="true" />
          
-         <unzip src="${BUILD_HOME}/master.zip" dest="${BUILD_HOME}/sbbuild"/>
+         <unzip src="${BUILD_HOME}/${BRANCH_BUILD}.zip" dest="${BUILD_HOME}/TMPDIR_BUILD"/>
          
         <echo
             message="  copy aggregator files to ${BUILD_MODEL_DIR}"/>
         <echo
-            message="     from ${BUILD_HOME}/sbbuild/master"/>
+            message="     from ${BUILD_HOME}/${TMPDIR_BUILD}/${BRANCH_BUILD}"/>
  
          <copy todir="${BUILD_MODEL_DIR}">
-             <fileset dir="${BUILD_HOME}/sbbuild/master" includes="*" />
-         </copy>
-
-    	<!--
-    	wget http://git.eclipse.org/c/simrel/simrel.git/org.eclipse.simrel.build/snapshot/master.zip && unzip master.zip -d sr && rsync -r sr/master/ org.eclipse.simrel.build 
-        -->
-    	
-    	<!--
-    	<cvs
-            failonerror="true"
-            cvsRoot="${CVS_INFO}/cvsroot/callisto"
-            package="${BUILD_MODEL}"
-            dest="${BUILD_HOME}"
-            command="export"
-            tag="HEAD"/>
-         -->   
+             <fileset dir="${BUILD_HOME}/${TMPDIR_BUILD}/${BRANCH_BUILD}" includes="*" />
+         </copy> 
             
         <property
             name="modelRetrived"
