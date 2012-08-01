@@ -108,9 +108,9 @@
 
     	<!-- get raw files from git -->
     	  	
-    	<get src="${CGITURL}/${RELENG_TESTS}/snapshot/master.zip" dest="${BUILD_HOME}" verbose="true" />
+    	<get src="${CGITURL}/${RELENG_TESTS}/snapshot/${BRANCH_TESTS}.zip" dest="${BUILD_HOME}" verbose="true" />
     	
-    	<unzip src="master.zip" dest="${BUILD_HOME}/sbtests"/>
+    	<unzip src="${BUILD_HOME}/${BRANCH_TESTS}.zip" dest="${BUILD_HOME}/${TMPDIR_TESTS}"/>
     	
     	<copy todir="${ECLIPSE_HOME_TEST}/eclipse/dropins/${RELENG_TESTS}">
     		<fileset dir="${BUILD_HOME}/${TMPDIR_TESTS}/${BRANCH_TESTS}" includes="*" />

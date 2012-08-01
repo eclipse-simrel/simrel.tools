@@ -6,6 +6,7 @@
 # hence, non-production users can set their own values for test machines
 source aggr_properties.shsource
 
+env
 
 BUILD_TOOLS=${BUILD_TOOLS:-org.eclipse.simrel.tools}
 
@@ -36,38 +37,47 @@ then
     echo "The variable BUILD_TOOLS must be defined to run this script"
     exit 1;
 fi
+
+echo "PWD: ${PWD}"
 echo "    removing all of ${BUILD_TOOLS} ..."
 rm -fr ${BUILD_TOOLS}
 mkdir -p "${BUILD_TOOLS}"
 
 BRANCH_TOOLS=${BRANCH_TOOLS:-master}
 TMPDIR_TOOLS=${TMPDIR_TOOLS:-sbtools}
-CGITURL=${CGITURL:-http://davidw.com/git}
+CGITURL=${CGITURL:-http://git.eclipse.org/c/simrel/}
 
+
+echo "PWD: ${PWD}"
 rm ${BRANCH_TOOLS}.zip*
 
+echo "PWD: ${PWD}"
 wget  ${CGITURL}/${BUILD_TOOLS}/snapshot/${BRANCH_TOOLS}.zip 2>&1
 RC=$?
-if [[ $RC? != 0 ]] 
+if [[ $RC != 0 ]] 
 then
     echo "   ERROR: Failed to get ${BRANCH_TOOLS}.zip from  ${CGITURL}/${BUILD_TOOLS}/snapshot/${BRANCH_TOOLS}.zip"
+    echo "   RC: $RC"
     exit $RC
 fi
 
+echo "PWD: ${PWD}"
 unzip -o ${BRANCH_TOOLS}.zip -d ${TMPDIR_TOOLS} 
 RC=$?
-if [[ $RC? != 0 ]] 
+if [[ $RC != 0 ]] 
 then
     printf "/n/t%s/t%s/n" "ERROR:" "Failed to unzip ${BRANCH_TOOLS}.zip to ${TMPDIR_TOOLS}"
+        echo "   RC: $RC"
     exit $RC
 fi
 
 rsync -r ${TMPDIR_TOOLS}/${BRANCH_TOOLS}/ ${BUILD_TOOLS}
 RC=$?
-if [[ $RC? != 0 ]] 
+if [[ $RC != 0 ]] 
 then
-    printf "/n/t%s/t%s/n" "ERROR:" "Failed to copy ${BUILD_TOOLS} to ${TMPDIR_TOOLS}/${BRANCH_TOOLS}/"
-    exit $RC
+    printf "/n/t%s/t%s/n" "ERROR:" "Failed to copy ${BUILD_TOOLS} from ${TMPDIR_TOOLS}/${BRANCH_TOOLS}/"
+        echo "   RC: $RC"
+        exit $RC
 fi
 
 echo "    making sure releng control files are executable and have proper EOL ..."
