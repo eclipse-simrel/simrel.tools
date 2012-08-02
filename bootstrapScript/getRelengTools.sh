@@ -1,24 +1,33 @@
 #!/usr/bin/env bash
 
-# it is assumed we are executing this in BUILD_TOOLS or the parent of BUILD_TOOLS
+
+# This script file is to help get builds started "fresh", when
+# the ${BUILD_TOOLS} directory already exists on local file system.
+# While it is in this source repository in ${BUILD_TOOLS}, it is
+# meant to be executed from the parent directory
+# of ${BUILD_TOOLS} on the file system. If completely fresh 
+# (first time) some "sanity check" code below needs to be commented out.
+
 
 # finds file on users path, before current directory
 # hence, non-production users can set their own values for test machines
 source aggr_properties.shsource
 
+# handy to get all variables to log, if needed for debugging
 env
 
 BUILD_TOOLS=${BUILD_TOOLS:-org.eclipse.simrel.tools}
 
-# This script file is to help get builds started "fresh", when
-# the ${BUILD_TOOLS} directory already exists on local file system.
-# While it is in the cvs repository in ${BUILD_TOOLS}, it is
-# meant to be executed from the parent directory
-# of ${BUILD_TOOLS} on the file system.
+# echo current directory for debugging
+echo "PWD: ${PWD}"
 
-# If there is no subdirectory, try going up one directory and looking again (in case we are in it).
+# If there is no subdirectory, try going up one directory and looking again 
+# (in case we are in it).
 # This is just a sanity check, to see if things are as expected, 
-# and at times may have to be commented out if completely fresh.
+# things might be wrong, if hudson setttings (such as "custom workspace" 
+# are not right. 
+# At times may have to be commented out if completely fresh,
+# after confirming "current directory" is as expected.
 if [ ! -e ${BUILD_TOOLS} ]
 then
     cd ..
@@ -29,16 +38,18 @@ then
     fi
 fi
 
-
-# make sure BUILD_TOOLS has been defined and is no zero length, or 
-# else following will eval to "rm -fr /*" ... potentially catastrophic!
+# even though we define it above, for safety
+# make sure BUILD_TOOLS has been defined and is not zero length, or 
+# else the following or else some following "removes" could be bad. 
 if [ -z "${BUILD_TOOLS}" ]
 then
     echo "The variable BUILD_TOOLS must be defined to run this script"
     exit 1;
 fi
 
+# echo current directory for debugging
 echo "PWD: ${PWD}"
+
 echo "    removing all of ${BUILD_TOOLS} ..."
 rm -fr ${BUILD_TOOLS}
 mkdir -p "${BUILD_TOOLS}"
@@ -47,11 +58,13 @@ BRANCH_TOOLS=${BRANCH_TOOLS:-master}
 TMPDIR_TOOLS=${TMPDIR_TOOLS:-sbtools}
 CGITURL=${CGITURL:-http://git.eclipse.org/c/simrel/}
 
-
+# echo current directory for debugging
 echo "PWD: ${PWD}"
 rm ${BRANCH_TOOLS}.zip*
 
+# echo current directory for debugging
 echo "PWD: ${PWD}"
+
 wget  ${CGITURL}/${BUILD_TOOLS}/snapshot/${BRANCH_TOOLS}.zip 2>&1
 RC=$?
 if [[ $RC != 0 ]] 
@@ -61,12 +74,14 @@ then
     exit $RC
 fi
 
+# echo current directory for debugging
 echo "PWD: ${PWD}"
+
 unzip -o ${BRANCH_TOOLS}.zip -d ${TMPDIR_TOOLS} 
 RC=$?
 if [[ $RC != 0 ]] 
 then
-    printf "/n/t%s/t%s/n" "ERROR:" "Failed to unzip ${BRANCH_TOOLS}.zip to ${TMPDIR_TOOLS}"
+    echo "ERROR:  Failed to unzip ${BRANCH_TOOLS}.zip to ${TMPDIR_TOOLS}"
         echo "   RC: $RC"
     exit $RC
 fi
@@ -75,13 +90,17 @@ rsync -r ${TMPDIR_TOOLS}/${BRANCH_TOOLS}/ ${BUILD_TOOLS}
 RC=$?
 if [[ $RC != 0 ]] 
 then
-    printf "/n/t%s/t%s/n" "ERROR:" "Failed to copy ${BUILD_TOOLS} from ${TMPDIR_TOOLS}/${BRANCH_TOOLS}/"
+    echo "ERROR: Failed to copy ${BUILD_TOOLS} from ${TMPDIR_TOOLS}/${BRANCH_TOOLS}/"
         echo "   RC: $RC"
         exit $RC
 fi
 
-echo "    making sure releng control files are executable and have proper EOL ..."
+echo "    make sure releng control files are executable and have proper EOL ..."
 dos2unix ${BUILD_TOOLS}/*.sh* ${BUILD_TOOLS}/*.properties ${BUILD_TOOLS}/*.xml >/dev/null 2>>/dev/null
 chmod +x ${BUILD_TOOLS}/*.sh > /dev/null
-echo
+echo "    Done. "
+
+exit 0
+
+
 
