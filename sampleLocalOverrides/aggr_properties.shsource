@@ -3,30 +3,30 @@
 # common variables used in scripts
 
 # It is required to specify a top level directory, that will contain all else involved with build, control and output
-BUILD_HOME=/shared/juno
+BUILD_HOME=/home/shared/juno
 
-# Java should be configured per machine, 
+# Java should be configured per machine,
 # so this variable point to valid installs
 # we "share" with orbits versions
 JAVA_5_HOME=/home/shared/orbit/apps/ibm-java2-i386-50
 JAVA_6_HOME=/home/shared/orbit/apps/ibm-java-i386-60
 
-REPO_ROOT=/home/data/httpd/download.eclipse.org
+REPO_ROOT=/home/www/html/downloads
 
 # each machine needs valid path to an appropriate, local Eclipse SDK, for fresh re-installs (see "full_filename" below)
-FULL_FILENAME_372=/home/data/httpd/download.eclipse.org/eclipse/downloads/drops/R-3.7.2-201202080800/eclipse-SDK-3.7.2-linux-gtk.tar.gz
+FULL_FILENAME_372=/home/files/buildzips/indigoSR2/eclipse-SDK-3.7.2-linux-gtk.tar.gz
 FULL_FILENAME_362=/home/data/httpd/download.eclipse.org/eclipse/downloads/drops/R-3.6.2-201102101200/eclipse-SDK-3.6.2-linux-gtk.tar.gz
 
 # note the "https" may have to be "http" on local, non production machines
-hostForURL=https://hudson.eclipse.org
+hostForURL=http://localhost
 
-LOG_URL=${hostForURL}/hudson/view/Repository%20Aggregation/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/console
+LOG_URL="${hostForURL}/hudson/view/Repository%20Aggregation/job/${JOB_NAME}/${BUILD_NUMBER}/console"
 
 
 
 
 # ##################################
-# typically the remaining variables not have to be 
+# typically the remaining variables not have to be
 # changed on a local, non-production machine,
 # as they just compute variables based on above, 
 # or provide relatively machine-independent values.
@@ -59,7 +59,6 @@ ECLIPSE_HOME=${ECLIPSE_HOME_37}
 
 #ECLIPSE_HOME_TEST=${ECLIPSE_HOME_36_TEST}
 ECLIPSE_HOME_TEST=${BUILD_HOME}/testInstance
-ECLIPSE_TEST_EXE=${ECLIPSE_HOME_TEST}/eclipse/eclipse
 
 stagingDirectory=${REPO_ROOT}/releases/staging
 releaseDirectory=${REPO_ROOT}/releases/juno
@@ -70,20 +69,20 @@ ECLIPSE_EXE=${ECLIPSE_HOME}/eclipse/eclipse
 # Holds the results of the build
 BUILD_RESULTS=${BUILD_HOME}/buildresults
 AGGREGATOR_RESULTS=${BUILD_HOME}/aggregation
-TEST_RESULTS=${env.BUILD_HOME}/simrel
+TEST_RESULTS=${BUILD_HOME}/simrel
 
 # remember, for ant, properties must be "read in" at beginning of ant build file to get variables expanded
 # also, remember, shell scripts need quotes, but ant can not have them
-AGGREGATOR_APP_BASE=--buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr --buildRoot ${AGGREGATOR_RESULTS}  --packedStrategy UNPACK_AS_SIBLING --eclipseLogLevel INFO --logLevel DEBUG --emailFromName JunoAggregator --logURL ${LOG_URL} --subjectPrefix JunoAggregation
+AGGREGATOR_APP_BASE="--buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr --buildRoot ${AGGREGATOR_RESULTS}  --packedStrategy UNPACK_AS_SIBLING --eclipseLogLevel INFO --logLevel DEBUG --emailFromName JunoAggregator --logURL ${LOG_URL} --subjectPrefix JunoAggregation"
 
 # clean build
 #we will clean the aggregation directory ourselves, as work around for bug 354321
-#AGGREGATOR_APP_ARGS=${AGGREGATOR_APP_BASE}  --action CLEAN_BUILD
-AGGREGATOR_APP_ARGS=${AGGREGATOR_APP_BASE}  --action BUILD
+#AGGREGATOR_APP_ARGS="${AGGREGATOR_APP_BASE}  --action CLEAN_BUILD"
+AGGREGATOR_APP_ARGS="${AGGREGATOR_APP_BASE}  --action BUILD"
 
-AGGREGATOR_APP_ARGS_BUILDONLY=${AGGREGATOR_APP_BASE}  --action BUILD
+AGGREGATOR_APP_ARGS_BUILDONLY="${AGGREGATOR_APP_BASE}  --action BUILD"
 
-AGGREGATOR_APP_ARGS_VERIFYONLY=${AGGREGATOR_APP_BASE} --action VERIFY
+AGGREGATOR_APP_ARGS_VERIFYONLY="${AGGREGATOR_APP_BASE} --action VERIFY"
 
 # only one or the other
 # --mavenResult
@@ -94,7 +93,7 @@ AGGREGATOR_APP_ARGS_VERIFYONLY=${AGGREGATOR_APP_BASE} --action VERIFY
 
 # NOTE: quotes needed in bash scripts ... NOT in ant properties! 
 # -Declipse.p2.mirrors=false
-BUILDER_VM_ARGS=-vmargs -Xmx384m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin
+BUILDER_VM_ARGS="-vmargs -Xmx384m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"
 
 # We use this redirection, so scripts only need to use "full_filename", but exact version controlled by properties
 FULL_FILENAME=${FULL_FILENAME_372}
@@ -105,8 +104,9 @@ BRANCH_TOOLS=master
 TMPDIR_TOOLS=sbtools
 BRANCH_TESTS=master
 TMPDIR_TESTS=sbtests
-CGITURL=http://git.eclipse.org/c/simrel
+CGITURL=http://davidw.com/git
 
 # should be '/aggregate' if using "trusted repos" ... else, empty
 #AGGR=/aggregate
 AGGR=
+
