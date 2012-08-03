@@ -15,16 +15,24 @@
 # hence, non-production users can set their own values for test machines
 source aggr_properties.shsource
 
+# define these essential variables for production machine, 
+# so aggr_properties.shsource does not have to exist there, 
+# for this script (in this directory)
+BUILD_TOOLS=${BUILD_TOOLS:-org.eclipse.simrel.tools}
+BRANCH_TOOLS=${BRANCH_TOOLS:-master}
+TMPDIR_TOOLS=${TMPDIR_TOOLS:-sbtools}
+CGITURL=${CGITURL:-http://git.eclipse.org/c/simrel/}
+
 function usage() 
 {
     printf "\n\tUsage: %s [-f] [-v] " $(basename $0) >&2
     printf "\n\t\t%s\t%s" "-f" "Allow fresh creation (confirm correct current directory)." >&2
-    printf "\n\t\t%s\t%s" "-v" "Pring verbose debug info." >&2
+    printf "\n\t\t%s\t%s\n" "-v" "Print verbose debug info." >&2
 }
 
 
 verboseFlag=false
-fresh=false
+freshFlag=false
 while getopts 'hvf' OPTION
 do
     case $OPTION in
@@ -33,7 +41,7 @@ do
         ;;
         v)    verboseFlag=true
         ;;
-        f)    fresh=true
+        f)    freshFlag=true
         ;;
         ?)    usage
         exit 2
@@ -50,12 +58,18 @@ shift $(($OPTIND - 1))
 
 # 'env' is handy to print all env variables to log, 
 # if needed for debugging
-if [[ $verboseFlag ]]
+if $verboseFlag
 then
 	env
+	echo "fresh install: $freshFlag"
+	echo "verbose output: $verboseFlag"
+	echo "BUILD_TOOLS: ${BUILD_TOOLS}"
+ echo "TMPDIR_TOOLS=${TMPDIR_TOOLS}"
+		
 fi
 
-BUILD_TOOLS=${BUILD_TOOLS:-org.eclipse.simrel.tools}
+echo "CGITURL: ${CGITURL}"
+echo "BRANCH_TOOLS: ${BRANCH_TOOLS}"
 
 # echo current directory
 echo "Current Directory: ${PWD}"
@@ -67,11 +81,15 @@ echo "Current Directory: ${PWD}"
 # are not right. 
 # At times may have to be commented out if completely fresh,
 # after confirming "current directory" is as expected.
-if [ ! $fresh && ! -e ${BUILD_TOOLS} ]
+
+# if freshFlag is set, then "not freshFlag" is false and will skip 
+# the sanity check.   
+if ! $freshFlag && [[ ! -e ${BUILD_TOOLS} ]]
 then
         echo "${BUILD_TOOLS} does not exist as sub directory";
         exit 1;
 fi
+
 
 # even though we define it above, for safety
 # make sure BUILD_TOOLS has been defined and is not zero length, or 
@@ -87,15 +105,11 @@ echo "    removing all of ${BUILD_TOOLS} ..."
 rm -fr ${BUILD_TOOLS}
 mkdir -p "${BUILD_TOOLS}"
 
-BRANCH_TOOLS=${BRANCH_TOOLS:-master}
-TMPDIR_TOOLS=${TMPDIR_TOOLS:-sbtools}
-CGITURL=${CGITURL:-http://git.eclipse.org/c/simrel/}
+# remove if already exists
+rm ${BRANCH_TOOLS}.zip* 2>/dev/null
 
 
-rm ${BRANCH_TOOLS}.zip*
-
-
-wget  ${CGITURL}/${BUILD_TOOLS}/snapshot/${BRANCH_TOOLS}.zip 2>&1
+wget --no-verbose -O ${BRANCH_TOOLS}.zip ${CGITURL}/${BUILD_TOOLS}/snapshot/${BRANCH_TOOLS}.zip 2>&1
 RC=$?
 if [[ $RC != 0 ]] 
 then
@@ -104,10 +118,13 @@ then
     exit $RC
 fi
 
-# echo current directory for debugging
-echo "PWD: ${PWD}"
+quietZipFlag=-q
+if $verboseFlag
+then
+	quietZipFlag=
+fi
 
-unzip -o ${BRANCH_TOOLS}.zip -d ${TMPDIR_TOOLS} 
+unzip ${quietZipFlag} -o ${BRANCH_TOOLS}.zip -d ${TMPDIR_TOOLS} 
 RC=$?
 if [[ $RC != 0 ]] 
 then
@@ -129,6 +146,9 @@ echo "    make sure releng control files are executable and have proper EOL ..."
 dos2unix ${BUILD_TOOLS}/*.sh* ${BUILD_TOOLS}/*.properties ${BUILD_TOOLS}/*.xml >/dev/null 2>>/dev/null
 chmod +x ${BUILD_TOOLS}/*.sh > /dev/null
 echo "    Done. "
+
+# TODO: we could remove the master.zip and ${TMPDIR_TOOLS} since no 
+# longer needed
 
 exit 0
 
