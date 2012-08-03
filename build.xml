@@ -158,7 +158,7 @@
     	
         <get src="${CGITURL}/${BUILD_MODEL}/snapshot/${BRANCH_BUILD}.zip" dest="${BUILD_HOME}" verbose="true" />
          
-         <unzip src="${BUILD_HOME}/${BRANCH_BUILD}.zip" dest="${BUILD_HOME}/TMPDIR_BUILD"/>
+         <unzip src="${BUILD_HOME}/${BRANCH_BUILD}.zip" dest="${BUILD_HOME}/${TMPDIR_BUILD}"/>
          
         <echo
             message="  copy aggregator files to ${BUILD_MODEL_DIR}"/>

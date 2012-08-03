@@ -107,9 +107,9 @@ mkdir -p "${BUILD_TOOLS}"
 
 # remove if already exists
 rm ${BRANCH_TOOLS}.zip* 2>/dev/null
+rm -fr ${TMPDIR_TOOLS} 2>/dev/null 
 
-
-wget --no-verbose -O ${BRANCH_TOOLS}.zip ${CGITURL}/${BUILD_TOOLS}/snapshot/${BRANCH_TOOLS}.zip 2>&1
+wget --no-verbose -O  ${BRANCH_TOOLS}.zip ${CGITURL}/${BUILD_TOOLS}/snapshot/${BRANCH_TOOLS}.zip 2>&1
 RC=$?
 if [[ $RC != 0 ]] 
 then
@@ -133,7 +133,13 @@ then
     exit $RC
 fi
 
-rsync -r ${TMPDIR_TOOLS}/${BRANCH_TOOLS}/ ${BUILD_TOOLS}
+rsynchvFlag=
+if $verboseFlag
+then
+	rsynchvFlag=-v
+fi
+
+rsync $rsynchvFlag -r ${TMPDIR_TOOLS}/${BRANCH_TOOLS}/ ${BUILD_TOOLS}
 RC=$?
 if [[ $RC != 0 ]] 
 then
@@ -147,8 +153,13 @@ dos2unix ${BUILD_TOOLS}/*.sh* ${BUILD_TOOLS}/*.properties ${BUILD_TOOLS}/*.xml >
 chmod +x ${BUILD_TOOLS}/*.sh > /dev/null
 echo "    Done. "
 
-# TODO: we could remove the master.zip and ${TMPDIR_TOOLS} since no 
-# longer needed
+
+if ! $verboseFlag
+then
+	# cleanup unless verbose/debugging
+ rm ${BRANCH_TOOLS}.zip* 2>/dev/null
+rm -fr ${TMPDIR_TOOLS} 2>/dev/null
+fi
 
 exit 0
 
