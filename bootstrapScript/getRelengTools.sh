@@ -27,7 +27,7 @@ function usage()
 {
     printf "\n\tUsage: %s [-f] [-v] " $(basename $0) >&2
     printf "\n\t\t%s\t%s" "-f" "Allow fresh creation (confirm correct current directory)." >&2
-    printf "\n\t\t%s\t%s" "-c" "Force clean prereqs directory" >&2
+    printf "\n\t\t%s\t%s" "-c" "Force clean of prereqs directory" >&2
     printf "\n\t\t%s\t%s\n" "-v" "Print verbose debug info." >&2
 }
 
@@ -35,7 +35,7 @@ function usage()
 verboseFlag=false
 freshFlag=false
 cleanFlag=false
-while getopts 'hvf' OPTION
+while getopts 'hvfc' OPTION
 do
     case $OPTION in
         h)    usage
@@ -58,8 +58,6 @@ done
 # point, so we leave it in. 
 shift $(($OPTIND - 1))
 
-
-
 # 'env' is handy to print all env variables to log, 
 # if needed for debugging
 if $verboseFlag
@@ -69,7 +67,7 @@ then
 	echo "verbose output: $verboseFlag"
 	echo "force clean prereqs: $cleanFlag"
 	echo "BUILD_TOOLS: ${BUILD_TOOLS}"
- echo "TMPDIR_TOOLS=${TMPDIR_TOOLS}"
+ 	echo "TMPDIR_TOOLS=${TMPDIR_TOOLS}"
 		
 fi
 
@@ -162,6 +160,7 @@ then
 	# But Eclipse (OSGi?) creates some files with 
 	# only group read access, so to complete remove them, must use 
 	# hudsonbuild ID to get completely clean. 
+	echo "    removing all of prereqs directory"
 	rm -fr prereqs
 fi
 
