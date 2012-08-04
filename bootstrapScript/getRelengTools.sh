@@ -27,12 +27,14 @@ function usage()
 {
     printf "\n\tUsage: %s [-f] [-v] " $(basename $0) >&2
     printf "\n\t\t%s\t%s" "-f" "Allow fresh creation (confirm correct current directory)." >&2
+    printf "\n\t\t%s\t%s" "-c" "Force clean prereqs directory" >&2
     printf "\n\t\t%s\t%s\n" "-v" "Print verbose debug info." >&2
 }
 
 
 verboseFlag=false
 freshFlag=false
+cleanFlag=false
 while getopts 'hvf' OPTION
 do
     case $OPTION in
@@ -42,6 +44,8 @@ do
         v)    verboseFlag=true
         ;;
         f)    freshFlag=true
+        ;;
+		c)    cleanFlag=true
         ;;
         ?)    usage
         exit 2
@@ -63,6 +67,7 @@ then
 	env
 	echo "fresh install: $freshFlag"
 	echo "verbose output: $verboseFlag"
+	echo "force clean prereqs: $cleanFlag"
 	echo "BUILD_TOOLS: ${BUILD_TOOLS}"
  echo "TMPDIR_TOOLS=${TMPDIR_TOOLS}"
 		
@@ -74,12 +79,10 @@ echo "BRANCH_TOOLS: ${BRANCH_TOOLS}"
 # echo current directory
 echo "Current Directory: ${PWD}"
 
-# If there is no subdirectory, try going up one directory and looking again 
-# (in case we are in it).
 # This is just a sanity check, to see if things are as expected, 
 # things might be wrong, if hudson setttings (such as "custom workspace" 
 # are not right. 
-# At times may have to be commented out if completely fresh,
+# At times may have to be skipped, if completely fresh,
 # after confirming "current directory" is as expected.
 
 # if freshFlag is set, then "not freshFlag" is false and will skip 
@@ -153,6 +156,14 @@ dos2unix ${BUILD_TOOLS}/*.sh* ${BUILD_TOOLS}/*.properties ${BUILD_TOOLS}/*.xml >
 chmod +x ${BUILD_TOOLS}/*.sh > /dev/null
 echo "    Done. "
 
+if $cleanFlag
+then
+	# should very rarely need to do this, Like, once release. 
+	# But Eclipse (OSGi?) creates some files with 
+	# only group read access, so to complete remove them, must use 
+	# hudsonbuild ID to get completely clean. 
+	rm -fr prereqs
+fi
 
 if ! $verboseFlag
 then
