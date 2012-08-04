@@ -108,7 +108,7 @@
 
     	<!-- get raw files from git -->
     	  	
-    	<get src="${CGITURL}/${RELENG_TESTS}/snapshot/${BRANCH_TESTS}.zip" dest="${BUILD_HOME}" verbose="true" />
+    	<get src="${CGITURL}/${RELENG_TESTS}.git/snapshot/${BRANCH_TESTS}.zip" dest="${BUILD_HOME}" verbose="true" />
     	
     	<unzip src="${BUILD_HOME}/${BRANCH_TESTS}.zip" dest="${BUILD_HOME}/${TMPDIR_TESTS}"/>
     	
@@ -156,7 +156,7 @@
     	
     	<delete file="${BUILD_HOME}/${BRANCH_BUILD}.zip" failonerror="false" />
     	
-        <get src="${CGITURL}/${BUILD_MODEL}/snapshot/${BRANCH_BUILD}.zip" dest="${BUILD_HOME}" verbose="true" />
+        <get src="${CGITURL}/${BUILD_MODEL}.git/snapshot/${BRANCH_BUILD}.zip" dest="${BUILD_HOME}" verbose="true" />
          
          <unzip src="${BUILD_HOME}/${BRANCH_BUILD}.zip" dest="${BUILD_HOME}/${TMPDIR_BUILD}"/>
          

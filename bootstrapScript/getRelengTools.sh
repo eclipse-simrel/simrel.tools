@@ -109,11 +109,11 @@ mkdir -p "${BUILD_TOOLS}"
 rm ${BRANCH_TOOLS}.zip* 2>/dev/null
 rm -fr ${TMPDIR_TOOLS} 2>/dev/null 
 
-wget --no-verbose -O  ${BRANCH_TOOLS}.zip ${CGITURL}/${BUILD_TOOLS}/snapshot/${BRANCH_TOOLS}.zip 2>&1
+wget --no-verbose -O  ${BRANCH_TOOLS}.zip ${CGITURL}/${BUILD_TOOLS}.git/snapshot/${BRANCH_TOOLS}.zip 2>&1
 RC=$?
 if [[ $RC != 0 ]] 
 then
-    echo "   ERROR: Failed to get ${BRANCH_TOOLS}.zip from  ${CGITURL}/${BUILD_TOOLS}/snapshot/${BRANCH_TOOLS}.zip"
+    echo "   ERROR: Failed to get ${BRANCH_TOOLS}.zip from  ${CGITURL}/${BUILD_TOOLS}.git/snapshot/${BRANCH_TOOLS}.zip"
     echo "   RC: $RC"
     exit $RC
 fi
