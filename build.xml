@@ -566,7 +566,7 @@
             name="jobName"
             value="${env.JOB_NAME}"/>
         <echo
-            message="Using jobName from Hudson Buider: ${jobName}"/>
+            message="Using jobName from Hudson Builder: ${jobName}"/>
     </target>
     <target
         name="getCCJobName"
