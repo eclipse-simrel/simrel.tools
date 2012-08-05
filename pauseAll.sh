@@ -11,6 +11,19 @@
 # done manually, or as part of the script work
 # There is a one-hour time-out built in, which should be plenty 
 
+if [[ -z "${release}" ]]
+then
+    echo 
+    echo "   ERRRO: The 'release' environment much be specified for this script. For example,"
+    echo "   release=juno ./$( basename $0 )"
+    echo
+    exit 1
+else
+    echo
+    echo "release: ${release}"
+    echo
+fi
+
 source aggr_properties.shsource
 
 if [ -z $BUILD_HOME ] ; then

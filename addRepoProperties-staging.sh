@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+if [[ -z "${release}" ]]
+then
+    echo 
+    echo "   ERRRO: The 'release' environment much be specified for this script. For example,"
+    echo "   release=juno ./$( basename $0 )"
+    echo
+    exit 1
+else
+    echo
+    echo "release: ${release}"
+    echo
+fi
+
 source aggr_properties.shsource
 
 APP_NAME=org.eclipse.wtp.releng.tools.addRepoProperties
@@ -12,7 +25,7 @@ ibmDevArgs="-Xms128M -Xmx256M -Dosgi.ws=gtk -Dosgi.os=linux -Dosgi.arch=x86"
 
 
 # remember, the '&' should be unescaped here ... the p2 api (or underlying xml) will escape it. 
-devArgs="$ibmDevArgs -Dp2MirrorsURL=http://www.eclipse.org/downloads/download.php?format=xml&file=/releases/staging${AGGR}/ -DartifactRepoDirectory=/home/data/httpd/download.eclipse.org/releases/staging${AGGR}/ -Dp2StatsURI=http://download.eclipse.org/stats/releases/staging"
+devArgs="$ibmDevArgs -Dp2MirrorsURL=http://www.eclipse.org/downloads/download.php?format=xml&file=/releases/${stagingsegment}${AGGR}/ -DartifactRepoDirectory=/home/data/httpd/download.eclipse.org/releases/${stagingsegment}${AGGR}/ -Dp2StatsURI=http://download.eclipse.org/stats/releases/${stagingsegment}"
 
 echo "dev:          " $0
 echo

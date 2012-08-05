@@ -1,6 +1,19 @@
 #!/usr/bin/env bash
 # script to copy update jars from their working area to the staging area
 
+if [[ -z "${release}" ]]
+then
+    echo 
+    echo "   ERRRO: The 'release' environment much be specified for this script. For example,"
+    echo "   release=juno ./$( basename $0 )"
+    echo
+    exit 1
+else
+    echo
+    echo "release: ${release}"
+    echo
+fi
+
 # finds file on users path, before current directory
 # hence, non-production users can set their own values for test machines
 source aggr_properties.shsource
@@ -76,7 +89,7 @@ else
     checkForErrorExit $? "could not copy files as expected"
 
     # copy standard index page
-    rsync -vp templateFiles/staging/index.html ${toDirectory}
+    rsync -vp templateFiles/${stagingsegment}/index.html ${toDirectory}
     checkForErrorExit $? "could not copy files as expected"
 
 

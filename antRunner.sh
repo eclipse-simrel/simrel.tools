@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+if [[ -z "${release}" ]]
+then
+    echo 
+    echo "   ERRRO: The 'release' environment much be specified for this script. For example,"
+    echo "   release=juno ./$( basename $0 )"
+    echo
+    exit 1
+else
+    echo
+    echo "release: ${release}"
+    echo
+fi
+
 source aggr_properties.shsource
 
 # specify devworkspace 

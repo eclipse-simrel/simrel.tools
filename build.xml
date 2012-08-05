@@ -11,6 +11,8 @@
         in other property values and evaluated lazily.
     -->
 
+	<fail unless="release" message="release must be specified for this script, such as -Drelease=juno" />
+	
     <property
         name="aggrPropertyFile"
         value="aggr.properties"/>
