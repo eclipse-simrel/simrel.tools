@@ -109,9 +109,9 @@
     	<!-- get raw files from git -->
 
         <echo
-            message="  removing previous ${BRANCH_TEST}.zip if it exists, in ${BUILD_HOME}"/>
+            message="  removing previous ${BRANCH_TESTS}.zip if it exists, in ${BUILD_HOME}"/>
         
-        <delete file="${BUILD_HOME}/${BRANCH_TEST}.zip" failonerror="false" />
+        <delete file="${BUILD_HOME}/${BRANCH_TESTS}.zip" failonerror="false" />
 
     	<echo 
     	    message="   getting ${CGITURL}/${RELENG_TESTS}.git/snapshot/${BRANCH_TESTS}.zip to ${BUILD_HOME}" />
