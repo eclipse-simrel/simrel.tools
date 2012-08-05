@@ -116,7 +116,7 @@
     	<echo 
     	    message="   getting ${CGITURL}/${RELENG_TESTS}.git/snapshot/${BRANCH_TESTS}.zip to ${BUILD_HOME}" />
     	
-    	<get src="${CGITURL}/${RELENG_TESTS}.git/snapshot/${BRANCH_TESTS}.zip" dest="${BUILD_HOME}" verbose="true" />
+    	<get src="${CGITURL}/${RELENG_TESTS}.git/snapshot/${BRANCH_TESTS}.zip" dest="${BUILD_HOME}/${BRANCH_TESTS}.zip" verbose="true" />
     	
     	<unzip src="${BUILD_HOME}/${BRANCH_TESTS}.zip" dest="${BUILD_HOME}/${TMPDIR_TESTS}"/>
     	
