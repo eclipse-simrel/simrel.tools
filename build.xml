@@ -436,13 +436,6 @@
         depends="getBuildTimestamp, getJobName, getBuildWorkarea"
         unless="isInitialized">
 
-        <property
-            name="CVS_INFO"
-            value=":pserver:anonymous@dev.eclipse.org:"/>
-
-        <echo
-            message="CVS_INFO: ${CVS_INFO}"/>
-
         <!-- often, especially for Huson slaves, it is easiest to set hostForURL "manually" in properties or 
     	on command line, e.g. -DhostForURL=hudson ... but, if not defined yet, we'll fallback to reasonable guess -->
         <property
