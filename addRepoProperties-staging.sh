@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ -z "${release}" | -z "${stagingsegment}" ]]
+if [[ -z "${release}" || -z "${stagingsegment}" ]]
 then
     echo 
     echo "   ERROR: The 'release' and 'stagingsegment' environment much be specified for this script. For example,"
