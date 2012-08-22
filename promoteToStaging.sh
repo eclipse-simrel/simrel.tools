@@ -4,9 +4,9 @@
 
 function usage() {
 printf "\n\tScript to promote aggregation to staging area" >&2 
-printf "\n\tUsage: %s -r <release> " "$(basename $0)" >&2 
-printf "\n\t\t%s" "where <release> is main or maintentance" >&2 
-printf "\n\t\t%s" "(and main currently means kepler and maintentane means juno)" >&2 
+printf "\n\tUsage: %s -s <stream> " "$(basename $0)" >&2 
+printf "\n\t\t%s" "where <stream> is 'main' or 'maintenance'" >&2 
+printf "\n\t\t%s" "(and main currently means kepler and maintenance means juno)" >&2 
 printf "\n" >&2 
 }
 
