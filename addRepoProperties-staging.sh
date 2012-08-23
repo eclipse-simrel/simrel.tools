@@ -26,7 +26,7 @@ ibmDevArgs="-Xms128M -Xmx256M -Dosgi.ws=gtk -Dosgi.os=linux -Dosgi.arch=x86"
 
 
 # remember, the '&' should be unescaped here ... the p2 api (or underlying xml) will escape it. 
-devArgs="$ibmDevArgs -Dp2MirrorsURL=http://www.eclipse.org/downloads/download.php?format=xml&file=/releases/${stagingsegment}${AGGR}/ -DartifactRepoDirectory=${REPO_ROOT}/releases/${stagingsegment}${AGGR}/ -Dp2StatsURI=http://download.eclipse.org/stats/releases/${stagingsegment}"
+devArgs="$ibmDevArgs -Dp2MirrorsURL=http://www.eclipse.org/downloads/download.php?format=xml&file=/releases/${stagingsegment}${AGGR}/ -DartifactRepoDirectory=${REPO_ROOT}/releases/${stagingsegment}${AGGR}/ -Dp2StatsURI=http://download.eclipse.org/stats/releases/${stagingsegment} -Dp2ArtifactRepositoryName=release/${stagingsegment}"
 
 echo "dev:          " $0
 echo
