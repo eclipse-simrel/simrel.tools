@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
-datetimestamp=$1
+release=$1
+datetimestamp=$2
 
 if [ -z $datetimestamp ] ; then
-    echo "Error: datetimestamp directory is required for this script."; 
+    echo "ERROR: 'datetimestamp' directory variable is required for this script."; 
     exit 1;
 fi
 
 if [[ -z "${release}" ]]
 then
     echo 
-    echo "   ERRRO: The 'release' environment much be specified for this script. For example,"
-    echo "   release=juno or release=kepler./$( basename $0 )"
+    echo "   ERROR: The 'release' environment variable is required for this script."
     echo
     exit 1
 else
@@ -32,9 +32,13 @@ ibmDevArgs="-Xms128M -Xmx256M -Dosgi.ws=gtk -Dosgi.os=linux -Dosgi.arch=x86"
 
 
 # remember, the '&' should be unescaped here ... the p2 api (or underlying xml) will escape it. 
-devArgs="$ibmDevArgs -Dp2MirrorsURL=http://www.eclipse.org/downloads/download.php?format=xml&file=/releases/juno/${datetimestamp}${AGGR}/ -DartifactRepoDirectory=/home/data/httpd/download.eclipse.org/releases/juno/${datetimestamp}${AGGR} -Dp2StatsURI=http://download.eclipse.org/stats/releases/juno"
+devArgs="$ibmDevArgs -Dp2MirrorsURL=http://www.eclipse.org/downloads/download.php?format=xml&file=/releases/${release}/${datetimestamp}${AGGR}/ -DartifactRepoDirectory=/home/data/httpd/download.eclipse.org/releases/${release}/${datetimestamp}${AGGR} -Dp2StatsURI=http://download.eclipse.org/stats/releases/${release}"
 
 echo "dev:          " $0
+echo
+echo "release:      " $release
+echo
+echo "datetimestampe: " $datetimestamp
 echo
 echo "devworkspace: " $devworkspace
 echo

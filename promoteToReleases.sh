@@ -34,7 +34,7 @@ do
             stream=$OPTARG
             ;;
         d)
-            export datetimestamp=$OPTARG
+            datetimestamp=$OPTARG
             ;;
         \?)
             # I've seen examples wehre just ?, or [?] is used, which means "match any one character", 
@@ -85,12 +85,12 @@ function checkForErrorExit
 
 case "$stream" in
         main)
-            export release=kepler
-            export stagingsegment=staging
+            release=kepler
+            stagingsegment=staging
             ;;
         maintenance)
-            export release=juno
-            export stagingsegment=maintenance
+            release=juno
+            stagingsegment=maintenance
             ;;
         *)
             usage
@@ -104,6 +104,8 @@ esac
 # hence, non-production users can set their own values for test machines
 # must be called (included) after the above variables set, since 
 # above variables are used to compute some other values
+# such as stagingsegment is used to define stagingDirectory
+
 source aggr_properties.shsource
 
 
@@ -151,7 +153,7 @@ else
 
 
 
-        "${BUILD_TOOLS_DIR}"/addRepoProperties-release.sh ${datetimestamp}
+        "${BUILD_TOOLS_DIR}"/addRepoProperties-release.sh ${release} ${datetimestamp}
         checkForErrorExit $? "repo properties could not be updated as expected"
 
         # copy standard p2.index page

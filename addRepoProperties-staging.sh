@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-if [[ -z "${release}" || -z "${stagingsegment}" ]]
+stagingsegment=$1
+
+if [[ -z "${stagingsegment}" ]]
 then
     echo 
-    echo "   ERROR: The 'release' and 'stagingsegment' environment much be specified for this script. For example,"
-    echo "   release=juno stagingsegment=maintenance ./$( basename $0 )"
+    echo "   ERROR: The 'stagingsegment' variable must be specified for this script."
     echo
     exit 1
 else
     echo
-    echo "release: ${release}"
     echo "stagingsegment: ${stagingsegment}"
     echo
 fi
@@ -29,6 +29,8 @@ ibmDevArgs="-Xms128M -Xmx256M -Dosgi.ws=gtk -Dosgi.os=linux -Dosgi.arch=x86"
 devArgs="$ibmDevArgs -Dp2MirrorsURL=http://www.eclipse.org/downloads/download.php?format=xml&file=/releases/${stagingsegment}${AGGR}/ -DartifactRepoDirectory=/home/data/httpd/download.eclipse.org/releases/${stagingsegment}${AGGR}/ -Dp2StatsURI=http://download.eclipse.org/stats/releases/${stagingsegment}"
 
 echo "dev:          " $0
+echo
+echo "stagingsegment: " $stagingsegment
 echo
 echo "devworkspace: " $devworkspace
 echo

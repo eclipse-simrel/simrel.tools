@@ -94,12 +94,12 @@ function checkForErrorExit
 
 case "$stream" in
         main)
-            export release=kepler
-            export stagingsegment=staging
+            release=kepler
+            stagingsegment=staging
             ;;
         maintenance)
-            export release=juno
-            export stagingsegment=maintenance
+            release=juno
+            stagingsegment=maintenance
             ;;
         *)
             usage
@@ -168,7 +168,7 @@ else
     checkForErrorExit $? "could not copy files as expected"
 
 
-    "${BUILD_TOOLS_DIR}"/addRepoProperties-staging.sh
+    "${BUILD_TOOLS_DIR}"/addRepoProperties-staging.sh ${stagingsegment}
     checkForErrorExit $? "repo properties could not be updated as expected"
 
     # copy standard p2.index page
