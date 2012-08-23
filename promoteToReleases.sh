@@ -1,9 +1,69 @@
 #!/usr/bin/env bash
 # script to copy update jars from their staging area to the releases area
 
-# finds file on users path, before current directory
-# hence, non-production users can set their own values for test machines
-source aggr_properties.shsource
+function usage() {
+printf "\n\tScript to promote aggregation to staging area" >&2 
+printf "\n\tUsage: %s -s <stream> " "$(basename $0)" >&2 
+printf "\n\t\t%s" "where <stream> is 'main' or 'maintenance'" >&2 
+printf "\n\t\t%s" "(and main currently means kepler and maintenance means juno)" >&2 
+printf "\n" >&2 
+}
+
+if [[ $# != 4 ]]  
+then 
+    printf "\n\tIncorrect number of arguments given.\n"
+    usage
+    exit 1
+fi
+
+datetimestamp=
+stream=
+# the initial ':' keeps getopts in quiet mode ... meaning it doesn't print "illegal argument" type messages.
+# to get it in completely silent mode, assign $OPTERR=0
+# the other ':' is the ususal "OPTARG"
+while getopts ':hs:d:' OPTION
+do
+    options_found=1
+    case $OPTION in
+        h)
+            usage
+            exit 1
+            ;;
+        s)
+            stream=$OPTARG
+            ;;
+        d)
+            datetimestamp=$OPTARG
+            ;;
+        \?)
+            # I've seen examples wehre just ?, or [?] is used, which means "match any one character", 
+            # whereas literal '?' is returned if getops finds unrecognized argument.     
+            # I've not seen documented, but if no arguments supplied, seems getopts returns
+            # '?' and sets $OPTARG to '-'. 
+            # so ... decided to handle "no arguments" case before calling getopts.
+            printf "\n\tUnknown option: -%s\n" $OPTARG
+            usage
+            ;;
+        *)
+            # This fall-through not really needed in this case, esp. with '?' clause. 
+            # Usually need one or the other.
+            # getopts appears to return '?' if no options or an unrecognized option. 
+            # Decide to use it for program check, in case allowable options are added,  
+            # but no matching case statemetns.
+            printf "\n\t%s" "ERROR: unhandled option found: $OPTION. Check script case statements. " >&2
+            printf "\n" >&2
+            usage
+            exit
+            ;;
+    esac
+done
+
+# while we currently don't use/expect additional arguments, it's best to 
+# shift away arguments handled by above getopts, so other code (in future) could 
+# handle additional trailing arguments not intended for getopts.
+shift $(($OPTIND - 1))
+
+
 
 function checkForErrorExit
 {   
@@ -22,11 +82,33 @@ function checkForErrorExit
     fi
 }
 
+case "$stream" in
+        main)
+            export release=kepler
+            export stagingsegment=staging
+            ;;
+        maintenance)
+            export release=juno
+            export stagingsegment=maintenance
+            ;;
+        *)
+            usage
+            exit 1
+			;;
+esac
+
+
+
+# finds file on users path, before current directory
+# hence, non-production users can set their own values for test machines
+# must be called (included) after the above variables set, since 
+# above variables are used to compute some other values
+source aggr_properties.shsource
+
 
 fromDirectory=${stagingDirectory}
 toDirectory=${releaseDirectory} 
 
-datetimestamp=$1
 
 # make sure 'toDirectory' has been defined and is not zero length
 if [ -z "${toDirectory}" ]

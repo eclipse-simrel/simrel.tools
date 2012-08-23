@@ -27,7 +27,7 @@ stream=
 # the initial ':' keeps getopts in quiet mode ... meaning it doesn't print "illegal argument" type messages.
 # to get it in completely silent mode, assign $OPTERR=0
 # the other ':' is the ususal "OPTARG"
-while getopts ':hr:' OPTION
+while getopts ':hs:' OPTION
 do
     options_found=1
     case $OPTION in
@@ -35,7 +35,7 @@ do
             usage
             exit 1
             ;;
-        r)
+        s)
             stream=$OPTARG
             ;;
         \?)
