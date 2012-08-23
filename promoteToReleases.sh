@@ -34,7 +34,7 @@ do
             stream=$OPTARG
             ;;
         d)
-            datetimestamp=$OPTARG
+            export datetimestamp=$OPTARG
             ;;
         \?)
             # I've seen examples wehre just ?, or [?] is used, which means "match any one character", 
