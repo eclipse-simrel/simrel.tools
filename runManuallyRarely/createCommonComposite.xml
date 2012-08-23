@@ -5,7 +5,7 @@
         name="createcomposite">
         <p2.composite.repository>
             <repository
-                location="file:/home/data/httpd/download.eclipse.org/releases/juno/"
+                location="file:{REPO_ROOT}/releases/${release}/"
                 name="Eclipse Juno repository"/>
             <add>
                 <repository
