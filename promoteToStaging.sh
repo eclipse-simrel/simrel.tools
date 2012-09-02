@@ -94,11 +94,11 @@ function checkForErrorExit
 
 case "$stream" in
         main)
-            release=kepler
+            export release=kepler
             stagingsegment=staging
             ;;
         maintenance)
-            release=juno
+            export release=juno
             stagingsegment=maintenance
             ;;
         *)
@@ -114,7 +114,7 @@ source aggr_properties.shsource
 
 
 fromDirectory=${AGGREGATOR_RESULTS}
-toDirectory=${stagingDirectory} 
+export toDirectory=${stagingDirectory} 
 
 echo "stream: $stream"
 echo "release: $release"
