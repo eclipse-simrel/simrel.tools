@@ -85,11 +85,11 @@ function checkForErrorExit
 
 case "$stream" in
         main)
-            release=kepler
+            export release=kepler
             stagingsegment=staging
             ;;
         maintenance)
-            release=juno
+            export release=juno
             stagingsegment=maintenance
             ;;
         *)
@@ -109,8 +109,8 @@ esac
 source aggr_properties.shsource
 
 
-fromDirectory=${stagingDirectory}
-toDirectory=${releaseDirectory} 
+export fromDirectory=${stagingDirectory}
+export toDirectory=${releaseDirectory} 
 
 
 # make sure 'toDirectory' has been defined and is not zero length
