@@ -21,6 +21,7 @@ then
 else
     echo
     echo "release: ${release}"
+    export "release"
     echo
 fi
 
