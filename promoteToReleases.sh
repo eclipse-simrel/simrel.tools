@@ -87,10 +87,12 @@ case "$stream" in
         main)
             export release=kepler
             stagingsegment=staging
+            releasesegment=current
             ;;
         maintenance)
             export release=juno
             stagingsegment=maintenance
+            releasesegment=maintenance
             ;;
         *)
             usage
@@ -148,7 +150,7 @@ else
         checkForErrorExit $? "could not copy files as expected"
 
         # static index page
-        rsync -vp templateFiles/release/index.html ${toDirectory}
+    rsync -vp templateFiles/release/${releasesegment}/index.html ${toDirectory}
         checkForErrorExit $? "could not copy files as expected"
 
 
