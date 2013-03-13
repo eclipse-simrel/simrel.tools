@@ -232,7 +232,7 @@
             for example, bug 244603 and bug 279596. -->
         <property
             name="BUILDER_VM_ARGS"
-            value="-vmargs -Xmx384m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"/>
+            value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"/>
         <echo
             message="AGGREGATOR_APP_ARGS: ${AGGREGATOR_APP_ARGS}"/>
 
@@ -293,7 +293,7 @@
 	            for example, bug 244603 and bug 279596. -->
         <property
             name="BUILDER_VM_ARGS"
-            value="-vmargs -Xmx384m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"/>
+            value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"/>
         <echo
             message="AGG_APP_ARGS: ${AGG_APP_ARGS}"/>
         <exec
@@ -346,7 +346,7 @@
                 for example, bug 244603 and bug 279596. -->
         <property
             name="BUILDER_VM_ARGS"
-            value="-vmargs -Xmx384m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"/>
+            value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"/>
         <echo
             message="AGG_APP_ARGS: ${AGG_APP_ARGS}"/>
 
@@ -404,7 +404,7 @@
 	            for example, bug 244603 and bug 279596. -->
         <property
             name="BUILDER_VM_ARGS"
-            value="-vmargs -Xmx384m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"/>
+            value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"/>
 
         <exec
             executable="${eclipseExecutable}"
