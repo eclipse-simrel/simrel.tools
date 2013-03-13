@@ -10,7 +10,7 @@
                 location="file:/${todir}" name="A temp test repo" />
             <source>
                 <repository
-                    location="file://home/data/httpd/download.eclipse.org/releases/juno/201005070900a/" />
+                    location="file://home/data/httpd/download.eclipse.org/releases/juno/201303010900/" />
             </source>
             <slicingOptions platformFilter="true" />         
         </p2.mirror>
