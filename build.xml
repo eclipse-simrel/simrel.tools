@@ -2,8 +2,7 @@
     name="AggregationTasks"
     basedir="."
     default="default">
-    <property
-        environment="env"/>
+    <property environment="env" />
     <!--
         This property file name is itself a property, so it can be overridden
         on one machine versus another. We do it this way, instead of just specifying
@@ -11,14 +10,15 @@
         in other property values and evaluated lazily.
     -->
 
-	<fail unless="release" message="release must be specified for this script, such as -Drelease=juno" />
-	
-    <property
-        name="aggrPropertyFile"
-        value="aggr.properties"/>
+    <fail
+        unless="release"
+        message="release must be specified for this script, such as -Drelease=juno" />
 
     <property
-        file="${aggrPropertyFile}"/>
+        name="aggrPropertyFile"
+        value="aggr.properties" />
+
+    <property file="${aggrPropertyFile}" />
 
     <!-- 
 	unrewriteMapsLine is a variable, but should never have to be chagned for current sim rel 
@@ -28,14 +28,13 @@
 
     <property
         name="commonRepositoryDownloadURLValue"
-        value="http://download.eclipse.org"/>
+        value="http://download.eclipse.org" />
 
     <target
         name="installAggregatorAndTools"
         depends="init, savePrevious,installAggregator,installRelengTools">
 
-        <echo
-            message="Installed fresh Eclipse, Aggregator, and Tools"/>
+        <echo message="Installed fresh Eclipse, Aggregator, and Tools" />
 
     </target>
 
@@ -44,31 +43,30 @@
         depends="init, savePrevious">
         <property
             name="APP_NAME"
-            value="org.eclipse.equinox.p2.director"/>
+            value="org.eclipse.equinox.p2.director" />
         <property
             name="OTHER_ARGS_AGG"
-            value="-metadataRepository http://download.eclipse.org/modeling/emft/b3/updates-4.2/ -artifactRepository http://download.eclipse.org/modeling/emft/b3/updates-4.2/ -installIU org.eclipse.b3.aggregator.engine.feature.feature.group"/>
+            value="-metadataRepository http://download.eclipse.org/modeling/emft/b3/updates-4.2/ -artifactRepository http://download.eclipse.org/modeling/emft/b3/updates-4.2/ -installIU org.eclipse.b3.aggregator.engine.feature.feature.group" />
         <!-- usually do not need the version, just to "get the latest" from
             buckminster builder site -version 1.0.0.v20090415-1651 -->
         <property
             name="VM_ARGS"
-            value="-vmargs -Xmx256m"/>
+            value="-vmargs -Xmx256m" />
 
 
-        <mkdir
-            dir="${ECLIPSE_HOME}"/>
+        <mkdir dir="${ECLIPSE_HOME}" />
 
         <untar
             compression="gzip"
             overwrite="true"
             src="${FULL_FILENAME}"
-            dest="${ECLIPSE_HOME}"/>
+            dest="${ECLIPSE_HOME}" />
 
         <!-- weird this chmod is required? probably ant bug -->
         <chmod
             file="${ECLIPSE_HOME}/eclipse/eclipse"
             perm="ugo+x"
-            verbose="true"/>
+            verbose="true" />
 
         <!-- and now get latest -->
         <exec
@@ -76,7 +74,7 @@
             dir="${basedir}"
             failonerror="true">
             <arg
-                line="-data ${eclipseWorkspace} -debug -nosplash --launcher.suppressErrors -vm ${JAVA_EXEC_DIR} -application ${APP_NAME} ${OTHER_ARGS_AGG} ${VM_ARGS}"/>
+                line="-data ${eclipseWorkspace} -debug -nosplash --launcher.suppressErrors -vm ${JAVA_EXEC_DIR} -application ${APP_NAME} ${OTHER_ARGS_AGG} ${VM_ARGS}" />
         </exec>
     </target>
     <target
@@ -84,66 +82,72 @@
         depends="init, savePreviousTest">
         <property
             name="APP_NAME"
-            value="org.eclipse.equinox.p2.director"/>
+            value="org.eclipse.equinox.p2.director" />
 
         <!-- usually do not need the version, just to "get the latest" from
 	            buckminster builder site -version 1.0.0.v20090415-1651 -->
         <property
             name="VM_ARGS"
-            value="-vmargs -Xmx256m"/>
+            value="-vmargs -Xmx256m" />
 
 
-        <mkdir
-            dir="${ECLIPSE_HOME_TEST}"/>
+        <mkdir dir="${ECLIPSE_HOME_TEST}" />
 
         <untar
             compression="gzip"
             overwrite="true"
             src="${FULL_FILENAME}"
-            dest="${ECLIPSE_HOME_TEST}"/>
+            dest="${ECLIPSE_HOME_TEST}" />
 
         <!-- weird this chmod is required? probably ant bug -->
         <chmod
             file="${ECLIPSE_HOME_TEST}/eclipse/eclipse"
             perm="ugo+x"
-            verbose="true"/>
+            verbose="true" />
 
     	<!-- get raw files from git -->
 
-        <echo
-            message="  removing previous ${BRANCH_TESTS}.zip if it exists, in ${BUILD_HOME}"/>
-        
-        <delete file="${BUILD_HOME}/${BRANCH_TESTS}.zip" failonerror="false" />
+        <echo message="  removing previous ${BRANCH_TESTS}.zip if it exists, in ${BUILD_HOME}" />
 
-    	<echo 
-    	    message="   getting ${CGITURL}/${RELENG_TESTS}.git/snapshot/${BRANCH_TESTS}.zip to ${BUILD_HOME}" />
-    	
-    	<get src="${CGITURL}/${RELENG_TESTS}.git/snapshot/${BRANCH_TESTS}.zip" dest="${BUILD_HOME}/${BRANCH_TESTS}.zip" verbose="true" />
-    	
-    	<unzip src="${BUILD_HOME}/${BRANCH_TESTS}.zip" dest="${BUILD_HOME}/${TMPDIR_TESTS}"/>
-    	
-    	<copy todir="${ECLIPSE_HOME_TEST}/eclipse/dropins/${RELENG_TESTS}">
-    		<fileset dir="${BUILD_HOME}/${TMPDIR_TESTS}/${BRANCH_TESTS}" includes="**/*" />
-    	</copy>
+        <delete
+            file="${BUILD_HOME}/${BRANCH_TESTS}.zip"
+            failonerror="false" />
+
+        <echo message="   getting ${CGITURL}/${RELENG_TESTS}.git/snapshot/${BRANCH_TESTS}.zip to ${BUILD_HOME}" />
+
+        <get
+            src="${CGITURL}/${RELENG_TESTS}.git/snapshot/${BRANCH_TESTS}.zip"
+            dest="${BUILD_HOME}/${BRANCH_TESTS}.zip"
+            verbose="true" />
+
+        <unzip
+            src="${BUILD_HOME}/${BRANCH_TESTS}.zip"
+            dest="${BUILD_HOME}/${TMPDIR_TESTS}" />
+
+        <copy todir="${ECLIPSE_HOME_TEST}/eclipse/dropins/${RELENG_TESTS}">
+            <fileset
+                dir="${BUILD_HOME}/${TMPDIR_TESTS}/${BRANCH_TESTS}"
+                includes="**/*" />
+        </copy>
     	
     	<!-- cleanup temp working files -->
-    	<delete file="${BUILD_HOME}/${BRANCH_TESTS}.zip"/>
-    	<delete dir="${BUILD_HOME}/${TMPDIR_TESTS}" />
- 
+        <delete file="${BUILD_HOME}/${BRANCH_TESTS}.zip" />
+        <delete dir="${BUILD_HOME}/${TMPDIR_TESTS}" />
+
     </target>
     <target
         name="installRelengTools"
         depends="init">
         <property
             name="APP_NAME"
-            value="org.eclipse.equinox.p2.director"/>
+            value="org.eclipse.equinox.p2.director" />
         <property
             name="OTHER_ARGS_TOOLS"
-            value="-metadataRepository http://download.eclipse.org/webtools/releng/repository/ -artifactRepository http://download.eclipse.org/webtools/releng/repository/ -installIU org.eclipse.wtp.releng.tools.feature.feature.group"/>
+            value="-metadataRepository http://download.eclipse.org/webtools/releng/repository/ -artifactRepository http://download.eclipse.org/webtools/releng/repository/ -installIU org.eclipse.wtp.releng.tools.feature.feature.group" />
 
         <property
             name="VM_ARGS"
-            value="-vmargs -Xmx256m"/>
+            value="-vmargs -Xmx256m" />
 
         <!-- install latest -->
         <exec
@@ -151,7 +155,7 @@
             dir="${basedir}"
             failonerror="true">
             <arg
-                line="-data ${eclipseWorkspace} -debug -nosplash --launcher.suppressErrors -vm ${JAVA_EXEC_DIR} -application ${APP_NAME} ${OTHER_ARGS_TOOLS} ${VM_ARGS}"/>
+                line="-data ${eclipseWorkspace} -debug -nosplash --launcher.suppressErrors -vm ${JAVA_EXEC_DIR} -application ${APP_NAME} ${OTHER_ARGS_TOOLS} ${VM_ARGS}" />
         </exec>
     </target>
 
@@ -159,48 +163,53 @@
         name="getModel"
         depends="init"
         unless="modelRetrived">
-        <echo
-            message="  removing all of previous model project: ${BUILD_MODEL_DIR}"/>
+        <echo message="  removing all of previous model project: ${BUILD_MODEL_DIR}" />
         <delete
             dir="${BUILD_MODEL_DIR}"
-            failonerror="false"/>
-    	
-        <echo
-            message="  removing previous ${BRANCH_BUILD}.zip if it exists, in ${BUILD_HOME}"/>
-    	
-    	<delete file="${BUILD_HOME}/${BUILD_MODEL}-${BRANCH_BUILD}.zip" failonerror="false" />
-    	
-        <get src="${CGITURL}/${BUILD_MODEL}.git/snapshot/${BUILD_MODEL}-${BRANCH_BUILD}.zip" dest="${BUILD_HOME}" verbose="true" />
-         
-         <unzip src="${BUILD_HOME}/${BUILD_MODEL}-${BRANCH_BUILD}.zip"  dest="${BUILD_HOME}/${TMPDIR_BUILD}"/>
-         
-        <echo
-            message="  copy aggregator files to ${BUILD_MODEL_DIR}"/>
-        <echo
-            message="     from ${BUILD_HOME}/${TMPDIR_BUILD}/${BUILD_MODEL}-${BRANCH_BUILD}"/>
- 
-         <copy todir="${BUILD_MODEL_DIR}" flatten="true">
-             <fileset dir="${BUILD_HOME}/${TMPDIR_BUILD}/${BUILD_MODEL}-${BRANCH_BUILD}" includes="**/*" />
-         </copy> 
+            failonerror="false" />
+
+        <echo message="  removing previous ${BRANCH_BUILD}.zip if it exists, in ${BUILD_HOME}" />
+
+        <delete
+            file="${BUILD_HOME}/${BUILD_MODEL}-${BRANCH_BUILD}.zip"
+            failonerror="false" />
+
+        <get
+            src="${CGITURL}/${BUILD_MODEL}.git/snapshot/${BUILD_MODEL}-${BRANCH_BUILD}.zip"
+            dest="${BUILD_HOME}"
+            verbose="true" />
+
+        <unzip
+            src="${BUILD_HOME}/${BUILD_MODEL}-${BRANCH_BUILD}.zip"
+            dest="${BUILD_HOME}/${TMPDIR_BUILD}" />
+
+        <echo message="  copy aggregator files to ${BUILD_MODEL_DIR}" />
+        <echo message="     from ${BUILD_HOME}/${TMPDIR_BUILD}/${BUILD_MODEL}-${BRANCH_BUILD}" />
+
+        <copy
+            todir="${BUILD_MODEL_DIR}"
+            flatten="true">
+            <fileset
+                dir="${BUILD_HOME}/${TMPDIR_BUILD}/${BUILD_MODEL}-${BRANCH_BUILD}"
+                includes="**/*" />
+        </copy> 
             
     	<!-- cleanup temp working files -->
-    	<delete file="${BUILD_HOME}/${BUILD_MODEL}-${BRANCH_BUILD}.zip"/>
-    	<delete dir="${BUILD_HOME}/${TMPDIR_BUILD}" />
-    	
+        <delete file="${BUILD_HOME}/${BUILD_MODEL}-${BRANCH_BUILD}.zip" />
+        <delete dir="${BUILD_HOME}/${TMPDIR_BUILD}" />
+
         <property
             name="modelRetrived"
-            value="true"/>
+            value="true" />
     </target>
 
     <target
         name="runBothBuilders"
         depends="init,getModel,rewriteRepositoryURL">
 
-        <antcall
-            target="runBuckyBuild"/>
+        <antcall target="runBuckyBuild" />
 
-        <antcall
-            target="runAggregator"/>
+        <antcall target="runAggregator" />
 
 
 
@@ -220,7 +229,7 @@
             value="-buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr
             -buildRoot ${AGGREGATOR_RESULTS} -mirrorReferences -packedStrategy unpackAsSibling
             -logLevel DEBUG -emailFromName SimRelAggregator
-            -logURL ${logURL}"/>
+            -logURL ${logURL}" />
 
         <!-- Important: on any non-production machines it is important to _not_ use
             eclipse.p2.mirrors=false, so this value should be supplied by calling script's
@@ -232,41 +241,32 @@
             for example, bug 244603 and bug 279596. -->
         <property
             name="BUILDER_VM_ARGS"
-            value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"/>
-        <echo
-            message="AGGREGATOR_APP_ARGS: ${AGGREGATOR_APP_ARGS}"/>
+            value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
+        <echo message="AGGREGATOR_APP_ARGS: ${AGGREGATOR_APP_ARGS}" />
 
         <!-- we will clean the aggregation directory ourselves, as work around for bug 354321   
     		https://bugs.eclipse.org/bugs/show_bug.cgi?id=354321
     		-->
-        <echo message="Removing any previous aggregation results, from ${AGGREGATOR_RESULTS}"/>
-    	<delete dir="${AGGREGATOR_RESULTS}" failonerror="false" />
-        <mkdir dir="${AGGREGATOR_RESULTS}"/>
+        <echo message="Removing any previous aggregation results, from ${AGGREGATOR_RESULTS}" />
+        <delete
+            dir="${AGGREGATOR_RESULTS}"
+            failonerror="false" />
+        <mkdir dir="${AGGREGATOR_RESULTS}" />
 
         <exec
             executable="${eclipseExecutable}"
             dir="${basedir}"
             failonerror="true">
-            <arg
-                value="-debug"/>
-            <arg
-                value="-nosplash"/>
-            <arg
-                line="-data ${eclipseWorkspace}"/>
-            <arg
-                line="-vm ${JAVA_6_HOME}/jre/bin"/>
-            <arg
-                value="--launcher.suppressErrors"/>
-            <arg
-                line="-application org.eclipse.b3.cli.headless"/>
-            <arg
-                value="aggregate"/>
-            <arg
-                line="--buildId ${buildTimestamp}"/>
-            <arg
-                line="${AGGREGATOR_APP_ARGS}"/>
-            <arg
-                line="${BUILDER_VM_ARGS}"/>
+            <arg value="-debug" />
+            <arg value="-nosplash" />
+            <arg line="-data ${eclipseWorkspace}" />
+            <arg line="-vm ${JAVA_6_HOME}/jre/bin" />
+            <arg value="--launcher.suppressErrors" />
+            <arg line="-application org.eclipse.b3.cli.headless" />
+            <arg value="aggregate" />
+            <arg line="--buildId ${buildTimestamp}" />
+            <arg line="${AGGREGATOR_APP_ARGS}" />
+            <arg line="${BUILDER_VM_ARGS}" />
         </exec>
     </target>
 
@@ -281,7 +281,7 @@
 
         <property
             name="AGG_APP_ARGS"
-            value="${AGGREGATOR_APP_ARGS_BUILDONLY}"/>
+            value="${AGGREGATOR_APP_ARGS_BUILDONLY}" />
 
         <!-- Important: on any non-production machines it is important to _not_ use
 	            eclipse.p2.mirrors=false, so this value should be supplied by calling script's
@@ -293,33 +293,22 @@
 	            for example, bug 244603 and bug 279596. -->
         <property
             name="BUILDER_VM_ARGS"
-            value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"/>
-        <echo
-            message="AGG_APP_ARGS: ${AGG_APP_ARGS}"/>
+            value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
+        <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
         <exec
             executable="${eclipseExecutable}"
             dir="${basedir}"
             failonerror="true">
-            <arg
-                value="-debug"/>
-            <arg
-                value="-nosplash"/>
-            <arg
-                line="-data ${eclipseWorkspace}"/>
-            <arg
-                line="-vm ${JAVA_6_HOME}/jre/bin"/>
-            <arg
-                value="--launcher.suppressErrors"/>
-            <arg
-                line="-application org.eclipse.b3.cli.headless"/>
-            <arg
-                value="aggregate"/>
-            <arg
-                line="--buildId ${buildTimestamp}"/>
-            <arg
-                line="${AGG_APP_ARGS}"/>
-            <arg
-                line="${BUILDER_VM_ARGS}"/>
+            <arg value="-debug" />
+            <arg value="-nosplash" />
+            <arg line="-data ${eclipseWorkspace}" />
+            <arg line="-vm ${JAVA_6_HOME}/jre/bin" />
+            <arg value="--launcher.suppressErrors" />
+            <arg line="-application org.eclipse.b3.cli.headless" />
+            <arg value="aggregate" />
+            <arg line="--buildId ${buildTimestamp}" />
+            <arg line="${AGG_APP_ARGS}" />
+            <arg line="${BUILDER_VM_ARGS}" />
         </exec>
     </target>
 
@@ -334,7 +323,7 @@
 
         <property
             name="AGG_APP_ARGS"
-            value="${AGGREGATOR_APP_ARGS_VERIFYONLY}"/>
+            value="${AGGREGATOR_APP_ARGS_VERIFYONLY}" />
 
         <!-- Important: on any non-production machines it is important to _not_ use
                 eclipse.p2.mirrors=false, so this value should be supplied by calling script's
@@ -346,34 +335,23 @@
                 for example, bug 244603 and bug 279596. -->
         <property
             name="BUILDER_VM_ARGS"
-            value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"/>
-        <echo
-            message="AGG_APP_ARGS: ${AGG_APP_ARGS}"/>
+            value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
+        <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
 
         <exec
             executable="${eclipseExecutable}"
             dir="${basedir}"
             failonerror="true">
-            <arg
-                value="-debug"/>
-            <arg
-                value="-nosplash"/>
-            <arg
-                line="-data ${eclipseWorkspace}"/>
-            <arg
-                line="-vm ${JAVA_6_HOME}/jre/bin"/>
-            <arg
-                value="--launcher.suppressErrors"/>
-            <arg
-                line="-application org.eclipse.b3.cli.headless"/>
-            <arg
-                value="aggregate"/>
-            <arg
-                line="--buildId ${buildTimestamp}"/>
-            <arg
-                line="${AGG_APP_ARGS}"/>
-            <arg
-                line="${BUILDER_VM_ARGS}"/>
+            <arg value="-debug" />
+            <arg value="-nosplash" />
+            <arg line="-data ${eclipseWorkspace}" />
+            <arg line="-vm ${JAVA_6_HOME}/jre/bin" />
+            <arg value="--launcher.suppressErrors" />
+            <arg line="-application org.eclipse.b3.cli.headless" />
+            <arg value="aggregate" />
+            <arg line="--buildId ${buildTimestamp}" />
+            <arg line="${AGG_APP_ARGS}" />
+            <arg line="${BUILDER_VM_ARGS}" />
         </exec>
     </target>
 
@@ -392,7 +370,7 @@
             value="--buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr
 	            --buildRoot ${HYBRID_RESULTS} --mirrorReferences --packedStrategy unpackAsSibling
 	            --mavenResult --logLevel DEBUG --emailFromName SimRelAggregator
-	            --logURL ${logURL}"/>
+	            --logURL ${logURL}" />
 
         <!-- Important: on any non-production machines it is important to _not_ use
 	            eclipse.p2.mirrors=false, so this value should be supplied by calling script's
@@ -404,32 +382,22 @@
 	            for example, bug 244603 and bug 279596. -->
         <property
             name="BUILDER_VM_ARGS"
-            value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"/>
+            value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
 
         <exec
             executable="${eclipseExecutable}"
             dir="${basedir}"
             failonerror="true">
-            <arg
-                value="-debug"/>
-            <arg
-                value="-nosplash"/>
-            <arg
-                line="-data ${eclipseWorkspace}"/>
-            <arg
-                line="-vm ${JAVA_6_HOME}/jre/bin"/>
-            <arg
-                value="--launcher.suppressErrors"/>
-            <arg
-                line="-application org.eclipse.b3.cli.headless"/>
-            <arg
-                value="aggregate"/>
-            <arg
-                line="--buildId ${buildTimestamp}"/>
-            <arg
-                line="${HYBRID_APP_ARGS}"/>
-            <arg
-                line="${BUILDER_VM_ARGS}"/>
+            <arg value="-debug" />
+            <arg value="-nosplash" />
+            <arg line="-data ${eclipseWorkspace}" />
+            <arg line="-vm ${JAVA_6_HOME}/jre/bin" />
+            <arg value="--launcher.suppressErrors" />
+            <arg line="-application org.eclipse.b3.cli.headless" />
+            <arg value="aggregate" />
+            <arg line="--buildId ${buildTimestamp}" />
+            <arg line="${HYBRID_APP_ARGS}" />
+            <arg line="${BUILDER_VM_ARGS}" />
         </exec>
     </target>
 
@@ -442,77 +410,63 @@
     	on command line, e.g. -DhostForURL=hudson ... but, if not defined yet, we'll fallback to reasonable guess -->
         <property
             name="hostForURL"
-            value="${HOSTNAME}"/>
+            value="${HOSTNAME}" />
 
         <condition
             property="logURL"
             value="${LOG_URL}"
             else="${hostForURL}">
-            <isset
-                property="LOG_URL"/>
+            <isset property="LOG_URL" />
         </condition>
         <property
             name="eclipseWorkspace"
-            value="${buildWorkarea}/eclipseworkingspace"/>
+            value="${buildWorkarea}/eclipseworkingspace" />
 
         <!-- if the eclipse workspace exists, remove it, to make sure we are starting "fresh". Eclipse will create it. Be sure some "archive artifacts" job saves it away, if desired. -->
         <delete
             dir="${eclipseWorkspace}"
-            quiet="true"/>
+            quiet="true" />
 
         <property
             name="eclipseExecutable"
-            value="${ECLIPSE_EXE}"/>
+            value="${ECLIPSE_EXE}" />
 
         <available
             file="${ECLIPSE_HOME}/eclipse"
             type="dir"
-            property="eclipseExists"/>
+            property="eclipseExists" />
 
         <available
             file="${ECLIPSE_HOME_TEST}/eclipse"
             type="dir"
-            property="eclipseTestExists"/>
+            property="eclipseTestExists" />
 
-        <echo
-            message="aggrPropertyFile: ${aggrPropertyFile}"/>
-        <echo
-            message="buildId: ${buildTimestamp}"/>
-        <echo
-            message="user.dir: ${user.dir}"/>
-        <echo
-            message="user.home: ${user.home}"/>
-        <echo
-            message="Eclipse WORKSPACE: ${eclipseWorkspace}"/>
-        <echo
-            message="PATH: ${env.PATH}"/>
-        <echo
-            message="JAVA_HOME: ${JAVA_HOME}"/>
-        <echo
-            message="hostForURL: ${hostForURL}"/>
-        <echo
-            message="JOB_NAME: ${env.JOB_NAME}"/>
-        <echo
-            message="BUILD_NUMBER: ${env.BUILD_NUMBER}"/>
-        <echo
-            message="logURL: ${logURL}"/>
-        <echo
-            message="ECLIPSE_EXE:  ${ECLIPSE_EXE}"/>
+        <echo message="aggrPropertyFile: ${aggrPropertyFile}" />
+        <echo message="buildId: ${buildTimestamp}" />
+        <echo message="user.dir: ${user.dir}" />
+        <echo message="user.home: ${user.home}" />
+        <echo message="Eclipse WORKSPACE: ${eclipseWorkspace}" />
+        <echo message="PATH: ${env.PATH}" />
+        <echo message="JAVA_HOME: ${JAVA_HOME}" />
+        <echo message="hostForURL: ${hostForURL}" />
+        <echo message="JOB_NAME: ${env.JOB_NAME}" />
+        <echo message="BUILD_NUMBER: ${env.BUILD_NUMBER}" />
+        <echo message="logURL: ${logURL}" />
+        <echo message="ECLIPSE_EXE:  ${ECLIPSE_EXE}" />
 
-        <echo
-            message="BUILDER_VM_ARGS: ${BUILDER_VM_ARGS}"/>
-        <echoproperties/>
+        <echo message="BUILDER_VM_ARGS: ${BUILDER_VM_ARGS}" />
+        <echoproperties />
         <!-- quick fail, if set up wrong -->
         <fail
             unless="BUILD_HOME"
-            message="BUILD_HOME must be set before running this script"/>
+            message="BUILD_HOME must be set before running this script" />
 
         <!--
             no need to initialize twice
         -->
         <property
             name="isInitialized"
-            value="true"/>
+            value="true" />
 
     </target>
     <target
@@ -523,10 +477,9 @@
             <format
                 property="buildTimestamp"
                 pattern="yyyy-MM-dd_HH-mm-ss"
-                timezone="UTC_TIME"/>
+                timezone="UTC_TIME" />
         </tstamp>
-        <echo
-            message="Using ant computed timestamp"/>
+        <echo message="Using ant computed timestamp" />
     </target>
     <target
         name="getHudsonTimestamp"
@@ -535,9 +488,8 @@
         if="env.BUILD_ID">
         <property
             name="buildTimestamp"
-            value="${env.BUILD_ID}"/>
-        <echo
-            message="Using timestamp from Hudson Build ID"/>
+            value="${env.BUILD_ID}" />
+        <echo message="Using timestamp from Hudson Build ID" />
     </target>
     <target
         name="getCCTimestamp"
@@ -545,9 +497,8 @@
         if="cctimestamp">
         <property
             name="buildTimestamp"
-            value="${cctimestamp}"/>
-        <echo
-            message="Using timestamp from CC time stamp"/>
+            value="${cctimestamp}" />
+        <echo message="Using timestamp from CC time stamp" />
     </target>
     <target
         name="getJobName"
@@ -555,9 +506,8 @@
         unless="jobName">
         <property
             name="jobName"
-            value="localbuild"/>
-        <echo
-            message="Using default jobName: localbuild"/>
+            value="localbuild" />
+        <echo message="Using default jobName: localbuild" />
     </target>
     <target
         name="getHudsonJobName"
@@ -566,9 +516,8 @@
         if="env.JOB_NAME">
         <property
             name="jobName"
-            value="${env.JOB_NAME}"/>
-        <echo
-            message="Using jobName from Hudson Builder: ${jobName}"/>
+            value="${env.JOB_NAME}" />
+        <echo message="Using jobName from Hudson Builder: ${jobName}" />
     </target>
     <target
         name="getCCJobName"
@@ -576,9 +525,8 @@
         if="projectname">
         <property
             name="jobName"
-            value="${projectname}"/>
-        <echo
-            message="Using jobName from CC Builder: ${jobName}"/>
+            value="${projectname}" />
+        <echo message="Using jobName from CC Builder: ${jobName}" />
     </target>
     <target
         name="getBuildWorkarea"
@@ -586,9 +534,8 @@
         unless="buildWorkarea">
         <property
             name="buildWorkarea"
-            value="${basedir}"/>
-        <echo
-            message="Using default buildWorkarea: ${buildWorkarea}"/>
+            value="${basedir}" />
+        <echo message="Using default buildWorkarea: ${buildWorkarea}" />
     </target>
     <target
         name="getHudsonBuildWorkarea"
@@ -597,8 +544,8 @@
         if="env.HUDSON_HOME">
         <property
             name="buildWorkarea"
-            value="${env.WORKSPACE}"/>
-        <echo message="Using buildWorkarea from Hudson Builder: ${buildWorkarea}"/>
+            value="${env.WORKSPACE}" />
+        <echo message="Using buildWorkarea from Hudson Builder: ${buildWorkarea}" />
     </target>
     <target
         name="getCCBuildWorkarea"
@@ -606,9 +553,8 @@
         if="env.PROJECT_PROJECTS">
         <property
             name="buildWorkarea"
-            value="${env.PROJECT_PROJECTS}/${jobName}/${buildTimestamp}"/>
-        <echo
-            message="Using buildWorkarea from CC Builder: ${buildWorkarea}"/>
+            value="${env.PROJECT_PROJECTS}/${jobName}/${buildTimestamp}" />
+        <echo message="Using buildWorkarea from CC Builder: ${buildWorkarea}" />
     </target>
 
     <target
@@ -620,13 +566,12 @@
         <move
             verbose="true"
             todir="${ECLIPSE_HOME}/eclipse${buildTimestamp}">
-            <fileset
-                dir="${ECLIPSE_HOME}/eclipse"/>
+            <fileset dir="${ECLIPSE_HOME}/eclipse" />
         </move>
 
         <property
             name="previousSaved"
-            value="true"/>
+            value="true" />
 
     </target>
 
@@ -635,10 +580,10 @@
         depends="init"
         if="eclipseTestExists">
         <!-- remember, old ones have to be maually cleaned up, from time to time -->
-        <fail unless="buildTimestamp"/>
+        <fail unless="buildTimestamp" />
 
         <move todir="${ECLIPSE_HOME_TEST}/eclipse${buildTimestamp}">
-            <fileset dir="${ECLIPSE_HOME_TEST}/eclipse"/>
+            <fileset dir="${ECLIPSE_HOME_TEST}/eclipse" />
         </move>
 
     </target>
@@ -652,16 +597,16 @@
             dir="${BUILD_MODEL_DIR}"
             token="${commonRepositoryDownloadURLValue}"
             value="${rewriteRepositoryURLValue}">
-            <include name="*.b3aggrcon"/>
+            <include name="*.b3aggrcon" />
         	<!--
             <exclude name="ep.b3aggrcon"/>
             <exclude name="equinox.b3aggrcon"/>
             -->
         </replace>
-        <echo message="Rewrote repository location URLs ..."/>
-        <echo message="        From: ${commonRepositoryDownloadURLValue}"/>
-        <echo message="          To: ${rewriteRepositoryURLValue}"/>
-    	<echo message="   Excluding no files since no composite artifacts, just agregate"/>
+        <echo message="Rewrote repository location URLs ..." />
+        <echo message="        From: ${commonRepositoryDownloadURLValue}" />
+        <echo message="          To: ${rewriteRepositoryURLValue}" />
+        <echo message="   Excluding no files since no composite artifacts, just agregate" />
         <!--
     	<echo message="   Excluding: ep.b3aggrcon"/>
         <echo message="   Excluding: ep.b3aggrcon, equinox.b3aggrcon"/>
@@ -669,9 +614,7 @@
 
     </target>
 
-    <target
-        name="default">
-        <echo
-            message="There is no default target for this build file"/>
+    <target name="default">
+        <echo message="There is no default target for this build file" />
     </target>
 </project>
