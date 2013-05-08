@@ -170,21 +170,21 @@
     	
     	<delete file="${BUILD_HOME}/${BRANCH_BUILD}.zip" failonerror="false" />
     	
-        <get src="${CGITURL}/${BUILD_MODEL}.git/snapshot/${BRANCH_BUILD}.zip" dest="${BUILD_HOME}" verbose="true" />
+        <get src="${CGITURL}/${BUILD_MODEL}.git/snapshot/${BUILD_MODEL}-${BRANCH_BUILD}.zip" dest="${BUILD_HOME}" verbose="true" />
          
-         <unzip src="${BUILD_HOME}/${BRANCH_BUILD}.zip" dest="${BUILD_HOME}/${TMPDIR_BUILD}"/>
+         <unzip src="${BUILD_HOME}/${BUILD_MODEL}-${BRANCH_BUILD}.zip"  dest="${BUILD_HOME}/${TMPDIR_BUILD}"/>
          
         <echo
             message="  copy aggregator files to ${BUILD_MODEL_DIR}"/>
         <echo
-            message="     from ${BUILD_HOME}/${TMPDIR_BUILD}/${BRANCH_BUILD}"/>
+            message="     from ${BUILD_HOME}/${TMPDIR_BUILD}/${BUILD_MODEL}-${BRANCH_BUILD}"/>
  
-         <copy todir="${BUILD_MODEL_DIR}">
-             <fileset dir="${BUILD_HOME}/${TMPDIR_BUILD}/${BRANCH_BUILD}" includes="**/*" />
+         <copy todir="${BUILD_MODEL_DIR}" flatten="true">
+             <fileset dir="${BUILD_HOME}/${TMPDIR_BUILD}/${BUILD_MODEL}-${BRANCH_BUILD}" includes="**/*" />
          </copy> 
             
     	<!-- cleanup temp working files -->
-    	<delete file="${BUILD_HOME}/${BRANCH_BUILD}.zip"/>
+    	<delete file="${BUILD_HOME}/${BUILD_MODEL}-${BRANCH_BUILD}.zip"/>
     	<delete dir="${BUILD_HOME}/${TMPDIR_BUILD}" />
     	
         <property
