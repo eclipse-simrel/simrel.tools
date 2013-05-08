@@ -168,7 +168,7 @@
         <echo
             message="  removing previous ${BRANCH_BUILD}.zip if it exists, in ${BUILD_HOME}"/>
     	
-    	<delete file="${BUILD_HOME}/${BRANCH_BUILD}.zip" failonerror="false" />
+    	<delete file="${BUILD_HOME}/${BUILD_MODEL}-${BRANCH_BUILD}.zip" failonerror="false" />
     	
         <get src="${CGITURL}/${BUILD_MODEL}.git/snapshot/${BUILD_MODEL}-${BRANCH_BUILD}.zip" dest="${BUILD_HOME}" verbose="true" />
          
