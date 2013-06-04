@@ -26,7 +26,7 @@ APP_NAME=org.eclipse.wtp.releng.tools.addRepoProperties
 
 devworkspace="${BUILD_HOME}"/addRepoPropertiesWorkspace
 
-devJRE=${JAVA_6_HOME}/jre/bin/java
+devJRE=${JAVA_7_HOME}/jre/bin/java
 
 ibmDevArgs="-Xms128M -Xmx256M -Dosgi.ws=gtk -Dosgi.os=linux -Dosgi.arch=x86" 
 
