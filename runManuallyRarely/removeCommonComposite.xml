@@ -7,7 +7,7 @@
         <p2.composite.repository>
             <repository
                 location="file:${REPO_ROOT}/releases/${release}/"
-                name="Eclipse Juno repository"/>
+                name="Eclipse Kepler repository"/>
             <remove>
                 <repository
                     location="201005070900"/>

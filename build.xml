@@ -12,7 +12,7 @@
 
     <fail
         unless="release"
-        message="release must be specified for this script, such as -Drelease=juno" />
+        message="release must be specified for this script, such as -Drelease=kepler" />
 
     <property
         name="aggrPropertyFile"

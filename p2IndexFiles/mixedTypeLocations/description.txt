@@ -1,9 +1,9 @@
 This p2.index files are created by recent versions of b3.aggregator, 
-for Juno, but this copy is provided for reference and use in earlier 
-repositories, such as subrepos under .../releases/indigo/<datestamp>/
+for Kepler, but this copy is provided for reference and use in earlier 
+repositories, such as subrepos under .../releases/juno/<datestamp>/
 There, typically, we have one compositeArtifacts.jar but a simple content.jar.
 
-Note we purposely do not put p2.index file in .../releases/indigo/<datestamp>/aggregate/
+Note we purposely do not put p2.index file in .../releases/juno/<datestamp>/aggregate/
 since does not really help save anything in that case as there is only artifacts.jar, 
 which happens to be looked for first anyway.
 

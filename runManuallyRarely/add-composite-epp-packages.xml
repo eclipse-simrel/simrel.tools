@@ -11,7 +11,7 @@
         <p2.composite.repository>
             <repository
                 location="file://${REPO_ROOT}/releases/${release}/"
-                name="Juno repository"/>
+                name="Kepler repository"/>
             <add>
                 <repository
                     location="http://download.eclipse.org/technology/epp/packages/${release}/" />

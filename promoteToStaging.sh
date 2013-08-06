@@ -6,7 +6,7 @@ function usage() {
 printf "\n\tScript to promote aggregation to staging area" >&2 
 printf "\n\tUsage: %s -s <stream> " "$(basename $0)" >&2 
 printf "\n\t\t%s" "where <stream> is 'main' or 'maintenance'" >&2 
-printf "\n\t\t%s" "(and main currently means kepler and maintenance means juno)" >&2 
+printf "\n\t\t%s" "(and main currently means luna and maintenance means kepler)" >&2 
 printf "\n" >&2 
 }
 
@@ -94,11 +94,11 @@ function checkForErrorExit
 
 case "$stream" in
         main)
-            export release=kepler
+            export release=luna
             stagingsegment=staging
             ;;
         maintenance)
-            export release=juno
+            export release=kepler
             stagingsegment=maintenance
             ;;
         *)
