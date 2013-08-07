@@ -1,0 +1,10 @@
+These config files are simply archived here for visibility (and 
+possible transfer to other test machines, etc.); they are not 
+actually used, from here, during a build. 
+Hence they might be "out of date" at any time. 
+
+Remember, to use 'relative' to snag all configs in appropriately named
+directories. Such as, on eclipse build machine:
+
+find /shared/jobs -regex ".*/simrel\..*/config.xml" -exec rsync -aR '{}'/ ~/temp   \; 2>/dev/null
+
