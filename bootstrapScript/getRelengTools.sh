@@ -8,12 +8,13 @@
 # of ${BUILD_TOOLS} on the file system. If completely fresh 
 # (first time) install, some "sanity check" code below needs 
 # overriden with -f after confirming correct current directory is 
-# correctly set in CC, something like /shared/simrel . 
+# correctly set in CC, something like /shared/juno . 
 
 
 # finds file on users path, before current directory
 # hence, non-production users can set their own values for test machines
-source aggr_properties.shsource
+# not expected on production machine, so we send error output to bit bucket
+source aggr_properties.shsource 2>/dev/null
 
 # define these essential variables for production machine, 
 # so aggr_properties.shsource does not have to exist there, 
@@ -45,7 +46,7 @@ do
         ;;
         f)    freshFlag=true
         ;;
-		c)    cleanFlag=true
+        c)    cleanFlag=true
         ;;
         ?)    usage
         exit 2
@@ -62,13 +63,13 @@ shift $(($OPTIND - 1))
 # if needed for debugging
 if $verboseFlag
 then
-	env
-	echo "fresh install: $freshFlag"
-	echo "verbose output: $verboseFlag"
-	echo "force clean prereqs: $cleanFlag"
-	echo "BUILD_TOOLS: ${BUILD_TOOLS}"
- 	echo "TMPDIR_TOOLS=${TMPDIR_TOOLS}"
-		
+    env
+    echo "fresh install: $freshFlag"
+    echo "verbose output: $verboseFlag"
+    echo "force clean prereqs: $cleanFlag"
+    echo "BUILD_TOOLS: ${BUILD_TOOLS}"
+    echo "TMPDIR_TOOLS=${TMPDIR_TOOLS}"
+
 fi
 
 echo "CGITURL: ${CGITURL}"
@@ -87,8 +88,9 @@ echo "Current Directory: ${PWD}"
 # the sanity check.   
 if ! $freshFlag && [[ ! -e ${BUILD_TOOLS} ]]
 then
-        echo "${BUILD_TOOLS} does not exist as sub directory";
-        exit 1;
+    echo "${BUILD_TOOLS} does not exist as sub directory";
+    usage
+    exit 1;
 fi
 
 
@@ -98,6 +100,7 @@ fi
 if [ -z "${BUILD_TOOLS}" ]
 then
     echo "The variable BUILD_TOOLS must be defined to run this script"
+    usage
     exit 1;
 fi
 
@@ -116,13 +119,14 @@ if [[ $RC != 0 ]]
 then
     echo "   ERROR: Failed to get ${BRANCH_TOOLS}.zip from  ${CGITURL}/${BUILD_TOOLS}.git/snapshot/${BRANCH_TOOLS}.zip"
     echo "   RC: $RC"
+    usage
     exit $RC
 fi
 
 quietZipFlag=-q
 if $verboseFlag
 then
-	quietZipFlag=
+    quietZipFlag=
 fi
 
 unzip ${quietZipFlag} -o ${BRANCH_TOOLS}.zip -d ${TMPDIR_TOOLS} 
@@ -130,14 +134,15 @@ RC=$?
 if [[ $RC != 0 ]] 
 then
     echo "ERROR:  Failed to unzip ${BRANCH_TOOLS}.zip to ${TMPDIR_TOOLS}"
-        echo "   RC: $RC"
+    echo "   RC: $RC"
+    usage
     exit $RC
 fi
 
 rsynchvFlag=
 if $verboseFlag
 then
-	rsynchvFlag=-v
+    rsynchvFlag=-v
 fi
 
 rsync $rsynchvFlag -r ${TMPDIR_TOOLS}/${BRANCH_TOOLS}/ ${BUILD_TOOLS}
@@ -145,8 +150,9 @@ RC=$?
 if [[ $RC != 0 ]] 
 then
     echo "ERROR: Failed to copy ${BUILD_TOOLS} from ${TMPDIR_TOOLS}/${BRANCH_TOOLS}/"
-        echo "   RC: $RC"
-        exit $RC
+    echo "   RC: $RC"
+    usage
+    exit $RC
 fi
 
 echo "    make sure releng control files are executable and have proper EOL ..."
@@ -156,19 +162,19 @@ echo "    Done. "
 
 if $cleanFlag
 then
-	# should very rarely need to do this, Like, once release. 
-	# But Eclipse (OSGi?) creates some files with 
-	# only group read access, so to complete remove them, must use 
-	# hudsonbuild ID to get completely clean. 
-	echo "    removing all of prereqs directory"
-	rm -fr prereqs
+    # should very rarely need to do this, Like, once release. 
+    # But Eclipse (OSGi?) creates some files with 
+    # only group read access, so to complete remove them, must use 
+    # hudsonbuild ID to get completely clean. 
+    echo "    removing all of prereqs directory"
+    rm -fr prereqs
 fi
 
 if ! $verboseFlag
 then
-	# cleanup unless verbose/debugging
- rm ${BRANCH_TOOLS}.zip* 2>/dev/null
-rm -fr ${TMPDIR_TOOLS} 2>/dev/null
+    # cleanup unless verbose/debugging
+    rm ${BRANCH_TOOLS}.zip* 2>/dev/null
+    rm -fr ${TMPDIR_TOOLS} 2>/dev/null
 fi
 
 exit 0
