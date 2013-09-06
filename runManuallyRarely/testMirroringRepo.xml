@@ -1,32 +1,34 @@
 <project
-    default="p2Mirror"
-    basedir=".">
+  default="p2Mirror"
+  basedir=".">
 	<!-- for misc manual tests only -->
-    <property name="todir" value="/home/shared/simrel/temp" />
-    <target
-        name="p2Mirror">
-        <p2.mirror ignoreErrors="true" log="${todir}/mirrorlog.txt">
-            <repository 
-                location="file:/${todir}" name="A temp test repo" />
-            <source>
-                <repository
-                    location="file://home/data/httpd/download.eclipse.org/releases/juno/201303010900/" />
-            </source>
-            <slicingOptions platformFilter="true" />         
-        </p2.mirror>
-    	
-    	
-    	
-    	
-    	 <!-- mirror from build results, comparing against previous builds that are in the composite repo -->
- <p2.mirror>
-     <source location="file:${assemblyTempDir}/${buildLabel}"/>
-     <destination location="file:${builder}/composite/${buildLabel}"/>
-     <comparator comparator="org.eclipse.equinox.p2.repository.tools.jar.comparator" comparatorLog="${buildDirectory}/comparator.log">
-         <repository location="file:${builder}/composite" />
-     </comparator>
- </p2.mirror>
-    	
-    </target>
+  <property
+    name="todir"
+    value="/shared/simrel/temp" />
+  <target name="p2Mirror">
+    <p2.mirror
+      ignoreErrors="true"
+      log="${todir}/mirrorlog.txt">
+      <repository
+        location="file:/${todir}"
+        name="A temp test repo" />
+      <source>
+        <repository location="file://home/data/httpd/download.eclipse.org/releases/luna/201308230900/" />
+      </source>
+      <slicingOptions platformFilter="true" />
+    </p2.mirror>
+
+    <!-- mirror from build results, comparing against previous builds that are in the composite repo 
+    <p2.mirror>
+      <source location="file:${assemblyTempDir}/${buildLabel}" />
+      <destination location="file:${builder}/composite/${buildLabel}" />
+      <comparator
+        comparator="org.eclipse.equinox.p2.repository.tools.jar.comparator"
+        comparatorLog="${buildDirectory}/comparator.log">
+        <repository location="file:${builder}/composite" />
+      </comparator>
+    </p2.mirror>
+-->
+  </target>
 </project>
 

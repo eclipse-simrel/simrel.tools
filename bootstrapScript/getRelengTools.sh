@@ -8,7 +8,7 @@
 # of ${BUILD_TOOLS} on the file system. If completely fresh 
 # (first time) install, some "sanity check" code below needs 
 # overriden with -f after confirming correct current directory is 
-# correctly set in CC, something like /shared/juno . 
+# correctly set in CC, something like /shared/simrel/luna . 
 
 
 # finds file on users path, before current directory
