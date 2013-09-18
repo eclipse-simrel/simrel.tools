@@ -20,7 +20,7 @@ source aggr_properties.shsource 2>/dev/null
 # so aggr_properties.shsource does not have to exist there, 
 # for this script (in this directory)
 BUILD_TOOLS=${BUILD_TOOLS:-org.eclipse.simrel.tools}
-BRANCH_TOOLS=${BRANCH_TOOLS:-master}
+BRANCH_TOOLS=${BRANCH_TOOLS:-david_williams/testnewbuild}
 TMPDIR_TOOLS=${TMPDIR_TOOLS:-sbtools}
 CGITURL=${CGITURL:-http://git.eclipse.org/c/simrel}
 

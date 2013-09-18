@@ -240,7 +240,7 @@
             <properties>buildWorkarea=/shared/simrel/luna/
 aggrPropertyFile=production.properties
 release=luna
-BRANCH_BUILD=master
+BRANCH_BUILD=david_williams/testnewbuild
 stagingsegment=staging</properties>
           </hudson.tasks.Ant>
         </originalValue>
