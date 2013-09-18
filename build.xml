@@ -107,21 +107,21 @@
 
     	<!-- get raw files from git -->
 
-        <echo message="  removing previous ${env.BRANCH_TESTS_FILENAME}.zip if it exists, in ${BUILD_HOME}" />
+        <echo message="  removing previous HOLD_BRANCH.zip if it exists, in ${BUILD_HOME}" />
 
         <delete
-            file="${BUILD_HOME}/${env.BRANCH_TESTS_FILENAME}.zip"
+            file="${BUILD_HOME}/HOLD_BRANCH.zip"
             failonerror="false" />
 
         <echo message="   getting ${CGITURL}/${RELENG_TESTS}.git/snapshot/${BRANCH_TESTS}.zip to ${BUILD_HOME}" />
 
         <get
             src="${CGITURL}/${RELENG_TESTS}.git/snapshot/${BRANCH_TESTS}.zip"
-            dest="${BUILD_HOME}/${env.BRANCH_TESTS_FILENAME}.zip"
+            dest="${BUILD_HOME}/HOLD_BRANCH.zip"
             verbose="true" />
 
         <unzip
-            src="${BUILD_HOME}/${env.BRANCH_TESTS_FILENAME}.zip"
+            src="${BUILD_HOME}/HOLD_BRANCH.zip"
             dest="${BUILD_HOME}/${TMPDIR_TESTS}" />
 
         <copy todir="${ECLIPSE_HOME_TEST}/eclipse/dropins/${RELENG_TESTS}">
@@ -131,7 +131,7 @@
         </copy>
     	
     	<!-- cleanup temp working files -->
-        <delete file="${BUILD_HOME}/${env.BRANCH_TESTS_FILENAME}.zip" />
+        <delete file="${BUILD_HOME}/HOLD_BRANCH.zip" />
         <delete dir="${BUILD_HOME}/${TMPDIR_TESTS}" />
 
     </target>
