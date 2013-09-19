@@ -9,7 +9,7 @@
         -propertyFile on command line, so that the property values can be "nested"
         in other property values and evaluated lazily.
     -->
- 
+
     <fail
         unless="release"
         message="release must be specified for this script, such as -Drelease=kepler" />
@@ -20,11 +20,11 @@
 
     <property file="${aggrPropertyFile}" />
 
-    <!-- 
-	unrewriteMapsLine is a variable, but should never have to be chagned for current sim rel 
-	We make the strong assumption that, in *.b3aggrcon file, this string occurs only in 
-	repository location attributes. If not true, more complex parsing/replacement would be required.
-	-->
+    <!--
+        unrewriteMapsLine is a variable, but should never have to be chagned for current sim rel
+        We make the strong assumption that, in *.b3aggrcon file, this string occurs only in
+        repository location attributes. If not true, more complex parsing/replacement would be required.
+    -->
 
     <property
         name="commonRepositoryDownloadURLValue"
@@ -85,7 +85,7 @@
             value="org.eclipse.equinox.p2.director" />
 
         <!-- usually do not need the version, just to "get the latest" from
-	            buckminster builder site -version 1.0.0.v20090415-1651 -->
+            buckminster builder site -version 1.0.0.v20090415-1651 -->
         <property
             name="VM_ARGS"
             value="-vmargs -Xmx256m" />
@@ -105,7 +105,7 @@
             perm="ugo+x"
             verbose="true" />
 
-    	<!-- get raw files from git -->
+        <!-- get raw files from git -->
 
         <echo message="  removing previous HOLD_BRANCH.zip if it exists, in ${BUILD_HOME}" />
 
@@ -129,8 +129,8 @@
                 dir="${BUILD_HOME}/${TMPDIR_TESTS}/${BRANCH_TESTS}"
                 includes="**/*" />
         </copy>
-    	
-    	<!-- cleanup temp working files -->
+
+        <!-- cleanup temp working files -->
         <delete file="${BUILD_HOME}/HOLD_BRANCH.zip" />
         <delete dir="${BUILD_HOME}/${TMPDIR_TESTS}" />
 
@@ -157,6 +157,75 @@
             <arg
                 line="-data ${eclipseWorkspace} -debug -nosplash --launcher.suppressErrors -vm ${JAVA_EXEC_DIR} -application ${APP_NAME} ${OTHER_ARGS_TOOLS} ${VM_ARGS}" />
         </exec>
+    </target>
+
+    <macrodef name="git-clone">
+        <attribute name="repository" />
+        <attribute name="dir" />
+        <!-- if not set, assume branch=master -->
+        <attribute
+            name="branch"
+            default="master" />
+        <sequential>
+            <echo message="execute git in @{dir}" />
+            <echo message="git clone -b @{branch} @{repository}" />
+            <exec
+                executable="git"
+                dir="@{dir}">
+                <arg line="clone -b @{branch} @{repository}" />
+            </exec>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="git-pull">
+        <attribute name="dir" />
+        <sequential>
+            <echo message="execute git in @{dir}" />
+            <echo message="git pull" />
+            <exec
+                executable="git"
+                dir="@{dir}">
+                <arg line="pull" />
+            </exec>
+        </sequential>
+    </macrodef>
+
+    <target
+        name="getModelFromGit"
+        depends="init,cloneRepo,pullRepo"
+        unless="modelRetrived">
+
+        <echo message="cloned/pulled repo ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
+
+        <property
+            name="modelRetrived"
+            value="true" />
+    </target>
+
+    <target
+        name="cloneRepo"
+        depends="init"
+        unless="localRepoExists">
+
+        <echo message="git clone task to execute in ${BUILD_HOME} using branch ${BRANCH_BUILD}" />
+
+        <git-clone
+            repository="git://git.eclipse.org/gitroot/simrel/${BUILD_MODEL}.git"
+            dir="${BUILD_HOME}"
+            branch="${BRANCH_BUILD}" />
+
+    </target>
+
+    <target
+        name="pullRepo"
+        depends="init"
+        if="localRepoExists">
+
+        <echo message="git pull task to execute in ${BUILD_MODEL_DIR}" />
+        <!-- assuming on correct branch, for now -->
+        <git-pull dir="${BUILD_MODEL_DIR}" />
+
+
     </target>
 
     <target
@@ -192,9 +261,9 @@
             <fileset
                 dir="${BUILD_HOME}/${TMPDIR_BUILD}/${BUILD_MODEL}-${BRANCH_BUILD}"
                 includes="**/*" />
-        </copy> 
-            
-    	<!-- cleanup temp working files -->
+        </copy>
+
+        <!-- cleanup temp working files -->
         <delete file="${BUILD_HOME}/${BUILD_MODEL}-${BRANCH_BUILD}.zip" />
         <delete dir="${BUILD_HOME}/${TMPDIR_BUILD}" />
 
@@ -205,7 +274,7 @@
 
     <target
         name="runBothBuilders"
-        depends="init,getModel,rewriteRepositoryURL">
+        depends="init,getModelFromGit,rewriteRepositoryURL">
 
         <antcall target="runBuckyBuild" />
 
@@ -216,14 +285,14 @@
     </target>
     <target
         name="runAggregator"
-        depends="init,getModel,rewriteRepositoryURL">
+        depends="init,getModelFromGit,rewriteRepositoryURL">
         <!--
             If not otherwise set in properties file, use these values. Note
             the build.eclipse.org production machine must override these values for property
             values appropriate for it.
         -->
 
-    	<!-- -trustedContributions Eclipse,Equinox -->
+        <!-- -trustedContributions Eclipse,Equinox -->
         <property
             name="AGGREGATOR_APP_ARGS"
             value="-buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr
@@ -244,9 +313,9 @@
             value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
         <echo message="AGGREGATOR_APP_ARGS: ${AGGREGATOR_APP_ARGS}" />
 
-        <!-- we will clean the aggregation directory ourselves, as work around for bug 354321   
-    		https://bugs.eclipse.org/bugs/show_bug.cgi?id=354321
-    		-->
+        <!-- we will clean the aggregation directory ourselves, as work around for bug 354321
+            https://bugs.eclipse.org/bugs/show_bug.cgi?id=354321
+        -->
         <echo message="Removing any previous aggregation results, from ${AGGREGATOR_RESULTS}" />
         <delete
             dir="${AGGREGATOR_RESULTS}"
@@ -272,25 +341,25 @@
 
     <target
         name="runAggregatorBuildOnly"
-        depends="init,getModel,rewriteRepositoryURL">
+        depends="init,getModelFromGit,rewriteRepositoryURL">
         <!--
-	            If not otherwise set in properties file, use these values. Note
-	            the build.eclipse.org production machine must override these values for property
-	            values appropriate for it.
-	        -->
+            If not otherwise set in properties file, use these values. Note
+            the build.eclipse.org production machine must override these values for property
+            values appropriate for it.
+        -->
 
         <property
             name="AGG_APP_ARGS"
             value="${AGGREGATOR_APP_ARGS_BUILDONLY}" />
 
         <!-- Important: on any non-production machines it is important to _not_ use
-	            eclipse.p2.mirrors=false, so this value should be supplied by calling script's
-	            properties. Note, we include '-vmargs' here, in case there are not any. Not
-	            sure if the use of -vmargs _requires_ arguments or not, but probably would.
-	            note: -Declipse.p2.MD5Check=false may be needed as a workaround for bug [253713]
-	            (should not actually be required ... but have left note for historical reference)
-	            note: rememeber that JAVA_6 should not be used for jar processor, see
-	            for example, bug 244603 and bug 279596. -->
+            eclipse.p2.mirrors=false, so this value should be supplied by calling script's
+            properties. Note, we include '-vmargs' here, in case there are not any. Not
+            sure if the use of -vmargs _requires_ arguments or not, but probably would.
+            note: -Declipse.p2.MD5Check=false may be needed as a workaround for bug [253713]
+            (should not actually be required ... but have left note for historical reference)
+            note: rememeber that JAVA_6 should not be used for jar processor, see
+            for example, bug 244603 and bug 279596. -->
         <property
             name="BUILDER_VM_ARGS"
             value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
@@ -314,25 +383,25 @@
 
     <target
         name="runAggregatorVerifyOnly"
-        depends="init,getModel,rewriteRepositoryURL">
+        depends="init,getModelFromGit,rewriteRepositoryURL">
         <!--
-                If not otherwise set in properties file, use these values. Note
-                the build.eclipse.org production machine must override these values for property
-                values appropriate for it.
-            -->
+            If not otherwise set in properties file, use these values. Note
+            the build.eclipse.org production machine must override these values for property
+            values appropriate for it.
+        -->
 
         <property
             name="AGG_APP_ARGS"
             value="${AGGREGATOR_APP_ARGS_VERIFYONLY}" />
 
         <!-- Important: on any non-production machines it is important to _not_ use
-                eclipse.p2.mirrors=false, so this value should be supplied by calling script's
-                properties. Note, we include '-vmargs' here, in case there are not any. Not
-                sure if the use of -vmargs _requires_ arguments or not, but probably would.
-                note: -Declipse.p2.MD5Check=false may be needed as a workaround for bug [253713]
-                (should not actually be required ... but have left note for historical reference)
-                note: rememeber that JAVA_6 should not be used for jar processor, see
-                for example, bug 244603 and bug 279596. -->
+            eclipse.p2.mirrors=false, so this value should be supplied by calling script's
+            properties. Note, we include '-vmargs' here, in case there are not any. Not
+            sure if the use of -vmargs _requires_ arguments or not, but probably would.
+            note: -Declipse.p2.MD5Check=false may be needed as a workaround for bug [253713]
+            (should not actually be required ... but have left note for historical reference)
+            note: rememeber that JAVA_6 should not be used for jar processor, see
+            for example, bug 244603 and bug 279596. -->
         <property
             name="BUILDER_VM_ARGS"
             value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
@@ -358,12 +427,12 @@
 
     <target
         name="runHybrid"
-        depends="init,getModel,rewriteRepositoryURL">
+        depends="init,getModelFromGit,rewriteRepositoryURL">
         <!--
-	            If not otherwise set in properties file, use these values. Note
-	            the build.eclipse.org production machine must override these values for property
-	            values appropriate for it.
-	        -->
+            If not otherwise set in properties file, use these values. Note
+            the build.eclipse.org production machine must override these values for property
+            values appropriate for it.
+        -->
 
         <property
             name="HYBRID_APP_ARGS"
@@ -373,13 +442,13 @@
 	            --logURL ${logURL}" />
 
         <!-- Important: on any non-production machines it is important to _not_ use
-	            eclipse.p2.mirrors=false, so this value should be supplied by calling script's
-	            properties. Note, we include '-vmargs' here, in case there are not any. Not
-	            sure if the use of -vmargs _requires_ arguments or not, but probably would.
-	            note: -Declipse.p2.MD5Check=false may be needed as a workaround for bug [253713]
-	            (should not actually be required ... but have left note for historical reference)
-	            note: rememeber that JAVA_6 should not be used for jar processor, see
-	            for example, bug 244603 and bug 279596. -->
+            eclipse.p2.mirrors=false, so this value should be supplied by calling script's
+            properties. Note, we include '-vmargs' here, in case there are not any. Not
+            sure if the use of -vmargs _requires_ arguments or not, but probably would.
+            note: -Declipse.p2.MD5Check=false may be needed as a workaround for bug [253713]
+            (should not actually be required ... but have left note for historical reference)
+            note: rememeber that JAVA_6 should not be used for jar processor, see
+            for example, bug 244603 and bug 279596. -->
         <property
             name="BUILDER_VM_ARGS"
             value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
@@ -406,11 +475,15 @@
         depends="getBuildTimestamp, getJobName, getBuildWorkarea"
         unless="isInitialized">
 
-        <!-- often, especially for Huson slaves, it is easiest to set hostForURL "manually" in properties or 
-    	on command line, e.g. -DhostForURL=hudson ... but, if not defined yet, we'll fallback to reasonable guess -->
+        <!-- often, especially for Huson slaves, it is easiest to set hostForURL "manually" in properties or
+            on command line, e.g. -DhostForURL=hudson ... but, if not defined yet, we'll fallback to reasonable guess -->
         <property
             name="hostForURL"
             value="${HOSTNAME}" />
+
+        <condition property="localRepoExists">
+            <available file="${BUILD_MODEL_DIR}" />
+        </condition>
 
         <condition
             property="logURL"
@@ -422,7 +495,8 @@
             name="eclipseWorkspace"
             value="${buildWorkarea}/eclipseworkingspace" />
 
-        <!-- if the eclipse workspace exists, remove it, to make sure we are starting "fresh". Eclipse will create it. Be sure some "archive artifacts" job saves it away, if desired. -->
+        <!-- if the eclipse workspace exists, remove it, to make sure we are starting "fresh". Eclipse will create it. Be sure some "archive
+            artifacts" job saves it away, if desired. -->
         <delete
             dir="${eclipseWorkspace}"
             quiet="true" />
@@ -589,7 +663,7 @@
     </target>
 
     <!-- Only rewrite, if a value has been provided -->
-	<!-- TODO: should make the "exclude" part automatic based on presence/abscense of "useTrusted" property -->
+    <!-- TODO: should make the "exclude" part automatic based on presence/abscense of "useTrusted" property -->
     <target
         name="rewriteRepositoryURL"
         if="rewriteRepositoryURLValue">
@@ -598,9 +672,9 @@
             token="${commonRepositoryDownloadURLValue}"
             value="${rewriteRepositoryURLValue}">
             <include name="*.b3aggrcon" />
-        	<!--
-            <exclude name="ep.b3aggrcon"/>
-            <exclude name="equinox.b3aggrcon"/>
+            <!--
+                <exclude name="ep.b3aggrcon"/>
+                <exclude name="equinox.b3aggrcon"/>
             -->
         </replace>
         <echo message="Rewrote repository location URLs ..." />
@@ -608,8 +682,8 @@
         <echo message="          To: ${rewriteRepositoryURLValue}" />
         <echo message="   Excluding no files since no composite artifacts, just agregate" />
         <!--
-    	<echo message="   Excluding: ep.b3aggrcon"/>
-        <echo message="   Excluding: ep.b3aggrcon, equinox.b3aggrcon"/>
+            <echo message=" Excluding: ep.b3aggrcon"/>
+            <echo message=" Excluding: ep.b3aggrcon, equinox.b3aggrcon"/>
         -->
 
     </target>
