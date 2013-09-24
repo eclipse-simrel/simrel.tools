@@ -177,14 +177,25 @@
     </sequential>
   </macrodef>
 
-   <!-- 
-       We do modify the source tree during build, to change URLs to local file system, 
-       if building on build.eclipse.org, so need to 'reset' before pull
-   -->
+  <!--
+    We do modify the source tree during build, to change URLs to local file system,
+    if building on build.eclipse.org, so need to 'clean' and 'reset' before pull.
+    In the unlikely event we have non-pushed commits, we use 'stash' and 'stash -+clear'
+    to get rid of those. (We in Sim. Release don't currently do any commits, in build
+    repo ... so this is more for future safety).
+  -->
   <macrodef name="git-pull">
     <attribute name="dir" />
     <sequential>
       <echo message="execute git in @{dir}" />
+      <echo message="git clean -d -ff -x" />
+      <exec
+        executable="git"
+        failonerror="true"
+        resultproperty="RCclean"
+        dir="@{dir}">
+        <arg line="clean -d -ff -x" />
+      </exec>
       <echo message="git reset --hard" />
       <exec
         executable="git"
