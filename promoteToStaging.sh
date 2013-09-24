@@ -112,6 +112,15 @@ esac
 # must be called after case statement sets release and statingsegment
 source aggr_properties.shsource
 
+if [[ ! -e "${BUILD_HOME}"/lockfile ]]
+then
+   # if lock file does not exist, then do not try and promote, just exit.
+   # For now, we'll write message, but eventually, after cronjob proven, we'll 
+   # do this silently. 
+   echo "No lock file found, so exiting promote"
+   exit
+fi
+
 
 fromDirectory=${AGGREGATOR_RESULTS}
 export toDirectory=${stagingDirectory} 
