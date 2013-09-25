@@ -99,6 +99,7 @@ function removeLock
     # remove lock file from hundson build's "pauseAll.sh" script once we are all done.
     # remember, we need to _always_ remove the lock file, so do not "exit" from script with calling removeLock
     rm -vf "${BUILD_HOME}"/lockfile
+    rm -vf "${BUILD_HOME}"/beingPromoted
 }
 
 function checkForErrorExit
@@ -136,18 +137,28 @@ esac
 
 # finds file on users path, before current directory
 # hence, non-production users can set their own values for test machines
-# must be called after case statement sets release and statingsegment
+# must be called after case statement sets release and staging segment
+
 source aggr_properties.shsource
+
+# First check if being promoted by another job. If so, can exit immediately
+if [[ -e "${BUILD_HOME}"/beingPromoted ]]
+then
+   exit
+fi
+
 
 if [[ ! -e "${BUILD_HOME}"/lockfile ]]
 then
    # if lock file does not exist, then do not try and promote, just exit.
    # For now, we'll write message, but eventually, after cronjob proven, we'll 
    # do this silently. 
-   echo "No lock file found, so exiting promote"
+   # echo "No lock file found, so exiting promote"
    exit
 fi
 
+# first thing is to create the beingPromoted file, so other promote jobs won't run
+touch "${BUILD_HOME}"/beingPromoted
 
 fromDirectory=${AGGREGATOR_RESULTS}
 export toDirectory=${stagingDirectory} 
