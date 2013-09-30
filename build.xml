@@ -46,7 +46,7 @@
       value="org.eclipse.equinox.p2.director" />
     <property
       name="OTHER_ARGS_AGG"
-      value="-metadataRepository http://davidw.com/modeling/emft/b3/updates-4.3/ -artifactRepository http://davidw.com/downloads/modeling/emft/b3/updates-4.3/ -installIU org.eclipse.b3.aggregator.engine.feature.feature.group" />
+      value="-metadataRepository http://davidw.com/downloads/modeling/emft/b3/updates-4.3/ -artifactRepository http://davidw.com/downloads/modeling/emft/b3/updates-4.3/ -installIU org.eclipse.b3.aggregator.engine.feature.feature.group" />
  <!--       
     <property
       name="OTHER_ARGS_AGG"
