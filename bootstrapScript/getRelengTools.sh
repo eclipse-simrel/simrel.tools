@@ -113,7 +113,7 @@ mkdir -p "${BUILD_TOOLS}"
 rm ${BRANCH_TOOLS}.zip* 2>/dev/null
 rm -fr ${TMPDIR_TOOLS} 2>/dev/null 
 
-wget --no-verbose -O  ${BRANCH_TOOLS}.zip ${CGITURL}/${BUILD_TOOLS}.git/snapshot/${BRANCH_TOOLS}.zip 2>&1
+wget --no-verbose -O  ${BRANCH_TOOLS////_}.zip ${CGITURL}/${BUILD_TOOLS}.git/snapshot/${BRANCH_TOOLS}.zip 2>&1
 RC=$?
 if [[ $RC != 0 ]] 
 then
@@ -129,7 +129,7 @@ then
     quietZipFlag=
 fi
 
-unzip ${quietZipFlag} -o ${BRANCH_TOOLS}.zip -d ${TMPDIR_TOOLS} 
+unzip ${quietZipFlag} -o ${BRANCH_TOOLS////_}.zip -d ${TMPDIR_TOOLS} 
 RC=$?
 if [[ $RC != 0 ]] 
 then
