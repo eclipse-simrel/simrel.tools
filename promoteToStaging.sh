@@ -139,7 +139,23 @@ esac
 # hence, non-production users can set their own values for test machines
 # must be called after case statement sets release and staging segment
 
-source aggr_properties.shsource
+# It is required to specify a top level directory, that will contain all else involved with build, control and output
+if [[ -z "${BUILD_HOME}" ]]
+then
+   export BUILD_HOME=/shared/simrel/${release}
+   echo "BUILD_HOME: $BUILD_HOME"
+fi
+
+# remember to leave no slashes on first filename in source command,
+# so that users path is used to find it (first, if it exists)
+# variables that user might want/need to override, should be defined, 
+# in our own aggr_properties.shsource using the X=${X:-"xyz"} syntax.
+source aggr_properties.shsource 2>/dev/null
+source ${BUILD_HOME}/org.eclipse.simrel.tools/aggr_properties.shsource
+
+echo "stream: $stream"
+echo "release: $release"
+echo "stagingSegment: $stagingSegment"
 
 # First check if being promoted by another job. If so, can exit immediately
 if [[ -e "${BUILD_HOME}"/beingPromoted ]]
@@ -161,11 +177,9 @@ fi
 touch "${BUILD_HOME}"/beingPromoted
 
 fromDirectory=${AGGREGATOR_RESULTS}
-export toDirectory=${stagingDirectory} 
+export toDirectory=${stagingDirectory}
 
-echo "stream: $stream"
-echo "release: $release"
-echo "stagingSegment: $stagingSegment"
+
 
 echo "fromDirectory: $fromDirectory"
 echo "toDirectory: $toDirectory"
