@@ -150,7 +150,7 @@ else
         checkForErrorExit $? "could not copy files as expected"
 
         # static index page
-    rsync -vp templateFiles/release/${releasesegment}/index.html ${toDirectory}
+        rsync -vp "${BUILD_TOOLS_DIR}/templateFiles/release/${releasesegment}/index.html" ${toDirectory}
         checkForErrorExit $? "could not copy files as expected"
 
 

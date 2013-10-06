@@ -1,6 +1,33 @@
 #!/usr/bin/env bash
 # script to copy update jars from their working area to the staging area
 
+# Simple utility to run as cronjob to run Eclipse Platform builds
+# Normally resides in $BUILD_HOME
+
+# Start with minimal path for consistency across machines
+# plus, cron jobs do not inherit an environment
+# care is needed not have anything in ${HOME}/bin that would effect the build 
+# unintentionally, but is required to make use of "source buildeclipse.shsource" on 
+# local machines.  
+# Likely only a "release engineer" would be interested, such as to override "SIGNING" (setting it 
+# to false) for a test I-build on a remote machine. 
+export PATH=/usr/local/bin:/usr/bin:/bin:${HOME}/bin
+# unset common variables (some defined for e4Build) which we don't want (or, set ourselves)
+unset JAVA_HOME
+unset JAVA_ROOT
+unset JAVA_JRE
+unset CLASSPATH
+unset JAVA_BINDIR
+unset JRE_HOME
+
+# 0002 is often the default for shell users, but it is not when ran from
+# a cron job, so we set it explicitly, so releng group has write access to anything
+# we create.
+oldumask=`umask`
+umask 0002
+# Remember, don't echo except when testing, or mail will be sent each time it runs. 
+#echo "umask explicitly set to 0002, old value was $oldumask"
+
 
 function usage() {
 printf "\n\tScript to promote aggregation to staging area" >&2 
@@ -72,6 +99,7 @@ function removeLock
     # remove lock file from hundson build's "pauseAll.sh" script once we are all done.
     # remember, we need to _always_ remove the lock file, so do not "exit" from script with calling removeLock
     rm -vf "${BUILD_HOME}"/lockfile
+    rm -vf "${BUILD_HOME}"/beingPromoted
 }
 
 function checkForErrorExit
@@ -109,9 +137,28 @@ esac
 
 # finds file on users path, before current directory
 # hence, non-production users can set their own values for test machines
-# must be called after case statement sets release and statingsegment
+# must be called after case statement sets release and staging segment
+
 source aggr_properties.shsource
 
+# First check if being promoted by another job. If so, can exit immediately
+if [[ -e "${BUILD_HOME}"/beingPromoted ]]
+then
+   exit
+fi
+
+
+if [[ ! -e "${BUILD_HOME}"/lockfile ]]
+then
+   # if lock file does not exist, then do not try and promote, just exit.
+   # For now, we'll write message, but eventually, after cronjob proven, we'll 
+   # do this silently. 
+   # echo "No lock file found, so exiting promote"
+   exit
+fi
+
+# first thing is to create the beingPromoted file, so other promote jobs won't run
+touch "${BUILD_HOME}"/beingPromoted
 
 fromDirectory=${AGGREGATOR_RESULTS}
 export toDirectory=${stagingDirectory} 
@@ -164,7 +211,7 @@ else
     checkForErrorExit $? "could not copy files as expected"
 
     # copy standard index page
-    rsync -vp templateFiles/${stagingsegment}/index.html ${toDirectory}
+    rsync -vp "${BUILD_TOOLS_DIR}/templateFiles/${stagingsegment}/index.html" ${toDirectory}
     checkForErrorExit $? "could not copy files as expected"
 
 
