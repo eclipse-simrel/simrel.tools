@@ -176,12 +176,12 @@ then
     rm -fr prereqs
 fi
 
-if ! $verboseFlag
-then
+#if ! $verboseFlag
+#then
     # cleanup unless verbose/debugging
     rm ${BRANCH_TOOLS////_}.zip* 
     rm -fr ${TMPDIR_TOOLS} 
-fi
+#fi
 
 exit 0
 
