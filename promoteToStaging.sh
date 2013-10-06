@@ -143,7 +143,7 @@ esac
 if [[ -z "${BUILD_HOME}" ]]
 then
    export BUILD_HOME=/shared/simrel/${release}
-   echo "BUILD_HOME: $BUILD_HOME"
+   #echo "BUILD_HOME: $BUILD_HOME"
 fi
 
 # remember to leave no slashes on first filename in source command,
@@ -152,10 +152,6 @@ fi
 # in our own aggr_properties.shsource using the X=${X:-"xyz"} syntax.
 source aggr_properties.shsource 2>/dev/null
 source ${BUILD_HOME}/org.eclipse.simrel.tools/aggr_properties.shsource
-
-echo "stream: $stream"
-echo "release: $release"
-echo "stagingSegment: $stagingSegment"
 
 # First check if being promoted by another job. If so, can exit immediately
 if [[ -e "${BUILD_HOME}"/beingPromoted ]]
@@ -180,10 +176,13 @@ fromDirectory=${AGGREGATOR_RESULTS}
 export toDirectory=${stagingDirectory}
 
 
-
+echo "BUILD_HOME: $BUILD_HOME"
+echo "BUILD_TOOLS_DIR: ${BUILD_TOOLS_DIR}"
+echo "stream: $stream"
+echo "release: $release"
+echo "stagingSegment: $stagingSegment"
 echo "fromDirectory: $fromDirectory"
 echo "toDirectory: $toDirectory"
-echo "BUILD_TOOLS_DIR: ${BUILD_TOOLS_DIR}"
 
 # make sure 'toDirectory' has been defined and is no zero length, or 
 # else following will eval to "rm -fr /*" ... potentially catastrophic

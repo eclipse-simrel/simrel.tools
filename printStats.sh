@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
-FAIL_ON_ERROR=false      
-source aggr_properties.shsource
+FAIL_ON_ERROR=false
+
+# remember to leave no slashes on first filename in source command,
+# so that users path is used to find it (first, if it exists)
+# variables that user might want/need to override, should be defined, 
+# in our own aggr_properties.shsource using the X=${X:-"xyz"} syntax.
+source aggr_properties.shsource 2>/dev/null
+source ${BUILD_HOME}/org.eclipse.simrel.tools/aggr_properties.shsource
 
 if [ -z "${toDirectory}" ] 
 then

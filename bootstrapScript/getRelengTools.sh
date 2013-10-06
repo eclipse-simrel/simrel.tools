@@ -10,15 +10,21 @@
 # overriden with -f after confirming correct current directory is 
 # correctly set in CC, something like /shared/simrel/luna . 
 
+# It is required to specify a top level directory, that will contain all else involved with build, control and output
+if [[ -z "${BUILD_HOME}" ]]
+then
+   export BUILD_HOME=/shared/simrel/${release}
+   echo "BUILD_HOME: $BUILD_HOME"
+fi
 
-# finds file on users path, before current directory
-# hence, non-production users can set their own values for test machines
-# not expected on production machine, so we send error output to bit bucket
+# remember to leave no slashes on first filename in source command,
+# so that users path is used to find it (first, if it exists)
+# variables that user might want/need to override, should be defined, 
+# in our own aggr_properties.shsource using the X=${X:-"xyz"} syntax.
 source aggr_properties.shsource 2>/dev/null
+source ${BUILD_HOME}/org.eclipse.simrel.tools/aggr_properties.shsource
 
-# define these essential variables for production machine, 
-# so aggr_properties.shsource does not have to exist there, 
-# for this script (in this directory)
+
 BUILD_TOOLS=${BUILD_TOOLS:-org.eclipse.simrel.tools}
 BRANCH_TOOLS=${BRANCH_TOOLS:-master}
 TMPDIR_TOOLS=${TMPDIR_TOOLS:-sbtools}
