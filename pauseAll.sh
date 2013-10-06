@@ -32,6 +32,13 @@ if [ -z $BUILD_HOME ] ; then
    exit 1
 fi
 
+BUILD_STATUS_FAILED="${BUILD_HOME}"/buildStatusFailed
+
+if [ -f $BUILD_STATUS_FAILED ] ; then
+   echo " ERROR: BUILD_STATUS_FAILED existed. Assuming previous build failed, so will not lock for promotion.";
+   exit 1
+fi
+
 LOCKFILE="${BUILD_HOME}"/lockfile
 
 if [[ -f "$LOCKFILE" ]]
