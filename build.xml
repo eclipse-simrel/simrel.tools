@@ -47,15 +47,18 @@
     <property
       name="OTHER_ARGS_AGG"
       value="-metadataRepository http://download.eclipse.org/modeling/emft/b3/updates-4.3/ -artifactRepository http://download.eclipse.org/modeling/emft/b3/updates-4.3/ -installIU org.eclipse.b3.aggregator.engine.feature.feature.group" />
- <!--       
-    <property
+    <!--
+      <property
       name="OTHER_ARGS_AGG"
-      value="-metadataRepository http://download.eclipse.org/modeling/emft/b3/updates-4.3/ -artifactRepository http://download.eclipse.org/modeling/emft/b3/updates-4.3/ -installIU org.eclipse.b3.aggregator.engine.feature.feature.group" />
-     
-    <property
+      value="-metadataRepository http://download.eclipse.org/modeling/emft/b3/updates-4.3/ -artifactRepository http://download.eclipse.org/modeling/emft/b3/updates-4.3/
+      -installIU org.eclipse.b3.aggregator.engine.feature.feature.group" />
+
+      <property
       name="OTHER_ARGS_AGG"
-      value="-metadataRepository http://download.eclipse.org/modeling/emft/b3/updates-4.3/,http://download.eclipse.org/releases/kepler -artifactRepository http://download.eclipse.org/modeling/emft/b3/updates-4.3/,http://download.eclipse.org/releases/kepler -installIU org.eclipse.b3.aggregator.engine.feature.feature.group" />
-       -->
+      value="-metadataRepository http://download.eclipse.org/modeling/emft/b3/updates-4.3/,http://download.eclipse.org/releases/kepler
+      -artifactRepository http://download.eclipse.org/modeling/emft/b3/updates-4.3/,http://download.eclipse.org/releases/kepler -installIU
+      org.eclipse.b3.aggregator.engine.feature.feature.group" />
+    -->
     <!-- usually do not need the version, just to "get the latest" from
       buckminster builder site -version 1.0.0.v20090415-1651 -->
     <property
@@ -353,10 +356,19 @@
       failonerror="false" />
     <mkdir dir="${AGGREGATOR_RESULTS}" />
 
+  	<!-- remove "build failed" status file, if there is one from previous run -->
+  	<delete failonerror="false" quiet="true">
+	<fileset dir="${env.BUILD_HOME}">
+	    <include name="buildStatusFailed"/>
+	</fileset>
+    </delete>
+
+  	
     <exec
       executable="${eclipseExecutable}"
       dir="${basedir}"
-      failonerror="true">
+      failonerror="false"
+      resultproperty="buildStatus">
       <arg value="-debug" />
       <arg value="-nosplash" />
       <arg line="-data ${eclipseWorkspace}" />
@@ -368,8 +380,27 @@
       <arg line="${AGGREGATOR_APP_ARGS}" />
       <arg line="${BUILDER_VM_ARGS}" />
     </exec>
+
+    <echo message="buildStatus: ${buildStatus}" />
+    <condition
+      property="buildStatusOK"
+      value="true">
+      <equals
+        arg1="buildStatus"
+        arg2="0" />
+    </condition>
+    <echo message="buildStatusOK: ${buildStatusOK}" />
+    <antcall target="writeStatus" />
+  	<fail message="Build Failed." unless="buildStatusOK" />
   </target>
 
+  <target
+    name="writeStatus"
+    unless="buildStatusOK">
+    <echo
+      message="build failed"
+      file="${env.BUILD_HOME}/buildStatusFailed" />
+  </target>
   <target
     name="runAggregatorBuildOnly"
     depends="init,getModelFromGit,rewriteRepositoryURL">
