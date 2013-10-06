@@ -356,16 +356,6 @@
       failonerror="false" />
     <mkdir dir="${AGGREGATOR_RESULTS}" />
 
-    <!-- remove "build failed" status file, if there is one from previous run -->
-    <delete
-      failonerror="false"
-      quiet="true">
-      <fileset dir="${BUILD_HOME}">
-        <include name="buildStatusFailed" />
-      </fileset>
-    </delete>
-
-
     <exec
       executable="${eclipseExecutable}"
       dir="${basedir}"
@@ -600,6 +590,15 @@
     <fail
       unless="BUILD_HOME"
       message="BUILD_HOME must be set before running this script" />
+
+    <!-- remove "build failed" status file, if there is one from previous run -->
+    <delete
+      failonerror="false"
+      quiet="true">
+      <fileset dir="${BUILD_HOME}">
+        <include name="buildStatusFailed" />
+      </fileset>
+    </delete>
 
     <!--
       no need to initialize twice
