@@ -356,14 +356,16 @@
       failonerror="false" />
     <mkdir dir="${AGGREGATOR_RESULTS}" />
 
-  	<!-- remove "build failed" status file, if there is one from previous run -->
-  	<delete failonerror="false" quiet="true">
-	<fileset dir="${env.BUILD_HOME}">
-	    <include name="buildStatusFailed"/>
-	</fileset>
+    <!-- remove "build failed" status file, if there is one from previous run -->
+    <delete
+      failonerror="false"
+      quiet="true">
+      <fileset dir="${env.BUILD_HOME}">
+        <include name="buildStatusFailed" />
+      </fileset>
     </delete>
 
-  	
+
     <exec
       executable="${eclipseExecutable}"
       dir="${basedir}"
@@ -391,7 +393,9 @@
     </condition>
     <echo message="buildStatusOK: ${buildStatusOK}" />
     <antcall target="writeStatus" />
-  	<fail message="Build Failed." unless="buildStatusOK" />
+    <fail
+      message="Build Failed."
+      unless="buildStatusOK" />
   </target>
 
   <target
