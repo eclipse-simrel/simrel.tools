@@ -585,7 +585,7 @@
       value="${HOSTNAME}" />
 
     <condition property="localRepoExists">
-      <available file="${BUILD_MODEL_DIR}" />
+      <available file="${BUILD_MODEL_DIR}/.git" />
     </condition>
 
     <condition
