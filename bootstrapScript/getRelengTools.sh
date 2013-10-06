@@ -139,7 +139,7 @@ unzip ${quietZipFlag} -o ${BRANCH_TOOLS////_}.zip -d ${TMPDIR_TOOLS}
 RC=$?
 if [[ $RC != 0 ]] 
 then
-    echo "ERROR:  Failed to unzip ${BRANCH_TOOLS}.zip to ${TMPDIR_TOOLS}"
+    echo "ERROR:  Failed to unzip ${BRANCH_TOOLS////_}.zip to ${TMPDIR_TOOLS}"
     echo "   RC: $RC"
     usage
     exit $RC
@@ -179,8 +179,8 @@ fi
 if ! $verboseFlag
 then
     # cleanup unless verbose/debugging
-    rm ${BRANCH_TOOLS}.zip* 2>/dev/null
-    rm -fr ${TMPDIR_TOOLS} 2>/dev/null
+    rm ${BRANCH_TOOLS////_}.zip* 
+    rm -fr ${TMPDIR_TOOLS} 
 fi
 
 exit 0

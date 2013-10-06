@@ -360,7 +360,7 @@
     <delete
       failonerror="false"
       quiet="true">
-      <fileset dir="${env.BUILD_HOME}">
+      <fileset dir="${BUILD_HOME}">
         <include name="buildStatusFailed" />
       </fileset>
     </delete>
@@ -403,7 +403,7 @@
     unless="buildStatusOK">
     <echo
       message="build failed"
-      file="${env.BUILD_HOME}/buildStatusFailed" />
+      file="${BUILD_HOME}/buildStatusFailed" />
   </target>
   <target
     name="runAggregatorBuildOnly"
