@@ -188,7 +188,7 @@
         dir="@{dir}">
         <arg line="clone -b @{branch} @{repository}" />
       </exec>
-      <antcall name="checkStatus">
+      <antcall target="checkStatus">
         <param
           name="status"
           value="${cloneResult}" />
@@ -215,7 +215,7 @@
         dir="@{dir}">
         <arg line="clean -d -ff -x" />
       </exec>
-      <antcall name="checkStatus">
+      <antcall target="checkStatus">
         <param
           name="status"
           value="${RCclean}" />
@@ -231,7 +231,7 @@
         dir="@{dir}">
         <arg line="reset --hard" />
       </exec>
-      <antcall name="checkStatus">
+      <antcall target="checkStatus">
         <param
           name="status"
           value="${RCreset}" />
@@ -247,7 +247,7 @@
         dir="@{dir}">
         <arg line="pull" />
       </exec>
-      <antcall name="checkStatus">
+      <antcall target="checkStatus">
         <param
           name="status"
           value="${RCpull}" />
@@ -407,7 +407,7 @@
       <arg line="${BUILDER_VM_ARGS}" />
     </exec>
 
-    <antcall name="checkStatus">
+    <antcall target="checkStatus">
       <param
         name="status"
         value="${buildStatus}" />
