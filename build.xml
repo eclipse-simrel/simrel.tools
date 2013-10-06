@@ -183,9 +183,19 @@
       <echo message="git clone -b @{branch} @{repository}" />
       <exec
         executable="git"
+        failonerror="false"
+        resultproperty="cloneResult"
         dir="@{dir}">
         <arg line="clone -b @{branch} @{repository}" />
       </exec>
+      <antcall name="checkStatus">
+        <param
+          name="status"
+          value="${cloneResult}" />
+        <param
+          name="message"
+          value="Cloning Failed" />
+      </antcall>
     </sequential>
   </macrodef>
 
@@ -200,27 +210,51 @@
       <echo message="git clean -d -ff -x" />
       <exec
         executable="git"
-        failonerror="true"
+        failonerror="false"
         resultproperty="RCclean"
         dir="@{dir}">
         <arg line="clean -d -ff -x" />
       </exec>
+      <antcall name="checkStatus">
+        <param
+          name="status"
+          value="${RCclean}" />
+        <param
+          name="message"
+          value="Cleaning Failed" />
+      </antcall>
       <echo message="git reset --hard" />
       <exec
         executable="git"
-        failonerror="true"
+        failonerror="false"
         resultproperty="RCreset"
         dir="@{dir}">
         <arg line="reset --hard" />
       </exec>
+      <antcall name="checkStatus">
+        <param
+          name="status"
+          value="${RCreset}" />
+        <param
+          name="message"
+          value="Reset Failed" />
+      </antcall>
       <echo message="git pull" />
       <exec
         executable="git"
-        failonerror="true"
+        failonerror="false"
         resultproperty="RCpull"
         dir="@{dir}">
         <arg line="pull" />
       </exec>
+      <antcall name="checkStatus">
+        <param
+          name="status"
+          value="${RCpull}" />
+        <param
+          name="message"
+          value="Pull Failed" />
+      </antcall>
     </sequential>
   </macrodef>
 
@@ -373,24 +407,37 @@
       <arg line="${BUILDER_VM_ARGS}" />
     </exec>
 
-    <echo message="buildStatus: ${buildStatus}" />
+    <antcall name="checkStatus">
+      <param
+        name="status"
+        value="${buildStatus}" />
+      <param
+        name="message"
+        value="Aggregation Failed" />
+    </antcall>
+
+  </target>
+
+  <target name="checkStatus">
+    <echo message="status: ${status}" />
     <condition
-      property="buildStatusOK"
+      property="statusOK"
       value="true">
       <equals
-        arg1="buildStatus"
+        arg1="status"
         arg2="0" />
     </condition>
-    <echo message="buildStatusOK: ${buildStatusOK}" />
+    <echo message="statusOK: ${statusOK}" />
     <antcall target="writeStatus" />
     <fail
-      message="Build Failed."
-      unless="buildStatusOK" />
+      message="${message}"
+      unless="statusOK" />
+
   </target>
 
   <target
     name="writeStatus"
-    unless="buildStatusOK">
+    unless="statusOK">
     <echo
       message="build failed"
       file="${BUILD_HOME}/buildStatusFailed" />
