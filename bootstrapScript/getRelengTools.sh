@@ -13,8 +13,8 @@
 # It is required to specify a top level directory, that will contain all else involved with build, control and output
 if [[ -z "${BUILD_HOME}" ]]
 then
-   export BUILD_HOME=/shared/simrel/${release}
-   echo "BUILD_HOME: $BUILD_HOME"
+    export BUILD_HOME=/shared/simrel/${release}
+    echo "BUILD_HOME: $BUILD_HOME"
 fi
 
 # remember to leave no slashes on first filename in source command,
@@ -46,17 +46,17 @@ while getopts 'hvfc' OPTION
 do
     case $OPTION in
         h)    usage
-        exit 1
-        ;;
+            exit 1
+            ;;
         v)    verboseFlag=true
-        ;;
+            ;;
         f)    freshFlag=true
-        ;;
+            ;;
         c)    cleanFlag=true
-        ;;
+            ;;
         ?)    usage
-        exit 2
-        ;;
+            exit 2
+            ;;
     esac
 done
 
@@ -178,9 +178,9 @@ fi
 
 #if ! $verboseFlag
 #then
-    # cleanup unless verbose/debugging
-    rm ${BRANCH_TOOLS////_}.zip* 
-    rm -fr ${TMPDIR_TOOLS} 
+# cleanup unless verbose/debugging
+rm ${BRANCH_TOOLS////_}.zip* 
+rm -fr ${TMPDIR_TOOLS} 
 #fi
 
 exit 0
