@@ -123,11 +123,11 @@ function checkForErrorExit
 case "$stream" in
         main)
             export release=luna
-            stagingsegment=staging
+            export stagingsegment=staging
             ;;
         maintenance)
             export release=kepler
-            stagingsegment=maintenance
+            export stagingsegment=maintenance
             ;;
         *)
             usage
