@@ -423,8 +423,8 @@
     <condition
       property="statusOK"
       value="true">
-      <equals
-        arg1="status"
+      <equals forceString="true"
+        arg1="${status}"
         arg2="0" />
     </condition>
     <echo message="statusOK: ${statusOK}" />
