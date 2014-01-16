@@ -416,6 +416,8 @@
         value="Aggregation Failed" />
     </antcall>
 
+    <antcall target="createBuildinfo" />
+
   </target>
 
   <target name="checkStatus">
@@ -423,7 +425,8 @@
     <condition
       property="statusOK"
       value="true">
-      <equals forceString="true"
+      <equals
+        forceString="true"
         arg1="${status}"
         arg2="0" />
     </condition>
@@ -799,6 +802,32 @@
     -->
 
   </target>
+
+  <target name="createBuildinfo">
+
+    <mkdir dir="${AGGREGATOR_RESULTS}/buildinfo" />
+    <exec
+      executable="git"
+      failonerror="false"
+      outputproperty="buildModelCommit"
+      dir="${BUILD_MODEL_DIR}">
+      <arg line="log -1" />
+    </exec>
+
+    <propertyfile file="${AGGREGATOR_RESULTS}/buildinfo/buildInfo.properties">
+      <entry
+        key="commit"
+        value="${buildModelCommit}" />
+      <entry
+        key="JOB_NAME"
+        value="${env.JOB_NAME}" />
+      <entry
+        key="BUILD_NUMBER"
+        value="${env.BUILD_NUMBER}" />
+    </propertyfile>
+  </target>
+
+
 
   <target name="default">
     <echo message="There is no default target for this build file" />
