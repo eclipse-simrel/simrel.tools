@@ -805,7 +805,7 @@
 
   <target name="createBuildinfo">
 
-  	<property name="BUILD_INFO_DIR" value="${AGGREGATOR_RESULTS}/final/buildinfo" />
+  	<property name="BUILD_INFO_DIR" value="${AGGREGATOR_RESULTS}/final/buildInfo" />
     <mkdir dir="${BUILD_INFO_DIR}" />
     <exec
       executable="git"
