@@ -196,6 +196,23 @@
           name="message"
           value="Cloning Failed" />
       </antcall>
+      <!-- config repo -->
+        <echo message="git config --local --add core.autocrlf input" />
+        <exec
+          executable="git"
+          failonerror="false"
+          resultproperty="configResult"
+          dir="@{dir}/@{repository}">
+          <arg line="config --local --add core.autocrlf input" />
+        </exec>
+        <antcall target="checkStatus">
+          <param
+            name="status"
+            value="${configResult}" />
+          <param
+            name="message"
+            value="Config Failed" />
+        </antcall>
     </sequential>
   </macrodef>
 
