@@ -203,7 +203,7 @@
           failonerror="false"
           resultproperty="configResult"
           dir="@{dir}/org.eclipse.simrel.build">
-          <arg line="config --local --add core.autocrlf input" />
+          <arg line="config --local --add core.autocrlf true" />
         </exec>
         <antcall target="checkStatus">
           <param
