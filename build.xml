@@ -202,7 +202,7 @@
           executable="git"
           failonerror="false"
           resultproperty="configResult"
-          dir="@{dir}/@{repository}">
+          dir="@{dir}/org.eclipse.simrel.build">
           <arg line="config --local --add core.autocrlf input" />
         </exec>
         <antcall target="checkStatus">
