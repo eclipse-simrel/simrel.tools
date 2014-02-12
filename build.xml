@@ -197,7 +197,7 @@
           value="Cloning Failed" />
       </antcall>
       <!-- config repo -->
-        <echo message="git config --local --add core.autocrlf input" />
+        <echo message="git config --local --add core.autocrlf true" />
         <exec
           executable="git"
           failonerror="false"
