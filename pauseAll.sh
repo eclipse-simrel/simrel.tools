@@ -28,36 +28,44 @@ fi
 source aggr_properties.shsource
 
 if [ -z $BUILD_HOME ] ; then
-   echo " ERROR: BUILD_HOME must be defined before running this script";
-   exit 1
+    echo " ERROR: BUILD_HOME must be defined before running this script";
+    exit 1
 fi
 
 BUILD_STATUS_FAILED="${BUILD_HOME}"/buildStatusFailed
 
 if [ -f $BUILD_STATUS_FAILED ] ; then
-   echo " ERROR: BUILD_STATUS_FAILED existed. Assuming previous build failed, so will not lock for promotion.";
-   exit 1
+    echo " ERROR: BUILD_STATUS_FAILED existed. Assuming previous build failed, so will not lock for promotion.";
+    exit 1
 fi
 
 LOCKFILE="${BUILD_HOME}"/lockfile
+FAILEDFILE="${BUILD_HOME}"/promoteFailed
 
 if [[ -f "$LOCKFILE" ]]
 then
-   echo "  LOCKFILE already exists, so not continuing to protect pending jobs."
-   echo "  If there is no pending job, you must manually remove"
-   echo "  " "$LOCKFILE"
+    echo "  LOCKFILE already exists, so not continuing to protect pending jobs."
+    echo "  If there is no pending job, you must manually remove"
+    echo "  " "$LOCKFILE"
 fi
 
 
 touch "$LOCKFILE"
 
+# remove any "promotion failed file" left over from previous run
+if [[ -e $FAILEDFILE ]]
+then
+    echo "  Found FAILEDFILE exists, so removed it since presumably from previous run?"
+    rm $FAILEDFILE
+fi
+
 "${BUILD_TOOLS_DIR}"/printStats.sh
 exitCode=$?
 if [ "${exitCode}" -ne "0" ]
 then 
-  echo "printStats returned an errorCode: " ${exitCode} " Exiting."
-  rm "$LOCKFILE"
-  exit 1
+    echo "printStats returned an errorCode: " ${exitCode} " Exiting."
+    rm "$LOCKFILE"
+    exit 1
 fi  
 
 PAUSE_SECONDS=5
@@ -69,26 +77,38 @@ COUNT_MAX=$(($MAX_TIME/$PAUSE_SECONDS))
 while [ -f "$LOCKFILE" -a $COUNT -lt $COUNT_MAX ]
 do
 
-   sleep $PAUSE_SECONDS
-   COUNT=$(($COUNT+1))
-#   echo "Loop number: " $COUNT
-   
+    sleep $PAUSE_SECONDS
+    COUNT=$(($COUNT+1))
+    #   echo "Loop number: " $COUNT
+
 done
+
+# if "promotion failed file" exists, then exit with error code
+if [[ -e $FAILEDFILE ]]
+then
+    # actually, we can go ahead and remove failed file now, its served its purpose
+    rm $FAILEDFILE
+    echo "Found FAILEDFILE. Since promotion failed, exiting now."
+    rm $LOCKFILE 
+    exit 4
+fi
+
+
 
 "${BUILD_TOOLS_DIR}"/printStats.sh
 exitCode=$?
 if [ "${exitCode}" -ne "0" ]
 then 
-  echo "printStats returned an errorCode: " ${exitCode} " Exiting."
-  rm "$LOCKFILE"
-  exit 2
+    echo "printStats returned an errorCode: " ${exitCode} " Exiting."
+    rm "$LOCKFILE"
+    exit 2
 fi  
 
 
 if [[ -f "$LOCKFILE"  ]]
 then
-   echo "pause loop hit maximum count (timed out). "
-   rm "$LOCKFILE"
-   exit 3
+    echo "pause loop hit maximum count (timed out). "
+    rm "$LOCKFILE"
+    exit 3
 fi
-       
+

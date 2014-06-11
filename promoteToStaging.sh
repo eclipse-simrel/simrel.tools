@@ -114,7 +114,8 @@ function checkForErrorExit
         echo
         echo "   ERROR. exit code: ${exitCode}"  ${message}
         echo
-        removeLock
+        touch "${BUILD_HOME}"/promoteFailed
+        removeLock 
         exit "${exitCode}"
     fi
 }
