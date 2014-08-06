@@ -185,10 +185,10 @@ Either getRelengTools.sh or getRelengTests.sh</description>
                 <description>The release to bootstrap. 
 
 Either 
-kepler
+luna
 or 
-luna</description>
-                <defaultValue>luna</defaultValue>
+mars</description>
+                <defaultValue>mars</defaultValue>
               </hudson.model.StringParameterDefinition>
             </parameterDefinitions>
           </hudson.model.ParametersDefinitionProperty>

@@ -13,12 +13,12 @@ fi
 # so this variable point to valid installs.
 
 export JAVA_6_HOME=/shared/common/jdk1.6.0-latest
-JAVA_7_HOME=/shared/common/jdk1.7.0-latest
+export JAVA_7_HOME=/shared/common/jdk1.7.0-latest
 
 REPO_ROOT=/home/data/httpd/download.eclipse.org
 
 # each machine needs valid path to an appropriate, local Eclipse SDK, for fresh re-installs (see "full_filename" below)
-FULL_FILENAME_432=/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.3.2-201402211700/eclipse-platform-4.3.2-linux-gtk-x86_64.tar.gz
+FULL_FILENAME=/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.4-201406061215/eclipse-SDK-4.4-linux-gtk-x86_64.tar.gz
 
 # note the "https" may have to be "http" on local, non production machines
 hostForURL=${hostForURL:-https://hudson.eclipse.org}
@@ -44,7 +44,7 @@ RELENG_TESTS=org.eclipse.simrel.tests
 BUILD_TESTS_DIR=${BUILD_HOME}/${RELENG_TESTS}
 
 # we use Java 6 by default. https://bugs.eclipse.org/bugs/show_bug.cgi?id=340267
-export JAVA_HOME=${JAVA_6_HOME}
+export JAVA_HOME=${JAVA_7_HOME}
 export JAVA_EXEC_DIR=${JAVA_HOME}/jre/bin
 export JAVA_CMD=${JAVA_EXEC_DIR}/java
 
@@ -52,9 +52,9 @@ export JAVA_CMD=${JAVA_EXEC_DIR}/java
 ECLIPSE_INSTALL=${BUILD_HOME}/prereqs
 
 # properties say what to consider eclipse home
-ECLIPSE_HOME_43=${ECLIPSE_INSTALL}/eclipse43SR2
+ECLIPSE_HOME_44=${ECLIPSE_INSTALL}/eclipse44
 
-ECLIPSE_HOME=${ECLIPSE_HOME_43}
+ECLIPSE_HOME=${ECLIPSE_HOME_44}
 
 ECLIPSE_HOME_TEST=${BUILD_HOME}/testInstance
 export ECLIPSE_TEST_EXE=${ECLIPSE_HOME_TEST}/eclipse/eclipse
@@ -94,9 +94,6 @@ AGGREGATOR_APP_ARGS_VERIFYONLY="${AGGREGATOR_APP_BASE} --action VERIFY"
 # NOTE: quotes needed in bash scripts ... NOT in ant properties! 
 # -Declipse.p2.mirrors=false
 BUILDER_VM_ARGS="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"
-
-# We use this redirection, so scripts only need to use "full_filename", but exact version controlled by properties
-FULL_FILENAME=${FULL_FILENAME_432}
 
 BRANCH_BUILD=${BRANCH_BUILD:-master}
 TMPDIR_BUILD=sbbuild

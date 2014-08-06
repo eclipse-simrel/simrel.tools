@@ -6,7 +6,7 @@
         <p2.composite.repository>
             <repository
                 location="file://${REPO_ROOT}/releases/${release}/"
-                name="Eclipse Kepler Repository"/>
+                name="Eclipse Mars Repository"/>
             <add> 
                 <repository location='201106220900'/>
             </add>

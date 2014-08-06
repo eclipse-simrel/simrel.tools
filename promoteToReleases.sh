@@ -5,7 +5,7 @@ function usage() {
 printf "\n\tScript to promote aggregation to staging area" >&2 
 printf "\n\tUsage: %s -s <stream> -d <datetimestamp>" "$(basename $0)" >&2 
 printf "\n\t\t%s" "where <stream> is 'main' or 'maintenance'" >&2 
-printf "\n\t\t%s" "   (and main currently means luna and maintenance means kepler)" >&2 
+printf "\n\t\t%s" "   (and main currently means mars and maintenance means luna)" >&2 
 printf "\n\t\t%s" "and where <datetimestamp> is the date and time for the directory name of the composite child repository, such as '201208240900'" >&2 
 printf "\n" >&2 
 }
@@ -85,12 +85,12 @@ function checkForErrorExit
 
 case "$stream" in
         main)
-            export release=luna
+            export release=mars
             export stagingsegment=staging
             export releasesegment=current
             ;;
         maintenance)
-            export release=kepler
+            export release=luna
             export stagingsegment=maintenance
             export releasesegment=maintenance
             ;;

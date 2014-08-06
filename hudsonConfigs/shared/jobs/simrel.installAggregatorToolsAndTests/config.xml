@@ -188,10 +188,10 @@ Neither should have to be ran very often ... only if the tools or tests change. 
               <hudson.model.StringParameterDefinition>
                 <name>release</name>
                 <description>The release to install for. Either Either 
-kepler
+luna
 or 
-luna</description>
-                <defaultValue>luna</defaultValue>
+mars</description>
+                <defaultValue>mars</defaultValue>
               </hudson.model.StringParameterDefinition>
             </parameterDefinitions>
           </hudson.model.ParametersDefinitionProperty>
