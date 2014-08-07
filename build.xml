@@ -174,10 +174,7 @@
   <macrodef name="git-clone">
     <attribute name="repository" />
     <attribute name="dir" />
-    <!-- if not set, assume branch=master -->
-    <attribute
-      name="branch"
-      default="master" />
+    <attribute name="branch" />
     <sequential>
       <echo message="execute git in @{dir}" />
       <echo message="git clone -b @{branch} @{repository}" />
@@ -197,31 +194,34 @@
           value="Cloning Failed" />
       </antcall>
       <!-- config repo -->
-        <echo message="git config --local --add core.autocrlf true" />
-        <exec
-          executable="git"
-          failonerror="false"
-          resultproperty="configResult"
-          dir="@{dir}/org.eclipse.simrel.build">
-          <arg line="config --local --add core.autocrlf true" />
-        </exec>
-        <antcall target="checkStatus">
-          <param
-            name="status"
-            value="${configResult}" />
-          <param
-            name="message"
-            value="Config Failed" />
-        </antcall>
+      <echo message="git config --local --add core.autocrlf true" />
+      <exec
+        executable="git"
+        failonerror="false"
+        resultproperty="configResult"
+        dir="@{dir}/org.eclipse.simrel.build">
+        <arg line="config --local --add core.autocrlf true" />
+      </exec>
+      <antcall target="checkStatus">
+        <param
+          name="status"
+          value="${configResult}" />
+        <param
+          name="message"
+          value="Config Failed" />
+      </antcall>
     </sequential>
   </macrodef>
 
   <!--
     We do modify the source tree during build, to change URLs to local file system,
     if building on build.eclipse.org, so need to 'clean' and 'reset' before pull.
+    For pull we always do a fetch followed by a checkout, in case we change branches
+    in Hudson job, etc. ... say, to do a "Luna_maintenance_patch".
   -->
   <macrodef name="git-pull">
     <attribute name="dir" />
+    <attribute name="branch" />
     <sequential>
       <echo message="execute git in @{dir}" />
       <echo message="git clean -d -ff -x" />
@@ -256,22 +256,38 @@
           name="message"
           value="Reset Failed" />
       </antcall>
-      <echo message="git pull" />
+      <echo message="git fetch" />
       <exec
         executable="git"
         failonerror="false"
-        resultproperty="RCpull"
+        resultproperty="RCfetch"
         dir="@{dir}">
-        <arg line="pull" />
+        <arg line="fetch" />
       </exec>
       <antcall target="checkStatus">
         <param
           name="status"
-          value="${RCpull}" />
+          value="${RCfetch}" />
         <param
           name="message"
-          value="Pull Failed" />
-      </antcall>
+          value="fetch Failed" />
+        </antcall>
+        <echo message="git checkout @{branch}" />
+        <exec
+          executable="git"
+          failonerror="false"
+          resultproperty="RCcheckout"
+          dir="@{dir}">
+          <arg line="checkout -b @{branch}" />
+        </exec>
+        <antcall target="checkStatus">
+          <param
+            name="status"
+            value="${RCcheckout}" />
+          <param
+            name="message"
+            value="Checkout Failed" />
+        </antcall>
     </sequential>
   </macrodef>
 
@@ -307,8 +323,8 @@
     if="localRepoExists">
 
     <echo message="git pull task to execute in ${BUILD_MODEL_DIR}" />
-    <!-- assuming on correct branch, for now -->
-    <git-pull dir="${BUILD_MODEL_DIR}" />
+    <!-- by "pull", we actually do a fetch, then check out -->
+    <git-pull dir="${BUILD_MODEL_DIR}" branch="${BRANCH_BUILD}" />
 
 
   </target>
@@ -822,7 +838,9 @@
 
   <target name="createBuildinfo">
 
-  	<property name="BUILD_INFO_DIR" value="${AGGREGATOR_RESULTS}/final/buildInfo" />
+    <property
+      name="BUILD_INFO_DIR"
+      value="${AGGREGATOR_RESULTS}/final/buildInfo" />
     <mkdir dir="${BUILD_INFO_DIR}" />
     <exec
       executable="git"
@@ -844,11 +862,11 @@
         value="${env.BUILD_NUMBER}" />
     </propertyfile>
   	<!-- echo the three key ones to end of log, just to have redundant record. -->
-    <echo message="commit: ${buildModelCommit}" /> 
-    <echo message="JOB_NAME: ${env.JOB_NAME}" /> 
-  	<echo message="BUILD_NUMBER: ${env.BUILD_NUMBER}" />
+    <echo message="commit: ${buildModelCommit}" />
+    <echo message="JOB_NAME: ${env.JOB_NAME}" />
+    <echo message="BUILD_NUMBER: ${env.BUILD_NUMBER}" />
   	<!-- just as well write out everything ... just in case something else needed in future. -->
-  	<echoproperties destfile="${BUILD_INFO_DIR}/allInfo.properties"/>
+    <echoproperties destfile="${BUILD_INFO_DIR}/allInfo.properties" />
   </target>
 
 
