@@ -272,13 +272,13 @@
           name="message"
           value="fetch Failed" />
         </antcall>
-        <echo message="git checkout -B @{branch}" />
+        <echo message="git checkout -B @{branch} --track origin/@{branch}" />
         <exec
           executable="git"
           failonerror="false"
           resultproperty="RCcheckout"
           dir="@{dir}">
-          <arg line="checkout -B @{branch}" />
+          <arg line="checkout -B @{branch} --track origin/@{branch}" />
         </exec>
         <antcall target="checkStatus">
           <param
