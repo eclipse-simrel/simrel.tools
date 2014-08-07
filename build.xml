@@ -288,6 +288,27 @@
             name="message"
             value="Checkout Failed" />
         </antcall>
+        <!-- 
+             And now must merge what we fetched, to make sure we have 
+             the latest in HEAD. We list diff (- -stat) as just a sanity 
+             check to leave in log.
+        --> 
+        <echo message="git merge --stat" />
+        <exec
+          executable="git"
+          failonerror="false"
+          resultproperty="RCMerge"
+          dir="@{dir}">
+          <arg line="merge --stat" />
+        </exec>
+        <antcall target="checkStatus">
+          <param
+            name="status"
+            value="${RCMerge}" />
+          <param
+            name="message"
+            value="Merge Failed" />
+        </antcall>
     </sequential>
   </macrodef>
 
