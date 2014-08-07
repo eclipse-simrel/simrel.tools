@@ -177,7 +177,7 @@
     <attribute name="branch" />
     <sequential>
       <echo message="execute git in @{dir}" />
-      <echo message="git clone -b @{branch} @{repository}" />
+      <echo message="git clone -b @{branch} @{repository} --config core.autocrlf=true --config merge.defaultToUpstream=true" />
       <exec
         executable="git"
         failonerror="false"
