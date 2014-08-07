@@ -183,7 +183,7 @@
         failonerror="false"
         resultproperty="cloneResult"
         dir="@{dir}">
-        <arg line="clone -b @{branch} @{repository}" />
+        <arg line="clone -b @{branch} @{repository} --config core.autocrlf=true --config merge.defaultToUpstream=true" />
       </exec>
       <antcall target="checkStatus">
         <param
@@ -192,23 +192,6 @@
         <param
           name="message"
           value="Cloning Failed" />
-      </antcall>
-      <!-- config repo -->
-      <echo message="git config --local --add core.autocrlf true" />
-      <exec
-        executable="git"
-        failonerror="false"
-        resultproperty="configResult"
-        dir="@{dir}/org.eclipse.simrel.build">
-        <arg line="config --local --add core.autocrlf true" />
-      </exec>
-      <antcall target="checkStatus">
-        <param
-          name="status"
-          value="${configResult}" />
-        <param
-          name="message"
-          value="Config Failed" />
       </antcall>
     </sequential>
   </macrodef>
