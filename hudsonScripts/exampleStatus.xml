@@ -1,0 +1,72 @@
+
+<!-- 
+https://hudson.eclipse.org/hudson/view/Repository%20Aggregation/job/simrel.mars.lockForPromotion/api/xml?depth=1
+ -->
+<freeStyleProject>
+  <action />
+  <description>This manual-only job will effectively lock-out other simrel-build jobs, allowing time for someone to do work directly
+    on build machine ... such as run the promote script.
+  </description>
+  <displayName>simrel.mars.lockForPromotion</displayName>
+  <name>simrel.mars.lockForPromotion</name>
+  <url>https://hudson.eclipse.org/hudson/view/Repository%20Aggregation/job/simrel.mars.lockForPromotion/</url>
+  <buildable>true</buildable>
+  <build>
+    <action>
+      <cause>
+        <shortDescription>Started by remote host 0:0:0:0:0:0:0:1</shortDescription>
+      </cause>
+    </action>
+    <building>false</building>
+    <duration>456636</duration>
+    <fullDisplayName>simrel.mars.lockForPromotion #35</fullDisplayName>
+    <id>2014-09-15_02-10-08</id>
+    <keepLog>false</keepLog>
+    <number>35</number>
+    <result>SUCCESS</result>
+    <timestamp>1410761408509</timestamp>
+    <url>https://hudson.eclipse.org/hudson/view/Repository%20Aggregation/job/simrel.mars.lockForPromotion/35/</url>
+    <builtOn>hudson-slave1</builtOn>
+    <changeSet />
+  </build>
+  <build>
+    <action>
+      <cause>
+        <shortDescription>Started by user david_williams</shortDescription>
+        <userName>david_williams</userName>
+      </cause>
+    </action>
+    <action />
+    <building>false</building>
+    <duration>311164</duration>
+    <fullDisplayName>simrel.mars.lockForPromotion #34</fullDisplayName>
+    <id>2014-09-14_20-47-09</id>
+    <keepLog>false</keepLog>
+    <number>34</number>
+    <result>SUCCESS</result>
+    <timestamp>1410742029078</timestamp>
+    <url>https://hudson.eclipse.org/hudson/view/Repository%20Aggregation/job/simrel.mars.lockForPromotion/34/</url>
+    <builtOn>hudson-slave1</builtOn>
+    <changeSet />
+  </build>
+  <build>
+    <action>
+      <cause>
+        <shortDescription>Started by user david_williams</shortDescription>
+        <userName>david_williams</userName>
+      </cause>
+    </action>
+    <action />
+    <building>false</building>
+    <duration>336690</duration>
+    <fullDisplayName>simrel.mars.lockForPromotion #33</fullDisplayName>
+    <id>2014-09-12_09-27-17</id>
+    <keepLog>false</keepLog>
+    <number>33</number>
+    <result>SUCCESS</result>
+    <timestamp>1410528437000</timestamp>
+    <url>https://hudson.eclipse.org/hudson/view/Repository%20Aggregation/job/simrel.mars.lockForPromotion/33/</url>
+    <builtOn>hudson-slave1</builtOn>
+    <changeSet />
+  </build>
+</freeStyleProject>
