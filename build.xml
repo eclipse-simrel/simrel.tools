@@ -3,7 +3,7 @@
   basedir="."
   default="default">
   <property environment="env" />
-  <!--
+    <!--
     This property file name is itself a property, so it can be overridden
     on one machine versus another. We do it this way, instead of just specifying
     -propertyFile on command line, so that the property values can be "nested"
@@ -20,7 +20,7 @@
 
   <property file="${aggrPropertyFile}" />
 
-  <!--
+    <!--
     unrewriteMapsLine is a variable, but should never have to be chagned for current sim rel
     We make the strong assumption that, in *.b3aggrcon file, this string occurs only in
     repository location attributes. If not true, more complex parsing/replacement would be required.
@@ -47,7 +47,7 @@
     <property
       name="OTHER_ARGS_AGG"
       value="-metadataRepository http://download.eclipse.org/modeling/emft/b3/updates-4.4/ -artifactRepository http://download.eclipse.org/modeling/emft/b3/updates-4.4/ -installIU org.eclipse.b3.aggregator.engine.feature.feature.group" />
-    <!--
+        <!--
       <property
       name="OTHER_ARGS_AGG"
       value="-metadataRepository http://download.eclipse.org/modeling/emft/b3/updates-4.4/ -artifactRepository http://download.eclipse.org/modeling/emft/b3/updates-4.4/
@@ -59,7 +59,7 @@
       -artifactRepository http://download.eclipse.org/modeling/emft/b3/updates-4.4/,http://download.eclipse.org/releases/luna -installIU
       org.eclipse.b3.aggregator.engine.feature.feature.group" />
     -->
-    <!-- usually do not need the version, just to "get the latest" from
+        <!-- usually do not need the version, just to "get the latest" from
       buckminster builder site -version 1.0.0.v20090415-1651 -->
     <property
       name="VM_ARGS"
@@ -74,13 +74,13 @@
       src="${FULL_FILENAME}"
       dest="${ECLIPSE_HOME}" />
 
-    <!-- weird this chmod is required? probably ant bug -->
+        <!-- weird this chmod is required? probably ant bug -->
     <chmod
       file="${ECLIPSE_HOME}/eclipse/eclipse"
       perm="ugo+x"
       verbose="true" />
 
-    <!-- and now get latest -->
+        <!-- and now get latest -->
     <exec
       executable="${eclipseExecutable}"
       dir="${basedir}"
@@ -96,7 +96,7 @@
       name="APP_NAME"
       value="org.eclipse.equinox.p2.director" />
 
-    <!-- usually do not need the version, just to "get the latest" from
+        <!-- usually do not need the version, just to "get the latest" from
       buckminster builder site -version 1.0.0.v20090415-1651 -->
     <property
       name="VM_ARGS"
@@ -111,13 +111,13 @@
       src="${FULL_FILENAME}"
       dest="${ECLIPSE_HOME_TEST}" />
 
-    <!-- weird this chmod is required? probably ant bug -->
+        <!-- weird this chmod is required? probably ant bug -->
     <chmod
       file="${ECLIPSE_HOME_TEST}/eclipse/eclipse"
       perm="ugo+x"
       verbose="true" />
 
-    <!-- get raw files from git -->
+        <!-- get raw files from git -->
 
     <echo message="  removing previous HOLD_BRANCH.zip if it exists, in ${BUILD_HOME}" />
 
@@ -142,7 +142,7 @@
         includes="**/*" />
     </copy>
 
-    <!-- cleanup temp working files -->
+        <!-- cleanup temp working files -->
     <delete file="${BUILD_HOME}/HOLD_BRANCH.zip" />
     <delete dir="${BUILD_HOME}/${TMPDIR_TESTS}" />
 
@@ -161,7 +161,7 @@
       name="VM_ARGS"
       value="-vmargs -Xmx256m" />
 
-    <!-- install latest -->
+        <!-- install latest -->
     <exec
       executable="${eclipseExecutable}"
       dir="${basedir}"
@@ -196,7 +196,7 @@
     </sequential>
   </macrodef>
 
-  <!--
+    <!--
     We do modify the source tree during build, to change URLs to local file system,
     if building on build.eclipse.org, so need to 'clean' and 'reset' before pull.
     For pull we always do a fetch followed by a checkout, in case we change branches
@@ -254,44 +254,44 @@
         <param
           name="message"
           value="fetch Failed" />
-        </antcall>
-        <echo message="git checkout -B @{branch} --track origin/@{branch}" />
-        <exec
-          executable="git"
-          failonerror="false"
-          resultproperty="RCcheckout"
-          dir="@{dir}">
-          <arg line="checkout -B @{branch} --track origin/@{branch}" />
-        </exec>
-        <antcall target="checkStatus">
-          <param
-            name="status"
-            value="${RCcheckout}" />
-          <param
-            name="message"
-            value="Checkout Failed" />
-        </antcall>
-        <!-- 
+      </antcall>
+      <echo message="git checkout -B @{branch} --track origin/@{branch}" />
+      <exec
+        executable="git"
+        failonerror="false"
+        resultproperty="RCcheckout"
+        dir="@{dir}">
+        <arg line="checkout -B @{branch} --track origin/@{branch}" />
+      </exec>
+      <antcall target="checkStatus">
+        <param
+          name="status"
+          value="${RCcheckout}" />
+        <param
+          name="message"
+          value="Checkout Failed" />
+      </antcall>
+            <!-- 
              And now must merge what we fetched, to make sure we have 
              the latest in HEAD. We list diff (- -stat) as just a sanity 
              check to leave in log.
-        --> 
-        <echo message="git merge --stat" />
-        <exec
-          executable="git"
-          failonerror="false"
-          resultproperty="RCMerge"
-          dir="@{dir}">
-          <arg line="merge --stat" />
-        </exec>
-        <antcall target="checkStatus">
-          <param
-            name="status"
-            value="${RCMerge}" />
-          <param
-            name="message"
-            value="Merge Failed" />
-        </antcall>
+        -->
+      <echo message="git merge --stat" />
+      <exec
+        executable="git"
+        failonerror="false"
+        resultproperty="RCMerge"
+        dir="@{dir}">
+        <arg line="merge --stat" />
+      </exec>
+      <antcall target="checkStatus">
+        <param
+          name="status"
+          value="${RCMerge}" />
+        <param
+          name="message"
+          value="Merge Failed" />
+      </antcall>
     </sequential>
   </macrodef>
 
@@ -327,8 +327,10 @@
     if="localRepoExists">
 
     <echo message="git pull task to execute in ${BUILD_MODEL_DIR}" />
-    <!-- by "pull", we actually do a fetch, then check out -->
-    <git-pull dir="${BUILD_MODEL_DIR}" branch="${BRANCH_BUILD}" />
+        <!-- by "pull", we actually do a fetch, then check out -->
+    <git-pull
+      dir="${BUILD_MODEL_DIR}"
+      branch="${BRANCH_BUILD}" />
 
 
   </target>
@@ -368,7 +370,7 @@
         includes="**/*" />
     </copy>
 
-    <!-- cleanup temp working files -->
+        <!-- cleanup temp working files -->
     <delete file="${BUILD_HOME}/${BUILD_MODEL}-${BRANCH_BUILD}.zip" />
     <delete dir="${BUILD_HOME}/${TMPDIR_BUILD}" />
 
@@ -391,13 +393,13 @@
   <target
     name="runAggregator"
     depends="init,getModelFromGit,rewriteRepositoryURL">
-    <!--
+        <!--
       If not otherwise set in properties file, use these values. Note
       the build.eclipse.org production machine must override these values for property
       values appropriate for it.
     -->
 
-    <!-- -trustedContributions Eclipse,Equinox -->
+        <!-- -trustedContributions Eclipse,Equinox -->
     <property
       name="AGGREGATOR_APP_ARGS"
       value="-buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr
@@ -405,7 +407,7 @@
             -logLevel DEBUG -emailFromName SimRelAggregator
             -logURL ${logURL}" />
 
-    <!-- Important: on any non-production machines it is important to _not_ use
+        <!-- Important: on any non-production machines it is important to _not_ use
       eclipse.p2.mirrors=false, so this value should be supplied by calling script's
       properties. Note, we include '-vmargs' here, in case there are not any. Not
       sure if the use of -vmargs _requires_ arguments or not, but probably would.
@@ -418,14 +420,7 @@
       value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
     <echo message="AGGREGATOR_APP_ARGS: ${AGGREGATOR_APP_ARGS}" />
 
-    <!-- we will clean the aggregation directory ourselves, as work around for bug 354321
-      https://bugs.eclipse.org/bugs/show_bug.cgi?id=354321
-    -->
-    <echo message="Removing any previous aggregation results, from ${AGGREGATOR_RESULTS}" />
-    <delete
-      dir="${AGGREGATOR_RESULTS}"
-      failonerror="false" />
-    <mkdir dir="${AGGREGATOR_RESULTS}" />
+    <antcall target="cleanPreviousAggregations" />
 
     <exec
       executable="${eclipseExecutable}"
@@ -485,7 +480,7 @@
   <target
     name="runAggregatorBuildOnly"
     depends="init,getModelFromGit,rewriteRepositoryURL">
-    <!--
+        <!--
       If not otherwise set in properties file, use these values. Note
       the build.eclipse.org production machine must override these values for property
       values appropriate for it.
@@ -495,7 +490,7 @@
       name="AGG_APP_ARGS"
       value="${AGGREGATOR_APP_ARGS_BUILDONLY}" />
 
-    <!-- Important: on any non-production machines it is important to _not_ use
+        <!-- Important: on any non-production machines it is important to _not_ use
       eclipse.p2.mirrors=false, so this value should be supplied by calling script's
       properties. Note, we include '-vmargs' here, in case there are not any. Not
       sure if the use of -vmargs _requires_ arguments or not, but probably would.
@@ -527,7 +522,7 @@
   <target
     name="runAggregatorVerifyOnly"
     depends="init,getModelFromGit,rewriteRepositoryURL">
-    <!--
+        <!--
       If not otherwise set in properties file, use these values. Note
       the build.eclipse.org production machine must override these values for property
       values appropriate for it.
@@ -537,7 +532,7 @@
       name="AGG_APP_ARGS"
       value="${AGGREGATOR_APP_ARGS_VERIFYONLY}" />
 
-    <!-- Important: on any non-production machines it is important to _not_ use
+        <!-- Important: on any non-production machines it is important to _not_ use
       eclipse.p2.mirrors=false, so this value should be supplied by calling script's
       properties. Note, we include '-vmargs' here, in case there are not any. Not
       sure if the use of -vmargs _requires_ arguments or not, but probably would.
@@ -571,7 +566,7 @@
   <target
     name="runHybrid"
     depends="init,getModelFromGit,rewriteRepositoryURL">
-    <!--
+        <!--
       If not otherwise set in properties file, use these values. Note
       the build.eclipse.org production machine must override these values for property
       values appropriate for it.
@@ -584,7 +579,7 @@
 	            --mavenResult --logLevel DEBUG --emailFromName SimRelAggregator
 	            --logURL ${logURL}" />
 
-    <!-- Important: on any non-production machines it is important to _not_ use
+        <!-- Important: on any non-production machines it is important to _not_ use
       eclipse.p2.mirrors=false, so this value should be supplied by calling script's
       properties. Note, we include '-vmargs' here, in case there are not any. Not
       sure if the use of -vmargs _requires_ arguments or not, but probably would.
@@ -618,7 +613,7 @@
     depends="getBuildTimestamp, getJobName, getBuildWorkarea"
     unless="isInitialized">
 
-    <!-- often, especially for Huson slaves, it is easiest to set hostForURL "manually" in properties or
+        <!-- often, especially for Huson slaves, it is easiest to set hostForURL "manually" in properties or
       on command line, e.g. -DhostForURL=hudson ... but, if not defined yet, we'll fallback to reasonable guess -->
     <property
       name="hostForURL"
@@ -638,7 +633,7 @@
       name="eclipseWorkspace"
       value="${buildWorkarea}/eclipseworkingspace" />
 
-    <!-- if the eclipse workspace exists, remove it, to make sure we are starting "fresh". Eclipse will create it. Be sure some "archive
+        <!-- if the eclipse workspace exists, remove it, to make sure we are starting "fresh". Eclipse will create it. Be sure some "archive
       artifacts" job saves it away, if desired. -->
     <delete
       dir="${eclipseWorkspace}"
@@ -673,12 +668,12 @@
 
     <echo message="BUILDER_VM_ARGS: ${BUILDER_VM_ARGS}" />
     <echoproperties />
-    <!-- quick fail, if set up wrong -->
+        <!-- quick fail, if set up wrong -->
     <fail
       unless="BUILD_HOME"
       message="BUILD_HOME must be set before running this script" />
 
-    <!-- remove "build failed" status file, if there is one from previous run -->
+        <!-- remove "build failed" status file, if there is one from previous run -->
     <delete
       failonerror="false"
       quiet="true">
@@ -687,7 +682,7 @@
       </fileset>
     </delete>
 
-    <!--
+        <!--
       no need to initialize twice
     -->
     <property
@@ -788,7 +783,7 @@
     depends="init"
     if="eclipseExists"
     unless="previousSaved">
-    <!-- remember, old ones have to be maually cleaned up, from time to time -->
+        <!-- remember, old ones have to be maually cleaned up, from time to time -->
     <move
       verbose="true"
       todir="${ECLIPSE_HOME}/eclipse${buildTimestamp}">
@@ -805,7 +800,7 @@
     name="savePreviousTest"
     depends="init"
     if="eclipseTestExists">
-    <!-- remember, old ones have to be maually cleaned up, from time to time -->
+        <!-- remember, old ones have to be maually cleaned up, from time to time -->
     <fail unless="buildTimestamp" />
 
     <move todir="${ECLIPSE_HOME_TEST}/eclipse${buildTimestamp}">
@@ -814,8 +809,8 @@
 
   </target>
 
-  <!-- Only rewrite, if a value has been provided -->
-  <!-- TODO: should make the "exclude" part automatic based on presence/abscense of "useTrusted" property -->
+    <!-- Only rewrite, if a value has been provided -->
+    <!-- TODO: should make the "exclude" part automatic based on presence/abscense of "useTrusted" property -->
   <target
     name="rewriteRepositoryURL"
     if="rewriteRepositoryURLValue">
@@ -824,7 +819,7 @@
       token="${commonRepositoryDownloadURLValue}"
       value="${rewriteRepositoryURLValue}">
       <include name="*.b3aggrcon" />
-      <!--
+            <!--
         <exclude name="ep.b3aggrcon"/>
         <exclude name="equinox.b3aggrcon"/>
       -->
@@ -833,7 +828,7 @@
     <echo message="        From: ${commonRepositoryDownloadURLValue}" />
     <echo message="          To: ${rewriteRepositoryURLValue}" />
     <echo message="   Excluding no files since no composite artifacts, just agregate" />
-    <!--
+        <!--
       <echo message=" Excluding: ep.b3aggrcon"/>
       <echo message=" Excluding: ep.b3aggrcon, equinox.b3aggrcon"/>
     -->
@@ -865,15 +860,28 @@
         key="BUILD_NUMBER"
         value="${env.BUILD_NUMBER}" />
     </propertyfile>
-  	<!-- echo the three key ones to end of log, just to have redundant record. -->
+        <!-- echo the three key ones to end of log, just to have redundant record. -->
     <echo message="commit: ${buildModelCommit}" />
     <echo message="JOB_NAME: ${env.JOB_NAME}" />
     <echo message="BUILD_NUMBER: ${env.BUILD_NUMBER}" />
-  	<!-- just as well write out everything ... just in case something else needed in future. -->
+        <!-- just as well write out everything ... just in case something else needed in future. -->
     <echoproperties destfile="${BUILD_INFO_DIR}/allInfo.properties" />
   </target>
 
-
+  <target
+    name="cleanPreviousAggregations"
+    unless="nocleanAggregations">
+    <!-- we will clean the aggregation directory ourselves, as work around for bug 354321
+      https://bugs.eclipse.org/bugs/show_bug.cgi?id=354321
+      The bug has been fixed ... but ... we'll leave as is. Perhaps gives more
+      flexibility?
+    -->
+    <echo message="Removing any previous aggregation results, from ${AGGREGATOR_RESULTS}" />
+    <delete
+      dir="${AGGREGATOR_RESULTS}"
+      failonerror="false" />
+    <mkdir dir="${AGGREGATOR_RESULTS}" />
+  </target>
 
   <target name="default">
     <echo message="There is no default target for this build file" />
