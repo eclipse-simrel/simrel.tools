@@ -32,7 +32,12 @@ umask 0002
 source aggr_properties.shsource
 
 # default of 10 minutes (unless overridden in ~bin/aggr_properties.shsource)
-defaultWaitOffsetTime=${defaultWaitOffsetTime:-600}
+#TODO: the logic, so far, of "default WaitOffsetTime is incorrect. Once 'TIME_DIFF',
+# below, is computed, it does not change (until next build, or promotion), so for 
+# "wait" to work right, we also would need additional checks against "now" 
+# and last build time completion. Carefully choosen cron times should suffice for 
+# practical purposes. 
+defaultWaitOffsetTime=${defaultWaitOffsetTime:-0}
 
 convertSecs() {
   seconds=$1
@@ -174,7 +179,7 @@ TIME_DIFF=$(( UNIX_BUILD_TIME - UNIX_PROMOTE_TIME ))
 # and if so, do nothing? (i.e. do not even need to look at time?)
 if [[ $TIME_DIFF -gt $waitOffsetTime ]]
 then
-  echo "TIME_DIFF, ${TIME_DIFF}, implies a successful build since last promote, so will check to trigger one."
+  echo "TIME_DIFF, $( convertSecs ${TIME_DIFF} ), implies a successful build since last promote, so will check to trigger one."
   # first check if one is already building, so we do not just put another in queue
   # Interestingly, if one is in que a) seems hard to detect that, and b) even if 
   # we try to put another there, is is 'rejected' so that do no seem to "stack up". 
