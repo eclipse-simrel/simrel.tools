@@ -1,5 +1,5 @@
 
-		Report as of  Sun Nov  9 00:30:51 UTC 2014
+		Report as of  Sun Nov 30 05:06:43 UTC 2014 
 
 Active during last year
 =======================
@@ -42,9 +42,9 @@ Kenn Hussey
 Kentarou Fukuda
 Konstantin Komissarchik
 Krum Tsvetkov
-Laurent goubet
+Laurent Goubet
 Linda Chan
-Manuel Bork
+Marc-Andre Laperle
 Marcel Bruch
 Marc Khouzam
 Mark R Russell
@@ -53,9 +53,10 @@ Markus Tiede
 Martin Oberhuber
 Marvin Mueller
 Matthias Sohn
-mgolubev
+Michael Golubev
 Michael Wenz
 Mickael Istria
+Olivier Constant
 Pierre-Charles David
 Robert Brodt
 Sam Davis
@@ -79,17 +80,17 @@ Zhiqiang Qian
 Inactive during last year
 =========================
 Adolfo Sanchez-Barbudo Herrera
-Ahmed Samir Wafa awafa
+Ahmed Samir Wafa
 Benjamin Cabe
 Borislav Kapukaranov
 David Dykstal
 Eric Gwin
 hstaudacher
 Idrissa Dieng
+Manuel Bork
 Matthieu Helleboid
 Mickael Barbero
 Miles Parker
-Olivier Constant
 Ralf Sternberg
 Sabine Achilles
 Stephane Begaudeau

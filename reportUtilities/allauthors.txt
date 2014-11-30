@@ -1,9 +1,9 @@
 
-		Report as of  Sun Nov  9 00:30:51 UTC 2014 
+		Report as of  Sun Nov 30 05:06:43 UTC 2014 
 
 Adolfo Sanchez-Barbudo Herrera <adolfosbh@gmail.com>
 Adrian Sacchi <adrian.sacchi@bsiag.com>
-Ahmed Samir Wafa awafa <ahmed.samir.wafa@gmail.com>
+Ahmed Samir Wafa <ahmed.samir.wafa@gmail.com>
 Alexander Gurov <alexander.gurov@polarion.com>
 Alexander Nyssen <alexander.nyssen@itemis.de>
 Alex Lagarde <alex.lagarde@obeo.fr>
@@ -49,9 +49,10 @@ Kenn Hussey <Kenn.Hussey@gmail.com>
 Kentarou Fukuda <kentarou@jp.ibm.com>
 Konstantin Komissarchik <konstantin.komissarchik@oracle.com>
 Krum Tsvetkov <krum.tsvetkov@sap.com>
-Laurent goubet <laurent.goubet@obeo.fr>
+Laurent Goubet <laurent.goubet@obeo.fr>
 Linda Chan <lchan@actuate.com>
 Manuel Bork <bork@yatta.de>
+Marc-Andre Laperle <marc-andre.laperle@ericsson.com>
 Marcel Bruch <marcel.bruch@codetrails.com>
 Marc Khouzam <marc.khouzam@ericsson.com>
 Mark R Russell <mrrussell@google.com>
@@ -61,7 +62,7 @@ Martin Oberhuber <martin.oberhuber@windriver.com>
 Marvin Mueller <marvin.mueller@bredex.de>
 Matthias Sohn <matthias.sohn@sap.com>
 Matthieu Helleboid <matthieu.helleboid@thalesgroup.com>
-mgolubev <golubev@montages.com>
+Michael Golubev <golubev@montages.com>
 Michael Wenz <michael.wenz@sap.com>
 Mickael Barbero <mikael.barbero@obeo.fr>
 Mickael Istria <mistria@redhat.com>
