@@ -4,7 +4,16 @@
 # committed to "simrel.build" repo, but then has not, for one year.
 # Part of a routine yearly process to remove inactive committers from
 # callisto-dev.
-
+#
+# In general, besides these "commit records" some people want to be left on, 
+# as "backups" for their projects. 
+# And, a few cases of "people recently added" so they would not have had time
+# yet to commit. 
+#
+# For 2014 effort, in November/December of 2014, see 
+#    https://bugs.eclipse.org/bugs/show_bug.cgi?id=450186
+#
+#
 # This script can be ran in an "complete clone" of org.eclipse.simrel.build.
 
 # Note that this script will not capture those in the "calisto-dev"
@@ -20,9 +29,9 @@ SCRIPT_DIR=/home/davidw/gitsimrel/org.eclipse.simrel.tools/reportUtilities
 
 pushd $BUILD_DIR
 
-allauthors() { git shortlog -sen | cut -s -f2 | sort; }
-authors() { git shortlog -sn | cut -s -f2 | sort; }
-lastyear() { git shortlog -sn --since="1 year ago" | cut -s -f2 | sort; }
+allauthors() { git shortlog --all -sen | cut -s -f2 | sort; }
+authors() { git shortlog --all -sn | cut -s -f2 | sort; }
+lastyear() { git shortlog --all -sn --since="1 year ago" | cut -s -f2 | sort; }
 
 # allauthors is used, instead of authors, to write a temporary file, allauthors.txt,
 # that can be used to improve the .mailmap file,

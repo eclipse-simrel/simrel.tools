@@ -1,5 +1,5 @@
 
-		Report as of  Sun Nov 30 05:06:43 UTC 2014 
+		Report as of  Tue Dec  2 19:54:19 UTC 2014 
 
 Adolfo Sanchez-Barbudo Herrera <adolfosbh@gmail.com>
 Adrian Sacchi <adrian.sacchi@bsiag.com>
@@ -27,6 +27,7 @@ David Williams <david_williams@us.ibm.com>
 Dawid Pakula <zulus@w3des.net>
 Dennis Huebner <dennis.huebner@itemis.de>
 Doug Schaefer <cdtdoug@gmail.com>
+Edgar Mueller <edgar.m.mueller@gmail.com>
 Ed Willink <ed@willink.me.uk>
 Eike Stepper <stepper@esc-net.de>
 Eric Gwin <eric.gwin@oracle.com>
@@ -70,6 +71,7 @@ Miles Parker <milesparker@gmail.com>
 Olivier Constant <olivier.constant@thalesgroup.com>
 Pierre-Charles David <pierre-charles.david@obeo.fr>
 Ralf Sternberg <rsternberg@eclipsesource.com>
+Remi Schnekenburger <remi.schnekenburger@cea.fr>
 Robert Brodt <bbrodt@redhat.com>
 Sabine Achilles <Sabine.Achilles@compeople.de>
 Sam Davis <sam.davis@tasktop.com>
@@ -78,6 +80,7 @@ Sergey Boyko <serg.boyko2011@gmail.com>
 Simon Bernard <sbernard@sierrawireless.com>
 Simone Seurer <simone.seurer@sungard.com>
 Steffen Pingel <steffen.pingel@tasktop.com>
+Stephan Born <stephan.born@sungard.com>
 Stephane Begaudeau <stephane.begaudeau@obeo.fr>
 Stephan Eberle <stephaneberle9@gmail.com>
 Stephan Herrmann <stephan.herrmann@berlin.de>
