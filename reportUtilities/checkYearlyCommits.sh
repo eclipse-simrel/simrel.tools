@@ -15,6 +15,11 @@
 # since any prior to that will have been "dealt with" already? And/or find a better way
 # to automate this "git listing" with the "listing" of ids from callisto-dev list.
 
+BUILD_DIR=/home/davidw/gitsimrel/org.eclipse.simrel.build
+SCRIPT_DIR=/home/davidw/gitsimrel/org.eclipse.simrel.tools/reportUtilities
+
+pushd $BUILD_DIR
+
 allauthors() { git shortlog -sen | cut -s -f2 | sort; }
 authors() { git shortlog -sn | cut -s -f2 | sort; }
 lastyear() { git shortlog -sn --since="1 year ago" | cut -s -f2 | sort; }
@@ -30,19 +35,21 @@ lastyear() { git shortlog -sn --since="1 year ago" | cut -s -f2 | sort; }
 # get "date of run" for putting in files.
 now=$( date --utc +%s )
 
-echo -e "\n\t\tReport as of  $( date --utc -d @$now ) \n" >allauthors.txt
-allauthors >> allauthors.txt
+ALL_AUTHORS_FILE=$SCRIPT_DIR/allauthors.txt
+
+echo -e "\n\t\tReport as of  $( date --utc -d @$now ) \n" >$ALL_AUTHORS_FILE
+allauthors >> $ALL_AUTHORS_FILE
 
 
-filename=committerList.txt
-echo -e "\n\t\tReport as of  $( date --utc -d @$now ) \n" >$filename
-echo "Active during last year" >>$filename
-echo "=======================" >>$filename
-lastyear >>$filename
-echo >>$filename
-echo "Inactive during last year" >>$filename
-echo "=========================" >>$filename
+COMMITTER_LIST_FILE=$SCRIPT_DIR/committerList.txt
+echo -e "\n\t\tReport as of  $( date --utc -d @$now ) \n" >$COMMITTER_LIST_FILE
+echo "Active during last year" >>$COMMITTER_LIST_FILE
+echo "=======================" >>$COMMITTER_LIST_FILE
+lastyear >>$COMMITTER_LIST_FILE
+echo >>$COMMITTER_LIST_FILE
+echo "Inactive during last year" >>$COMMITTER_LIST_FILE
+echo "=========================" >>$COMMITTER_LIST_FILE
 
-comm -13 <(lastyear) <(authors) >>$filename
-echo -e "\n\t\tOutput written to $filename"
+comm -13 <(lastyear) <(authors) >>$COMMITTER_LIST_FILE
+echo -e "\n\t\tOutput written to $COMMITTER_LIST_FILE"
 
