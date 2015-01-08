@@ -2,6 +2,12 @@
 
 # common variables used in scripts
 
+if [[ -z "${release}" ]]
+then
+  echo -e "\n\tERROR: the 'release' variable is required"
+  exit 1
+fi
+
 # It is required to specify a top level directory, that will contain all else involved with build, control and output
 export BUILD_HOME=/home/shared/simrel/${release}
 
