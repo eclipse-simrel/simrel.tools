@@ -1,0 +1,9 @@
+These files perform in "batch mode" 
+bascially what "Hudson" normally does.
+
+Handy for doing a "one time" aggregation, such as for 
+a "patched repo". 
+
+If these scripts are for, say "lunalimited", then they would 
+be exported (copyied, or scp copied) to /shared/simrel/lunalimited.
+
