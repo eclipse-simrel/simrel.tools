@@ -9,28 +9,29 @@ then
 fi
 
 # It is required to specify a top level directory, that will contain all else involved with build, control and output
-export BUILD_HOME=/home/shared/simrel/${release}
+export BUILD_HOME=/shared/simrel/${release}
 
-echo "BUILD_HOME: $BUILD_HOME"
+# echo "BUILD_HOME: $BUILD_HOME"
 
 # Java should be configured per machine,
 # so this variable point to valid installs.
 
 export JAVA_6_HOME=/shared/common/jdk1.6.0-latest
-JAVA_7_HOME=/shared/common/jdk1.7.0-latest
+export JAVA_7_HOME=/shared/common/jdk1.7.0-latest
 
-REPO_ROOT=/home/www/html/downloads
+#REPO_ROOT=/home/www/html/downloads
+REPO_ROOT=/data/httpd/download.eclipse.org
 
 # each machine needs valid path to an appropriate, local Eclipse SDK, for fresh re-installs (see "full_filename" below)
 FULL_FILENAME=/home/data/httpd/download.eclipse.org/eclipse/downloads/drops4/R-4.4.1-201409250400/eclipse-SDK-4.4.1-linux-gtk-x86_64.tar.gz
 
 # note the "https" may have to be "http" on local, non production machines
-hostForURL=http://localhost
+hostForURL=http://davidw.com:8080
+
+# HUDSON_HOST used in cron job, checkSimRelJobStatus.sh
+HUDSON_HOST=http://davidw:8080/hudson
 
 LOG_URL="${hostForURL}/hudson/view/Repository%20Aggregation/job/${JOB_NAME}/${BUILD_NUMBER}/console"
-
-
-
 
 # ##################################
 # typically the remaining variables not have to be
@@ -102,11 +103,16 @@ AGGREGATOR_APP_ARGS_VALIDATEONLY="${AGGREGATOR_APP_BASE} --action VALIDATE"
 # -Declipse.p2.mirrors=false
 BUILDER_VM_ARGS="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"
 
+# default for BRANCH_BUILD is master, so for maintenance, build branch 
+# needs to be specified on command line, such as -DBRANCH_BUILD=Kepler_maintenance
+# and TOOLS and TESTS are always 'master' (so far, no need for "maintenance branch")
 BRANCH_BUILD=${BRANCH_BUILD:-master}
 TMPDIR_BUILD=sbbuild
-BRANCH_TOOLS=david_williams/testnewbuild
+#BRANCH_TOOLS=master
+BRANCH_TOOLS=${BRANCH_BUILD}
 TMPDIR_TOOLS=sbtools
-BRANCH_TESTS=david_williams/testnewbuild
+#export BRANCH_TESTS=dhubner/junit
+BRANCH_TESTS=${BRANCH_BUILD}
 TMPDIR_TESTS=sbtests
 #CGITURL=http://davidw.com/git
 CGITURL=http://git.eclipse.org/c/simrel
