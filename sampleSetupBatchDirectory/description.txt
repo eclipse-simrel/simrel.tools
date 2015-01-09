@@ -7,3 +7,22 @@ a "patched repo".
 If these scripts are for, say "lunalimited", then they would 
 be exported (copyied, or scp copied) to /shared/simrel/lunalimited.
 
+These are in addition to the normal "bootstrap" files, 
+getRelengTools.sh and getRelengTests.sh, each of which 
+would be ran first, say, with 
+release=lunalimited ./getRelengTools.sh
+and 
+release=lunalimited ./getRelengTests.sh
+
+Then 
+./installTools.sh
+./installtests.sh
+and finally 
+./aggLunaLimited.sh
+
+
+The "promoteToReleases.sh" file is here, since is shows how 
+I had to change it, to promote directly from the build machine, 
+to the "releases" directory. (Normally we "promote" from "staging" 
+directory). Seems in an ideal world ... it would be easier! 
+
