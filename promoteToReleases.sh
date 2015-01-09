@@ -65,7 +65,7 @@ done
 shift $(($OPTIND - 1))
 
 
-
+# no 'removelock' since no associated lock file.
 function checkForErrorExit
 {   
     # arg 1 must be return code, $?
@@ -78,7 +78,6 @@ function checkForErrorExit
         echo
         echo "   ERROR. exit code: ${exitCode}"  ${message}
         echo
-        removeLock
         exit "${exitCode}"
     fi
 }
