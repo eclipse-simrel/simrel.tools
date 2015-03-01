@@ -32,7 +32,8 @@
 
   <target
     name="installAggregatorAndTools"
-    depends="init, savePrevious,installAggregator,installRelengTools">
+    depends="init, savePrevious,installAggregator,installRelengTools"
+    unless="eclipseExists">
 
     <echo message="Installed fresh Eclipse, Aggregator, and Tools" />
 
@@ -40,7 +41,8 @@
 
   <target
     name="installAggregator"
-    depends="init, savePrevious">
+    depends="init, savePrevious"
+    unless="eclipseExists">
     <property
       name="APP_NAME"
       value="org.eclipse.equinox.p2.director" />
@@ -149,7 +151,8 @@
   </target>
   <target
     name="installRelengTools"
-    depends="init">
+    depends="init"
+    unless="eclipseExists">
     <property
       name="APP_NAME"
       value="org.eclipse.equinox.p2.director" />
@@ -650,6 +653,8 @@
       file="${ECLIPSE_HOME_TEST}/eclipse"
       type="dir"
       property="eclipseTestExists" />
+    
+    <antcall target="installAggregatorAndTools"/>
 
     <echo message="aggrPropertyFile: ${aggrPropertyFile}" />
     <echo message="buildId: ${buildTimestamp}" />
@@ -663,6 +668,8 @@
     <echo message="BUILD_NUMBER: ${env.BUILD_NUMBER}" />
     <echo message="logURL: ${logURL}" />
     <echo message="ECLIPSE_EXE:  ${ECLIPSE_EXE}" />
+    <echo message="eclipseExists: ${eclipseExists}" />
+    <echo message="eclipseTestExists: ${eclipseTestExists}" />
 
     <echo message="BUILDER_VM_ARGS: ${BUILDER_VM_ARGS}" />
     <echoproperties />
