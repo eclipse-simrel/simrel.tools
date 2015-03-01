@@ -9,7 +9,7 @@ then
 fi
 
 # It is required to specify a top level directory, that will contain all else involved with build, control and output
-export BUILD_HOME=/shared/simrel/${release}
+export BUILD_HOME=${BUILD_HOME:-/shared/simrel/${release}}
 
 # echo "BUILD_HOME: $BUILD_HOME"
 
@@ -23,7 +23,7 @@ export JAVA_7_HOME=/shared/common/jdk1.7.0-latest
 REPO_ROOT=/data/httpd/download.eclipse.org
 
 # each machine needs valid path to an appropriate, local Eclipse SDK, for fresh re-installs (see "full_filename" below)
-FULL_FILENAME=/home/data/httpd/download.eclipse.org/eclipse/downloads/drops4/R-4.4.1-201409250400/eclipse-SDK-4.4.1-linux-gtk-x86_64.tar.gz
+FULL_FILENAME=/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.4.2-201502041700/eclipse-SDK-4.4.2-linux-gtk-x86_64.tar.gz
 
 # note the "https" may have to be "http" on local, non production machines
 hostForURL=http://davidw.com:8080
