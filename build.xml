@@ -420,7 +420,7 @@
       value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
     <echo message="AGGREGATOR_APP_ARGS: ${AGGREGATOR_APP_ARGS}" />
 
-    <antcall target="cleanPreviousAggregations" />
+   <!-- <antcall target="cleanPreviousAggregations" /> -->
 
     <exec
       executable="${eclipseExecutable}"
