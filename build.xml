@@ -32,7 +32,7 @@
 
   <target
     name="installAggregatorAndTools"
-    depends="savePrevious,installAggregator,installRelengTools"
+    depends="init, savePrevious,installAggregator,installRelengTools"
     unless="eclipseExists">
 
     <echo message="Installed fresh Eclipse, Aggregator, and Tools" />
@@ -522,7 +522,7 @@
 
   <target
     name="runAggregatorValidateOnly"
-    depends="init,getModelFromGit,rewriteRepositoryURL">
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools">
         <!--
       If not otherwise set in properties file, use these values. Note
       the build.eclipse.org production machine must override these values for property
@@ -653,8 +653,6 @@
       file="${ECLIPSE_HOME_TEST}/eclipse"
       type="dir"
       property="eclipseTestExists" />
-    
-    <antcall target="installAggregatorAndTools"/>
 
     <echo message="aggrPropertyFile: ${aggrPropertyFile}" />
     <echo message="buildId: ${buildTimestamp}" />
