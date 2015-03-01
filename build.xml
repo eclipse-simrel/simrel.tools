@@ -295,12 +295,13 @@
     </sequential>
   </macrodef>
 
+    <!-- remvoed cloneRepo,pullRepo for running on Hudson -->
   <target
     name="getModelFromGit"
-    depends="init,cloneRepo,pullRepo"
+    depends="init"
     unless="modelRetrived">
 
-    <echo message="cloned/pulled repo ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
+    <echo message="on HUDSON: cloned/pulled repo ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
 
     <property
       name="modelRetrived"
