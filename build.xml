@@ -396,7 +396,7 @@
   </target>
     <target
       name="runAggregatorCleanBuild"
-      depends="init,getModelFromGit,rewriteRepositoryURL">
+      depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools">
           <!--
         If not otherwise set in properties file, use these values. Note
         the build.eclipse.org production machine must override these values for property
@@ -480,7 +480,7 @@
   </target>
   <target
     name="runAggregatorBuildOnly"
-    depends="init,getModelFromGit,rewriteRepositoryURL">
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools">
         <!--
       If not otherwise set in properties file, use these values. Note
       the build.eclipse.org production machine must override these values for property
