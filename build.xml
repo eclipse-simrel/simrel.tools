@@ -390,67 +390,64 @@
 
 
   </target>
-  <target
-    name="runAggregator"
-    depends="init,getModelFromGit,rewriteRepositoryURL">
-        <!--
-      If not otherwise set in properties file, use these values. Note
-      the build.eclipse.org production machine must override these values for property
-      values appropriate for it.
-    -->
+    <target
+      name="runAggregatorCleanBuild"
+      depends="init,getModelFromGit,rewriteRepositoryURL">
+          <!--
+        If not otherwise set in properties file, use these values. Note
+        the build.eclipse.org production machine must override these values for property
+        values appropriate for it.
+      -->
 
-        <!-- -trustedContributions Eclipse,Equinox -->
-    <property
-      name="AGGREGATOR_APP_ARGS"
-      value="-buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr
-            -buildRoot ${AGGREGATOR_RESULTS} -mirrorReferences -packedStrategy unpackAsSibling
-            -logLevel DEBUG -emailFromName SimRelAggregator
-            -logURL ${logURL}" />
+          <!-- -trustedContributions Eclipse,Equinox -->
+      <property
+        name="AGG_APP_ARGS"
+        value="${AGGREGATOR_APP_ARGS_CLEAN_BUILD}" />
 
-        <!-- Important: on any non-production machines it is important to _not_ use
-      eclipse.p2.mirrors=false, so this value should be supplied by calling script's
-      properties. Note, we include '-vmargs' here, in case there are not any. Not
-      sure if the use of -vmargs _requires_ arguments or not, but probably would.
-      note: -Declipse.p2.MD5Check=false may be needed as a workaround for bug [253713]
-      (should not actually be required ... but have left note for historical reference)
-      note: rememeber that JAVA_6 should not be used for jar processor, see
-      for example, bug 244603 and bug 279596. -->
-    <property
-      name="BUILDER_VM_ARGS"
-      value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
-    <echo message="AGGREGATOR_APP_ARGS: ${AGGREGATOR_APP_ARGS}" />
+          <!-- Important: on any non-production machines it is important to _not_ use
+        eclipse.p2.mirrors=false, so this value should be supplied by calling script's
+        properties. Note, we include '-vmargs' here, in case there are not any. Not
+        sure if the use of -vmargs _requires_ arguments or not, but probably would.
+        note: -Declipse.p2.MD5Check=false may be needed as a workaround for bug [253713]
+        (should not actually be required ... but have left note for historical reference)
+        note: rememeber that JAVA_6 should not be used for jar processor, see
+        for example, bug 244603 and bug 279596. -->
+      <property
+        name="BUILDER_VM_ARGS"
+        value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
+      <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
 
-   <!-- <antcall target="cleanPreviousAggregations" /> -->
+     <!-- <antcall target="cleanPreviousAggregations" /> -->
 
-    <exec
-      executable="${eclipseExecutable}"
-      dir="${basedir}"
-      failonerror="false"
-      resultproperty="buildStatus">
-      <arg value="-debug" />
-      <arg value="-nosplash" />
-      <arg line="-data ${eclipseWorkspace}" />
-      <arg line="-vm ${JAVA_6_HOME}/jre/bin" />
-      <arg value="--launcher.suppressErrors" />
-      <arg line="-application org.eclipse.b3.cli.headless" />
-      <arg value="aggregate" />
-      <arg line="--buildId ${buildTimestamp}" />
-      <arg line="${AGGREGATOR_APP_ARGS}" />
-      <arg line="${BUILDER_VM_ARGS}" />
-    </exec>
+      <exec
+        executable="${eclipseExecutable}"
+        dir="${basedir}"
+        failonerror="false"
+        resultproperty="buildStatus">
+        <arg value="-debug" />
+        <arg value="-nosplash" />
+        <arg line="-data ${eclipseWorkspace}" />
+        <arg line="-vm ${JAVA_6_HOME}/jre/bin" />
+        <arg value="--launcher.suppressErrors" />
+        <arg line="-application org.eclipse.b3.cli.headless" />
+        <arg value="aggregate" />
+        <arg line="--buildId ${buildTimestamp}" />
+        <arg line="${AGG_APP_ARGS}" />
+        <arg line="${BUILDER_VM_ARGS}" />
+      </exec>
 
-    <antcall target="checkStatus">
-      <param
-        name="status"
-        value="${buildStatus}" />
-      <param
-        name="message"
-        value="Aggregation Failed" />
-    </antcall>
+      <antcall target="checkStatus">
+        <param
+          name="status"
+          value="${buildStatus}" />
+        <param
+          name="message"
+          value="Aggregation Failed" />
+      </antcall>
 
-    <antcall target="createBuildinfo" />
+      <antcall target="createBuildinfo" />
 
-  </target>
+    </target>
 
   <target name="checkStatus">
     <echo message="status: ${status}" />
