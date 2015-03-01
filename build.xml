@@ -33,7 +33,7 @@
   <target
     name="installAggregatorAndTools"
     depends="init, savePrevious,installAggregator,installRelengTools"
-    unless="eclipseExists">
+    if="installEclipseAndTools">
 
     <echo message="Installed fresh Eclipse, Aggregator, and Tools" />
 
@@ -42,7 +42,7 @@
   <target
     name="installAggregator"
     depends="init, savePrevious"
-    unless="eclipseExists">
+    if="installEclipseAndTools">
     <property
       name="APP_NAME"
       value="org.eclipse.equinox.p2.director" />
@@ -152,7 +152,7 @@
   <target
     name="installRelengTools"
     depends="init"
-    unless="eclipseExists">
+    if="installEclipseAndTools">
     <property
       name="APP_NAME"
       value="org.eclipse.equinox.p2.director" />
@@ -649,6 +649,27 @@
       type="dir"
       property="eclipseExists" />
 
+    <!--
+         set installEclipseAndTools on command line to force a reinstall, 
+         is only done if not installed yet.
+    -->
+    <condition property="installEclipseAndTools">
+      <not>
+         <isset property="eclipseExists" />
+      </not>
+    </condition>
+
+    <!-- 
+         saveAndInstallEclipseAndTools should only be true if "installEclipseAndTools" are
+         set on command line properties (and a version already exists). 
+    -->
+    <condition property="saveAndInstallEclipseAndTools">
+        <and>
+           <isset property="eclipseExists" />
+           <isset property="installEclipseAndTools" />
+        </and>
+      </condition>
+
     <available
       file="${ECLIPSE_HOME_TEST}/eclipse"
       type="dir"
@@ -784,7 +805,7 @@
   <target
     name="savePrevious"
     depends="init"
-    if="eclipseExists"
+    if="saveAndInstallEclipseAndTools"
     unless="previousSaved">
         <!-- remember, old ones have to be maually cleaned up, from time to time -->
     <move
