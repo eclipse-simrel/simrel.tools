@@ -337,7 +337,7 @@
     -->
     <echo message="on HUDSON: checkedout ${commitOrBranch} of ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
     <git-checkout
-      dir="${BUILD_MODEL}"
+      dir="${BUILD_MODEL_DIR}"
       commit="${commitOrBranch}" />
     <property
       name="modelRetrived"
