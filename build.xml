@@ -302,28 +302,28 @@
          This can leave repo in "detached" state, which, shouldn't hurt anything we're doing, 
          as long as Hudson can check out/clone branch next time through. 
     -->
-    <macrodef name="git-checkout">
-      <attribute name="dir" />
-      <attribute name="commit" />
-      <sequential>
-        <echo message="execute git checkout @{commit} in @{dir}" />
-        <exec
-          executable="git"
-          failonerror="false"
-          resultproperty="RCcheckout"
-          dir="@{dir}">
-            <arg line="checkout @{commit}" />
-        </exec>
-        <antcall target="checkStatus">
-          <param
-            name="status"
-            value="${RCcheckout}" />
-          <param
-            name="message"
-            value="Checkout Failed" />
-        </antcall>
-      </sequential>
-    </macrodef>
+  <macrodef name="git-checkout">
+    <attribute name="dir" />
+    <attribute name="commit" />
+    <sequential>
+      <echo message="execute git checkout @{commit} in @{dir}" />
+      <exec
+        executable="git"
+        failonerror="false"
+        resultproperty="RCcheckout"
+        dir="@{dir}">
+        <arg line="checkout @{commit}" />
+      </exec>
+      <antcall target="checkStatus">
+        <param
+          name="status"
+          value="${RCcheckout}" />
+        <param
+          name="message"
+          value="Checkout Failed" />
+      </antcall>
+    </sequential>
+  </macrodef>
 
   <target
     name="getModelFromGit"
@@ -335,8 +335,10 @@
          a specific revision. This is so that the various jobs we have, 'validate', 
          'build', and 'build_clean' can all work on the same revision. 
     -->
-    <echo message="on HUDSON: cloned/pulled repo ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
-    <git-checkout dir="${BUILD_MODEL}" commit="${commit}" />
+    <echo message="on HUDSON: checkedout ${commitOrBranch} of ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
+    <git-checkout
+      dir="${BUILD_MODEL}"
+      commit="${commitOrBranch}" />
     <property
       name="modelRetrived"
       value="true" />
@@ -579,6 +581,13 @@
 
     <condition property="localRepoExists">
       <available file="${BUILD_MODEL_DIR}/.git" />
+    </condition>
+
+    <condition
+      property="commitOrBranch"
+      value="${commit}"
+      else="${BRANCH_BUILD}">
+      <isset property="commit" />
     </condition>
 
     <condition
