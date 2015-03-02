@@ -180,13 +180,13 @@
     <attribute name="branch" />
     <sequential>
       <echo message="execute git in @{dir}" />
-      <echo message="git clone -b @{branch} @{repository} --config core.autocrlf=true --config merge.defaultToUpstream=true" />
+      <echo message="git clone -b @{branch} @{repository} --config core.autocrlf=input --config merge.defaultToUpstream=true" />
       <exec
         executable="git"
         failonerror="false"
         resultproperty="cloneResult"
         dir="@{dir}">
-        <arg line="clone -b @{branch} @{repository} --config core.autocrlf=true --config merge.defaultToUpstream=true" />
+        <arg line="clone -b @{branch} @{repository} --config core.autocrlf=input --config merge.defaultToUpstream=true" />
       </exec>
       <antcall target="checkStatus">
         <param
@@ -199,7 +199,7 @@
     </sequential>
   </macrodef>
 
-    <!--
+  <!--
     We do modify the source tree during build, to change URLs to local file system,
     if building on build.eclipse.org, so need to 'clean' and 'reset' before pull.
     For pull we always do a fetch followed by a checkout, in case we change branches
@@ -298,17 +298,45 @@
     </sequential>
   </macrodef>
 
-    <!-- remvoed cloneRepo,pullRepo for running on Hudson -->
+    <!-- 
+         This can leave repo in "detached" state, which, shouldn't hurt anything we're doing, 
+         as long as Hudson can check out/clone branch next time through. 
+    -->
+    <macrodef name="git-checkout">
+      <attribute name="dir" />
+      <attribute name="commit" />
+      <sequential>
+        <echo message="execute git checkout @{commit} in @{dir}" />
+        <exec
+          executable="git"
+          failonerror="false"
+          resultproperty="RCcheckout"
+          dir="@{dir}">
+            <arg line="checkout @{commit}" />
+        </exec>
+        <antcall target="checkStatus">
+          <param
+            name="status"
+            value="${RCcheckout}" />
+          <param
+            name="message"
+            value="Checkout Failed" />
+        </antcall>
+      </sequential>
+    </macrodef>
+
   <target
     name="getModelFromGit"
     depends="init"
     unless="modelRetrived">
     <!-- 
-         we now let Hudson "get the model" project, so there is no work to do here. 
-         can remove, some day. 
+         Removed cloneRepo,pullRepo (from depends list) for running on Hudson.
+         We now let Hudson "get the model" project but we still want to get 
+         a specific revision. This is so that the various jobs we have, 'validate', 
+         'build', and 'build_clean' can all work on the same revision. 
     -->
     <echo message="on HUDSON: cloned/pulled repo ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
-
+    <git-checkout dir="${BUILD_MODEL}" commit="${commit}" />
     <property
       name="modelRetrived"
       value="true" />
@@ -485,7 +513,7 @@
   <target
     name="runAggregatorValidateOnly"
     depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools">
-        <!--
+    <!--
       If not otherwise set in properties file, use these values. Note
       the build.eclipse.org production machine must override these values for property
       values appropriate for it.
