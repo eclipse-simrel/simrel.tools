@@ -258,13 +258,17 @@
           name="message"
           value="fetch Failed" />
       </antcall>
-      <echo message="git checkout -B @{branch} --track origin/@{branch}" />
+      <!-- removed - -track origin/@{branch}" since we don't need to track, and 
+           on Huson, with multiple repositories, it selects different name than 
+           "origin" so if it is ever needed, will need to pass-in as paramter -->
+      <echo message="git checkout -B @{branch}" />
       <exec
         executable="git"
         failonerror="false"
         resultproperty="RCcheckout"
         dir="@{dir}">
-        <arg line="checkout -B @{branch} --track origin/@{branch}" />
+        <!-- removed - -track origin/@{branch} -->
+        <arg line="checkout -B @{branch}" />
       </exec>
       <antcall target="checkStatus">
         <param
