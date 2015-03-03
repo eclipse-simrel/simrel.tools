@@ -262,14 +262,14 @@
       <!-- removed - -track origin/@{branch}" since we don't need to track, and 
            on Huson, with multiple repositories, it selects different name than 
            "origin" so if it is ever needed, will need to pass-in as paramter -->
-      <echo message="git checkout -B @{branch} --track @{origin}/@{branch}"/>
+      <echo message="git checkout -B @{branch} --track @{origin}/@{branch}" />
       <exec
         executable="git"
         failonerror="false"
         resultproperty="RCcheckout"
         dir="@{dir}">
         <!-- removed - -track origin/@{branch} -->
-        <arg line="checkout -B @{branch} --track @{origin}/@{branch}"/>
+        <arg line="checkout -B @{branch} --track @{origin}/@{branch}" />
       </exec>
       <antcall target="checkStatus">
         <param
@@ -393,7 +393,7 @@
     <git-pull
       dir="${BUILD_MODEL_DIR}"
       branch="${BRANCH_BUILD}"
-      origin="${BUILD_ORIGIN}"/>
+      origin="${BUILD_ORIGIN}" />
 
   </target>
 
@@ -407,7 +407,7 @@
     <git-pull
       dir="${BUILD_TOOLS_DIR}"
       branch="${BRANCH_TOOLS}"
-      origin="${TOOLS_ORIGIN}"/>
+      origin="${TOOLS_ORIGIN}" />
 
   </target>
 
@@ -441,6 +441,7 @@
       name="BUILDER_VM_ARGS"
       value="-vmargs -Xmx1024m -Djava.io.tmpdir=${buildWorkarea}/tmp -Declipse.p2.mirrors=false -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
+    <echo message="BUILDER_VM_ARGS: ${BUILDER_VM_ARGS}" />
 
      <!-- <antcall target="cleanPreviousAggregations" /> -->
 
@@ -524,6 +525,8 @@
       name="BUILDER_VM_ARGS"
       value="-vmargs -Xmx1024m -Djava.io.tmpdir=${buildWorkarea}/tmp -Declipse.p2.mirrors=false -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
+    <echo message="BUILDER_VM_ARGS: ${BUILDER_VM_ARGS}" />
+
     <exec
       executable="${eclipseExecutable}"
       dir="${basedir}"
@@ -579,6 +582,7 @@
       name="BUILDER_VM_ARGS"
       value="-vmargs -Xmx1024m -Djava.io.tmpdir=${buildWorkarea}/tmp -Declipse.p2.mirrors=false -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
+    <echo message="BUILDER_VM_ARGS: ${BUILDER_VM_ARGS}" />
 
     <exec
       executable="${eclipseExecutable}"
