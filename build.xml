@@ -208,6 +208,7 @@
   <macrodef name="git-pull">
     <attribute name="dir" />
     <attribute name="branch" />
+    <attribute name="origin" />
     <sequential>
       <echo message="execute git in @{dir}" />
       <echo message="git clean -d -ff -x" />
@@ -261,14 +262,14 @@
       <!-- removed - -track origin/@{branch}" since we don't need to track, and 
            on Huson, with multiple repositories, it selects different name than 
            "origin" so if it is ever needed, will need to pass-in as paramter -->
-      <echo message="git checkout -B @{branch} --track"/>
+      <echo message="git checkout -B @{branch} --track @{origin}/@{branch}"/>
       <exec
         executable="git"
         failonerror="false"
         resultproperty="RCcheckout"
         dir="@{dir}">
         <!-- removed - -track origin/@{branch} -->
-        <arg line="checkout -B @{branch} --track"/>
+        <arg line="checkout -B @{branch} --track @{origin}/@{branch}"/>
       </exec>
       <antcall target="checkStatus">
         <param
@@ -391,7 +392,8 @@
         <!-- in macro "pull", we actually do a fetch, then check out -->
     <git-pull
       dir="${BUILD_MODEL_DIR}"
-      branch="${BRANCH_BUILD}" />
+      branch="${BRANCH_BUILD}"
+      origin="${BUILD_ORIGIN}"/>
 
   </target>
 
@@ -404,7 +406,8 @@
           <!-- in macro "pull", we actually do a fetch, then check out -->
     <git-pull
       dir="${BUILD_TOOLS_DIR}"
-      branch="${BRANCH_TOOLS}" />
+      branch="${BRANCH_TOOLS}"
+      origin="${TOOLS_ORIGIN}"/>
 
   </target>
 
