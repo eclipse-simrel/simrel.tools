@@ -436,7 +436,7 @@
         for example, bug 244603 and bug 279596. -->
     <property
       name="BUILDER_VM_ARGS"
-      value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
+      value="-vmargs -Xmx1024m -Djava.io.tmpdir=${WORKSPACE}/tmp -Declipse.p2.mirrors=false -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
 
      <!-- <antcall target="cleanPreviousAggregations" /> -->
@@ -519,7 +519,7 @@
       for example, bug 244603 and bug 279596. -->
     <property
       name="BUILDER_VM_ARGS"
-      value="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
+      value="-vmargs -Xmx1024m -Djava.io.tmpdir=${WORKSPACE}/tmp -Declipse.p2.mirrors=false -Djava.io.tmpdir=${WORKSPACE}/tmp -Declipse.p2.mirrors=false -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <exec
       executable="${eclipseExecutable}"
