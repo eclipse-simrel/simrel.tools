@@ -327,18 +327,24 @@
 
   <target
     name="getModelFromGit"
-    depends="init"
+    depends="init, cloneRepo, cloneToolsRepo, pullRepo, pullToolsRepo"
     unless="modelRetrived">
     <!-- 
-         Removed cloneRepo,pullRepo (from depends list) for running on Hudson.
-         We now let Hudson "get the model" project but we still want to get 
-         a specific revision. This is so that the various jobs we have, 'validate', 
+         While Hudson normall does clone and 'pull', we "check" here to make sure.
+         In particular, in some cases, a build might be triggered by a change in "tools" 
+         repo, so even then we want to make sure to get 'latest' of "build" repo.
+         In both cases, we *then* want to get a specific revision, if passed to us by 
+         a previous job. This is so that the various jobs we have, 'validate', 
          'build', and 'build_clean' can all work on the same revision. 
     -->
-    <echo message="on HUDSON: checkedout ${commitOrBranch} of ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
     <git-checkout
       dir="${BUILD_MODEL_DIR}"
       commit="${commitOrBranch}" />
+    <echo message="on HUDSON: checkedout ${commitOrBranch} of ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
+    <git-checkout
+      dir="${BUILD_TOOLS_DIR}"
+      commit="${toolsCommitOrBranch}" />
+    <echo message="on HUDSON: checkedout ${toolsCommitOrBranch} of ${BUILD_TOOLS} into ${BUILD_TOOLSL_DIR}" />
     <property
       name="modelRetrived"
       value="true" />
@@ -349,7 +355,7 @@
     depends="init"
     unless="localRepoExists">
 
-    <echo message="git clone task to execute in ${BUILD_HOME} using branch ${BRANCH_BUILD}" />
+    <echo message="git clone task for ${BUILD_MODEL} to execute in ${BUILD_HOME} using branch ${BRANCH_BUILD}" />
 
     <git-clone
       repository="git://git.eclipse.org/gitroot/simrel/${BUILD_MODEL}.git"
@@ -357,22 +363,49 @@
       branch="${BRANCH_BUILD}" />
 
   </target>
+  <target
+    name="cloneToolsRepo"
+    depends="init"
+    unless="localToolsRepoExists">
 
+    <echo message="git clone task for ${BUILD_TOOLS} to execute in ${BUILD_HOME} using branch ${BRANCH_BUILD}" />
+
+    <git-clone
+      repository="git://git.eclipse.org/gitroot/simrel/${BUILD_TOOLS}.git"
+      dir="${BUILD_HOME}"
+      branch="${BRANCH_BUILD}" />
+
+  </target>
   <target
     name="pullRepo"
     depends="init"
     if="localRepoExists">
 
     <echo message="git pull task to execute in ${BUILD_MODEL_DIR}" />
-        <!-- by "pull", we actually do a fetch, then check out -->
+        <!-- in macro "pull", we actually do a fetch, then check out -->
     <git-pull
       dir="${BUILD_MODEL_DIR}"
       branch="${BRANCH_BUILD}" />
 
+  </target>
+
+  <target
+    name="pullToolsRepo"
+    depends="init"
+    if="localToolsRepoExists">
+
+    <echo message="git pull task to execute in ${BUILD_TOOLS_DIR}" />
+          <!-- in macro "pull", we actually do a fetch, then check out -->
+    <git-pull
+      dir="${BUILD_TOOLS_DIR}"
+      branch="${BRANCH_TOOLS}" />
 
   </target>
 
-
+  <!-- 
+       No longer used ... will rely on cleaning all of Hudson workspace manually, 
+       from time to time. But otherwise, rely on "BUILD_CLEAN" in aggregator.
+  -->
   <target
     name="runAggregatorCleanBuild"
     depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools">
@@ -583,13 +616,22 @@
       <available file="${BUILD_MODEL_DIR}/.git" />
     </condition>
 
+    <condition property="localToolsRepoExists">
+      <available file="${BUILD_TOOLS_DIR}/.git" />
+    </condition>
+
     <condition
       property="commitOrBranch"
       value="${commit}"
       else="${BRANCH_BUILD}">
       <isset property="commit" />
     </condition>
-
+    <condition
+      property="toolsCommitOrBranch"
+      value="${toolsCommit}"
+      else="${BRANCH_TOOLS}">
+      <isset property="toolsCommit" />
+    </condition>
     <condition
       property="logURL"
       value="${LOG_URL}"
@@ -694,7 +736,6 @@
   </target>
   <target
     name="getHudsonTimestamp"
-    depends="getCCTimestamp"
     unless="buildTimestamp"
     if="env.BUILD_ID">
     <property
@@ -702,15 +743,7 @@
       value="${env.BUILD_ID}" />
     <echo message="Using timestamp from Hudson Build ID" />
   </target>
-  <target
-    name="getCCTimestamp"
-    unless="buildTimestamp"
-    if="cctimestamp">
-    <property
-      name="buildTimestamp"
-      value="${cctimestamp}" />
-    <echo message="Using timestamp from CC time stamp" />
-  </target>
+
   <target
     name="getJobName"
     depends="getHudsonJobName"
@@ -722,7 +755,6 @@
   </target>
   <target
     name="getHudsonJobName"
-    depends="getCCJobName"
     unless="jobName"
     if="env.JOB_NAME">
     <property
@@ -730,15 +762,7 @@
       value="${env.JOB_NAME}" />
     <echo message="Using jobName from Hudson Builder: ${jobName}" />
   </target>
-  <target
-    name="getCCJobName"
-    unless="jobName"
-    if="projectname">
-    <property
-      name="jobName"
-      value="${projectname}" />
-    <echo message="Using jobName from CC Builder: ${jobName}" />
-  </target>
+
   <target
     name="getBuildWorkarea"
     depends="getJobName, getHudsonBuildWorkarea"
@@ -750,22 +774,12 @@
   </target>
   <target
     name="getHudsonBuildWorkarea"
-    depends="getCCBuildWorkarea"
     unless="buildWorkarea"
     if="env.HUDSON_HOME">
     <property
       name="buildWorkarea"
       value="${env.WORKSPACE}" />
     <echo message="Using buildWorkarea from Hudson Builder: ${buildWorkarea}" />
-  </target>
-  <target
-    name="getCCBuildWorkarea"
-    unless="buildWorkarea"
-    if="env.PROJECT_PROJECTS">
-    <property
-      name="buildWorkarea"
-      value="${env.PROJECT_PROJECTS}/${jobName}/${buildTimestamp}" />
-    <echo message="Using buildWorkarea from CC Builder: ${buildWorkarea}" />
   </target>
 
   <target
@@ -838,11 +852,21 @@
       dir="${BUILD_MODEL_DIR}">
       <arg line="rev-parse HEAD" />
     </exec>
+    <exec
+      executable="git"
+      failonerror="false"
+      outputproperty="toolsCommit"
+      dir="${BUILD_TOOLS_DIR}">
+      <arg line="rev-parse HEAD" />
+    </exec>
 
     <propertyfile file="${BUILD_INFO_DIR}/buildInfo.properties">
       <entry
         key="commit"
         value="${buildModelCommit}" />
+      <entry
+        key="toolsCommit"
+        value="${toolsCommit}" />
       <entry
         key="JOB_NAME"
         value="${env.JOB_NAME}" />
@@ -852,6 +876,7 @@
     </propertyfile>
         <!-- echo the three key ones to end of log, just to have redundant record. -->
     <echo message="commit: ${buildModelCommit}" />
+    <echo message="toolsCommit: ${toolsCommit}" />
     <echo message="JOB_NAME: ${env.JOB_NAME}" />
     <echo message="BUILD_NUMBER: ${env.BUILD_NUMBER}" />
         <!-- just as well write out everything ... just in case something else needed in future. -->
