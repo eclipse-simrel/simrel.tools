@@ -210,7 +210,7 @@
     <attribute name="branch" />
     <attribute name="origin" />
     <sequential>
-      <echo message="execute git in @{dir}" />
+      <echo message="= = = execute git in @{dir}" />
       <echo message="git clean -d -ff -x" />
       <exec
         executable="git"
@@ -243,7 +243,7 @@
           name="message"
           value="Reset Failed" />
       </antcall>
-      <echo message="git fetch" />
+      <echo message="git fetch @{origin}" />
       <exec
         executable="git"
         failonerror="false"
