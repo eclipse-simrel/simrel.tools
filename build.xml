@@ -249,7 +249,7 @@
         failonerror="false"
         resultproperty="RCfetch"
         dir="@{dir}">
-        <arg line="fetch" />
+        <arg line="fetch @{origin}"/>
       </exec>
       <antcall target="checkStatus">
         <param
