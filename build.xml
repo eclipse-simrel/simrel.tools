@@ -283,13 +283,14 @@
              the latest in HEAD. We list diff (- -stat) as just a sanity 
              check to leave in log.
         -->
-      <echo message="git merge --stat" />
+        <!-- removed merge when letting Hudson do most the work ... 
+      <echo message="git merge - -stat" />
       <exec
         executable="git"
         failonerror="false"
         resultproperty="RCMerge"
         dir="@{dir}">
-        <arg line="merge --stat" />
+        <arg line="merge - -stat" />
       </exec>
       <antcall target="checkStatus">
         <param
@@ -299,6 +300,7 @@
           name="message"
           value="Merge Failed" />
       </antcall>
+          -->
     </sequential>
   </macrodef>
 
