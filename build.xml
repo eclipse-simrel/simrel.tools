@@ -693,10 +693,12 @@
       type="dir"
       property="eclipseTestExists" />
 
+    <echo message="= = = Properties in init = = = " />
     <echo message="aggrPropertyFile: ${aggrPropertyFile}" />
     <echo message="buildId: ${buildTimestamp}" />
     <echo message="user.dir: ${user.dir}" />
     <echo message="user.home: ${user.home}" />
+    <echo message="buildWorkarea (HUDSON workspace): ${buildWorkarea}" />
     <echo message="Eclipse WORKSPACE: ${eclipseWorkspace}" />
     <echo message="PATH: ${env.PATH}" />
     <echo message="JAVA_HOME: ${JAVA_HOME}" />
@@ -707,8 +709,8 @@
     <echo message="ECLIPSE_EXE:  ${ECLIPSE_EXE}" />
     <echo message="eclipseExists: ${eclipseExists}" />
     <echo message="eclipseTestExists: ${eclipseTestExists}" />
-
     <echo message="BUILDER_VM_ARGS: ${BUILDER_VM_ARGS}" />
+    <echo message=" = = = = = = = = = = = = " />
     <echoproperties />
         <!-- quick fail, if set up wrong -->
     <fail
@@ -780,7 +782,7 @@
     <property
       name="buildWorkarea"
       value="${basedir}" />
-    <echo message="Using default buildWorkarea: ${buildWorkarea}" />
+    <echo message="Setting buildWorkarea: ${buildWorkarea}" />
   </target>
   <target
     name="getHudsonBuildWorkarea"
@@ -789,7 +791,7 @@
     <property
       name="buildWorkarea"
       value="${env.WORKSPACE}" />
-    <echo message="Using buildWorkarea from Hudson Builder: ${buildWorkarea}" />
+    <echo message="Setting buildWorkarea from Hudson Builder WORKSPACE: ${buildWorkarea}" />
   </target>
 
   <target
