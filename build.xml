@@ -814,10 +814,10 @@
   <target
     name="getHudsonJobName"
     unless="jobName"
-    if="env.JOB_NAME">
+    if="JOB_NAME">
     <property
       name="jobName"
-      value="${env.JOB_NAME}" />
+      value="${JOB_NAME}" />
     <echo message="Using jobName from Hudson Builder: ${jobName}" />
   </target>
 
@@ -896,27 +896,23 @@
     -->
 
   </target>
-
-  <target name="createBuildinfo">
+<target name="checkAvailableDirs" >
+    <available
+      file="${BUILD_MODEL_DIR}"
+      property="buildModelAvailable" />
+    <available
+      file="${BUILD_TOOLS_DIR}"
+      property="toolsAvailable" />
+    <available
+      file="${BUILD_TESTS_DIR}"
+      property="testsAvailable" />
+    </target>
+  <target name="createBuildinfo" depends="checkAvailableDirs, gitRevParseModel, gitRevParseTools, gitRevParseTests">
 
     <property
       name="BUILD_INFO_DIR"
       value="${AGGREGATOR_RESULTS}/final/buildInfo" />
     <mkdir dir="${BUILD_INFO_DIR}" />
-
-    <available
-      file="${BUILD_MODEL_DIR}"
-      property="buildModelAvailable" />
-    <antcall target="gitRevParseModel" />
-    <available
-      file="${BUILD_TOOLS_DIR}"
-      property="toolsAvailable" />
-
-    <antcall target="gitRevParseTools" />
-    <available
-      file="${BUILD_TESTS_DIR}"
-      property="testsAvailable" />
-    <antcall target="gitRevParseTests" />
 
     <propertyfile file="${BUILD_INFO_DIR}/buildInfo.properties">
       <entry
