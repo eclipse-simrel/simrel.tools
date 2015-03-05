@@ -974,7 +974,7 @@
     <git-rev-parse
       repodir="${BUILD_TESTS_DIR}"
       returnproperty="testsCommit" />
-    <echo message="In target, testCommit: ${testCommit}" />
+    <echo message="In target, testsCommit: ${testsCommit}" />
   </target>
   <target
     name="cleanPreviousAggregations"
