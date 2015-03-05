@@ -903,15 +903,19 @@
       name="BUILD_INFO_DIR"
       value="${AGGREGATOR_RESULTS}/final/buildInfo" />
     <mkdir dir="${BUILD_INFO_DIR}" />
-    <git-rev-parse
-      repodir="${BUILD_MODEL_DIR}"
-      returnproperty="buildModelCommit" />
-    <git-rev-parse
-      repodir="${BUILD_TOOLS_DIR}"
-      returnproperty="toolsCommit" />
-    <git-rev-parse
-      repodir="${BUILD_TESTS_DIR}"
-      returnproperty="testsCommit" />
+    <available
+      file="${BUILD_MODEL_DIR}"
+      property="buildModelAvailable" />
+    <antcall target="gitRevParseModel" />
+    <available
+      file="${BUILD_TOOLS_DIR}"
+      property="toolsAvailable" />
+
+    <antcall target="gitRevParseTools" />
+    <available
+      file="${BUILD_TESTS_DIR}"
+      property="testsAvailable" />
+    <antcall target="gitRevParseTests" />
 
     <propertyfile file="${BUILD_INFO_DIR}/buildInfo.properties">
       <entry
@@ -939,6 +943,27 @@
     <echoproperties destfile="${BUILD_INFO_DIR}/allInfo.properties" />
   </target>
 
+  <target
+    name="gitRevParseModel"
+    if="buildModelAvailable">
+    <git-rev-parse
+      repodir="${BUILD_MODEL_DIR}"
+      returnproperty="buildModelCommit" />
+  </target>
+  <target
+    name="gitRevParseTools"
+    if="toolsAvailable">
+    <git-rev-parse
+      repodir="${BUILD_TOOLS_DIR}"
+      returnproperty="toolsCommit" />
+  </target>
+  <target
+    name="gitRevParseTests"
+    if="testsAvailable">
+    <git-rev-parse
+      repodir="${BUILD_TESTS_DIR}"
+      returnproperty="testsCommit" />
+  </target>
   <target
     name="cleanPreviousAggregations"
     unless="nocleanAggregations">
