@@ -31,8 +31,8 @@
     value="http://download.eclipse.org" />
 
   <target
-    name="installAggregatorAndToolsAndTests"
-    depends="init, savePrevious,savePreviousTest,installAggregator,installRelengTools, installTests"
+    name="installAggregatorAndTools"
+    depends="init, savePrevious,installAggregator,installRelengTools"
     if="installEclipseAndTools">
 
     <echo message="Installed fresh Eclipse, Aggregator, and Tools" />
@@ -93,7 +93,8 @@
   </target>
   <target
     name="installTests"
-    depends="init, savePreviousTest">
+    depends="init, savePreviousTest"
+    unless="eclipseTestExists">
     <property
       name="APP_NAME"
       value="org.eclipse.equinox.p2.director" />
@@ -119,7 +120,7 @@
       perm="ugo+x"
       verbose="true" />
 
-        <!-- get raw files from git -->
+        <!-- get raw files from git ... this is now done by Hudson 
 
     <echo message="  removing previous HOLD_BRANCH.zip if it exists, in ${BUILD_HOME}" />
 
@@ -137,16 +138,17 @@
     <unzip
       src="${BUILD_HOME}/HOLD_BRANCH.zip"
       dest="${BUILD_HOME}/${TMPDIR_TESTS}" />
-
+-->
     <copy todir="${ECLIPSE_HOME_TEST}/eclipse/dropins/${RELENG_TESTS_DIR}">
       <fileset
-        dir="${BUILD_HOME}/${TMPDIR_TESTS}/${BRANCH_TESTS}/${RELENG_TESTS_PATH}/"
+        dir="${BUILD_HOME}/${RELENG_TESTS_DIR}/"
         includes="**/*" />
     </copy>
 
-        <!-- cleanup temp working files -->
+        <!-- cleanup temp working files 
     <delete file="${BUILD_HOME}/HOLD_BRANCH.zip" />
     <delete dir="${BUILD_HOME}/${TMPDIR_TESTS}" />
+    -->
 
   </target>
   <target
@@ -414,7 +416,7 @@
   -->
   <target
     name="runAggregatorCleanBuild"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndToolsAndTests">
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools,installTests">
           <!--
         If not otherwise set in properties file, use these values. Note
         the build.eclipse.org production machine must override these values for property
@@ -500,7 +502,7 @@
   </target>
   <target
     name="runAggregatorBuildOnly"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndToolsAndTests">
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools">
         <!--
       If not otherwise set in properties file, use these values. Note
       the build.eclipse.org production machine must override these values for property
@@ -558,7 +560,7 @@
 
   <target
     name="runAggregatorValidateOnly"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndToolsAndTests">
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools">
     <!--
       If not otherwise set in properties file, use these values. Note
       the build.eclipse.org production machine must override these values for property
@@ -711,7 +713,7 @@
     </condition>
 
     <available
-      file="${ECLIPSE_HOME_TEST}/eclipse/dropins/org.eclipse.simrel.tests-bundle"
+      file="${ECLIPSE_HOME_TEST}/eclipse/dropins/${RELENG_TESTS_DIR}"
       type="dir"
       property="eclipseTestExists" />
 
@@ -860,7 +862,7 @@
       token="${commonRepositoryDownloadURLValue}"
       value="${rewriteRepositoryURLValue}">
       <include name="*.b3aggrcon" />
-            <!--
+      <!--
         <exclude name="ep.b3aggrcon"/>
         <exclude name="equinox.b3aggrcon"/>
       -->
