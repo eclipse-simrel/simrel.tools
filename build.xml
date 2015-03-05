@@ -444,7 +444,7 @@
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
-      <arg value="-consolelog" />
+      <!-- <arg value="-consolelog" /> -->
       <arg value="-nosplash" />
       <arg line="-data ${eclipseWorkspace}" />
       <arg value="--launcher.suppressErrors" />
@@ -527,7 +527,7 @@
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
-      <arg value="-consolelog" />
+      <!-- <arg value="-consolelog" /> -->
       <arg value="-nosplash" />
       <arg line="-data ${eclipseWorkspace}" />
       <arg value="--launcher.suppressErrors" />
@@ -585,7 +585,7 @@
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
-      <arg value="-consolelog" />
+      <!-- <arg value="-consolelog" /> -->
       <arg value="-nosplash" />
       <arg line="-data ${eclipseWorkspace}" />
       <arg value="--launcher.suppressErrors" />
