@@ -158,13 +158,18 @@
     <sequential>
       <echo message="execute git in @{repodir}" />
       <echo message="git rev-parse @{reference} returned in @{returnProperty}" />
+      <local name="rc" />
       <exec
         executable="git"
         failonerror="false"
-        resultproperty="@{returnProperty}"
+        resultproperty="rc"
         dir="@{repodir}">
         <arg line="rev-parse @{reference}" />
       </exec>
+      <property
+        name="@{returnProperty}"
+        value="${rc}" />
+      <echo message="In macro @@{returnProperty} is @{returnProperty}" />
     </sequential>
   </macrodef>
   <macrodef name="git-clone">
@@ -896,7 +901,7 @@
     -->
 
   </target>
-<target name="checkAvailableDirs" >
+  <target name="checkAvailableDirs">
     <available
       file="${BUILD_MODEL_DIR}"
       property="buildModelAvailable" />
@@ -906,8 +911,10 @@
     <available
       file="${BUILD_TESTS_DIR}"
       property="testsAvailable" />
-    </target>
-  <target name="createBuildinfo" depends="checkAvailableDirs, gitRevParseModel, gitRevParseTools, gitRevParseTests">
+  </target>
+  <target
+    name="createBuildinfo"
+    depends="checkAvailableDirs, gitRevParseModel, gitRevParseTools, gitRevParseTests">
 
     <property
       name="BUILD_INFO_DIR"
@@ -947,7 +954,7 @@
     <git-rev-parse
       repodir="${BUILD_MODEL_DIR}"
       returnproperty="buildModelCommit" />
-      <echo message="buildModelCommit: ${buildModelCommit}" />
+    <echo message="buildModelCommit: ${buildModelCommit}" />
   </target>
   <target
     name="gitRevParseTools"
@@ -955,7 +962,7 @@
     <git-rev-parse
       repodir="${BUILD_TOOLS_DIR}"
       returnproperty="toolsCommit" />
-      <echo message="toolsCommit: ${toolsCommit}" />
+    <echo message="toolsCommit: ${toolsCommit}" />
   </target>
   <target
     name="gitRevParseTests"
@@ -963,7 +970,7 @@
     <git-rev-parse
       repodir="${BUILD_TESTS_DIR}"
       returnproperty="testsCommit" />
-      <echo message="testCommit: ${testCommit}" />
+    <echo message="testCommit: ${testCommit}" />
   </target>
   <target
     name="cleanPreviousAggregations"
