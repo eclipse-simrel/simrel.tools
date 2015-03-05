@@ -169,7 +169,7 @@
       <property
         name="@{returnProperty}"
         value="${rc}" />
-      <echo message="In macro @@{returnProperty} is @{returnProperty}" />
+      <echo message="In macro @{returnProperty} is ${returnProperty}" />
     </sequential>
   </macrodef>
   <macrodef name="git-clone">
