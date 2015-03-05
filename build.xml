@@ -903,6 +903,7 @@
       name="BUILD_INFO_DIR"
       value="${AGGREGATOR_RESULTS}/final/buildInfo" />
     <mkdir dir="${BUILD_INFO_DIR}" />
+
     <available
       file="${BUILD_MODEL_DIR}"
       property="buildModelAvailable" />
@@ -937,6 +938,7 @@
         <!-- echo the three key ones to end of log, just to have redundant record. -->
     <echo message="commit: ${buildModelCommit}" />
     <echo message="toolsCommit: ${toolsCommit}" />
+    <echo message="testsCommit: ${testsCommit}" />
     <echo message="JOB_NAME: ${env.JOB_NAME}" />
     <echo message="BUILD_NUMBER: ${env.BUILD_NUMBER}" />
         <!-- just as well write out everything ... just in case something else needed in future. -->
@@ -949,6 +951,7 @@
     <git-rev-parse
       repodir="${BUILD_MODEL_DIR}"
       returnproperty="buildModelCommit" />
+      <echo message="buildModelCommit: ${buildModelCommit}" />
   </target>
   <target
     name="gitRevParseTools"
@@ -956,6 +959,7 @@
     <git-rev-parse
       repodir="${BUILD_TOOLS_DIR}"
       returnproperty="toolsCommit" />
+      <echo message="toolsCommit: ${toolsCommit}" />
   </target>
   <target
     name="gitRevParseTests"
@@ -963,6 +967,7 @@
     <git-rev-parse
       repodir="${BUILD_TESTS_DIR}"
       returnproperty="testsCommit" />
+      <echo message="testCommit: ${testCommit}" />
   </target>
   <target
     name="cleanPreviousAggregations"
