@@ -176,6 +176,27 @@
     </exec>
   </target>
 
+  <macrodef name="git-rev-parse">
+    <attribute name="repodir" />
+    <attribute
+      name="reference"
+      default="HEAD" />
+    <attribute name="returnProperty" />
+    <sequential>
+      <echo message="execute git in @{repodir}" />
+      <var
+        name="@{returnProperty}"
+        unset="true" />
+      <echo message="git rev-parse @{reference} returned in @{returnProperty}" />
+      <exec
+        executable="git"
+        failonerror="false"
+        resultproperty="@{returnProperty}"
+        dir="@{repodir}">
+        <arg line="rev-parse @{reference}" />
+      </exec>
+    </sequential>
+  </macrodef>
   <macrodef name="git-clone">
     <attribute name="repository" />
     <attribute name="dir" />
@@ -884,27 +905,10 @@
       name="BUILD_INFO_DIR"
       value="${AGGREGATOR_RESULTS}/final/buildInfo" />
     <mkdir dir="${BUILD_INFO_DIR}" />
-    <exec
-      executable="git"
-      failonerror="false"
-      outputproperty="buildModelCommit"
-      dir="${BUILD_MODEL_DIR}">
-      <arg line="rev-parse HEAD" />
-    </exec>
-    <exec
-      executable="git"
-      failonerror="false"
-      outputproperty="toolsCommit"
-      dir="${BUILD_TOOLS_DIR}">
-      <arg line="rev-parse HEAD" />
-    </exec>
-    <exec
-      executable="git"
-      failonerror="false"
-      outputproperty="testsCommit"
-      dir="${BUILD_TESTS_DIR}">
-      <arg line="rev-parse HEAD" />
-    </exec>
+    <git-rev-parse repodir="${BUILD_MODEL_DIR}" returnproperty="buildModelCommit"/>
+    <git-rev-parse repodir="${BUILD_TOOLS_DIR}" returnproperty="toolsCommit" />
+    <git-rev-parse repodir="${BUILD_TESTS_DIR}" returnproperty="testsCommit"/>
+
     <propertyfile file="${BUILD_INFO_DIR}/buildInfo.properties">
       <entry
         key="commit"
