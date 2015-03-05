@@ -31,8 +31,8 @@
     value="http://download.eclipse.org" />
 
   <target
-    name="installAggregatorAndTools"
-    depends="init, savePrevious,installAggregator,installRelengTools"
+    name="installAggregatorAndToolsAndTests"
+    depends="init, savePrevious,savePreviousTest,installAggregator,installRelengTools, installTests"
     if="installEclipseAndTools">
 
     <echo message="Installed fresh Eclipse, Aggregator, and Tools" />
@@ -249,7 +249,7 @@
         failonerror="false"
         resultproperty="RCfetch"
         dir="@{dir}">
-        <arg line="fetch @{origin}"/>
+        <arg line="fetch @{origin}" />
       </exec>
       <antcall target="checkStatus">
         <param
@@ -414,7 +414,7 @@
   -->
   <target
     name="runAggregatorCleanBuild"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools">
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndToolsAndTests">
           <!--
         If not otherwise set in properties file, use these values. Note
         the build.eclipse.org production machine must override these values for property
@@ -500,7 +500,7 @@
   </target>
   <target
     name="runAggregatorBuildOnly"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools">
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndToolsAndTests">
         <!--
       If not otherwise set in properties file, use these values. Note
       the build.eclipse.org production machine must override these values for property
@@ -558,7 +558,7 @@
 
   <target
     name="runAggregatorValidateOnly"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools">
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndToolsAndTests">
     <!--
       If not otherwise set in properties file, use these values. Note
       the build.eclipse.org production machine must override these values for property
@@ -633,6 +633,10 @@
       <available file="${BUILD_TOOLS_DIR}/.git" />
     </condition>
 
+    <condition property="localTestsRepoExists">
+      <available file="${BUILD_TESTS_DIR}/.git" />
+    </condition>
+
     <condition
       property="commitOrBranch"
       value="${commit}"
@@ -646,6 +650,12 @@
       <isset property="toolsCommit" />
     </condition>
     <condition
+      property="testsCommitOrBranch"
+      value="${testsCommit}"
+      else="${BRANCH_TESTS}">
+      <isset property="testsCommit" />
+    </condition>
+    <condition
       property="logURL"
       value="${LOG_URL}"
       else="${hostForURL}">
@@ -655,16 +665,19 @@
       name="eclipseWorkspace"
       value="${buildWorkarea}/eclipseworkingspace" />
 
-        <!-- if the eclipse workspace exists, remove it, to make sure we are starting "fresh". Eclipse will create it. Be sure some "archive
+    <!-- if the eclipse workspace exists, remove it, to make sure we are starting "fresh". Eclipse will create it. Be sure some "archive
       artifacts" job saves it away, if desired. -->
     <delete
       dir="${eclipseWorkspace}"
       quiet="true" />
 
-    <property name="javaIOTmpdir" value="${buildWorkarea}/tmp" />
+    <property
+      name="javaIOTmpdir"
+      value="${buildWorkarea}/tmp" />
     <mkdir dir="${javaIOTmpdir}" />
     <!-- in case java.io.tmpdir is "passed in", technically, it is BUILDER_VM_ARGS 
-         that is passed in from aggr.properties.
+         that is passed in from aggr.properties. So, make sure this value matches 
+         the properties. 
     -->
 
     <property
@@ -698,7 +711,7 @@
     </condition>
 
     <available
-      file="${ECLIPSE_HOME_TEST}/eclipse"
+      file="${ECLIPSE_HOME_TEST}/eclipse/dropins/org.eclipse.simrel.tests-bundle"
       type="dir"
       property="eclipseTestExists" />
 
@@ -883,7 +896,13 @@
       dir="${BUILD_TOOLS_DIR}">
       <arg line="rev-parse HEAD" />
     </exec>
-
+    <exec
+      executable="git"
+      failonerror="false"
+      outputproperty="testsCommit"
+      dir="${BUILD_TESTS_DIR}">
+      <arg line="rev-parse HEAD" />
+    </exec>
     <propertyfile file="${BUILD_INFO_DIR}/buildInfo.properties">
       <entry
         key="commit"
@@ -891,6 +910,9 @@
       <entry
         key="toolsCommit"
         value="${toolsCommit}" />
+      <entry
+        key="testsCommit"
+        value="${testsCommit}" />
       <entry
         key="JOB_NAME"
         value="${env.JOB_NAME}" />
