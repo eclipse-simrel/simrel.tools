@@ -931,10 +931,10 @@
         value="${buildModelCommit}" />
       <entry
         key="toolsCommit"
-        value="${toolsCommit}" />
+        value="${toolsRepoCommit}" />
       <entry
         key="testsCommit"
-        value="${testsCommit}" />
+        value="${testsRepoCommit}" />
       <entry
         key="JOB_NAME"
         value="${env.JOB_NAME}" />
@@ -944,8 +944,8 @@
     </propertyfile>
         <!-- echo the three key ones to end of log, just to have redundant record. -->
     <echo message="commit: ${buildModelCommit}" />
-    <echo message="toolsCommit: ${toolsCommit}" />
-    <echo message="testsCommit: ${testsCommit}" />
+    <echo message="toolsCommit: ${toolsRepoCommit}" />
+    <echo message="testsCommit: ${testsRepoCommit}" />
     <echo message="JOB_NAME: ${env.JOB_NAME}" />
     <echo message="BUILD_NUMBER: ${env.BUILD_NUMBER}" />
         <!-- just as well write out everything ... just in case something else needed in future. -->
@@ -965,16 +965,16 @@
     if="toolsAvailable">
     <git-rev-parse
       repodir="${BUILD_TOOLS_DIR}"
-      returnproperty="toolsCommit" />
-    <echo message="In target, toolsCommit: ${toolsCommit}" />
+      returnproperty="toolsRepoCommit" />
+    <echo message="In target, toolsRepoCommit: ${toolsRepoCommit}" />
   </target>
   <target
     name="gitRevParseTests"
     if="testsAvailable">
     <git-rev-parse
       repodir="${BUILD_TESTS_DIR}"
-      returnproperty="testsCommit" />
-    <echo message="In target, testsCommit: ${testsCommit}" />
+      returnproperty="testsRepoCommit" />
+    <echo message="In target, testsRepoCommit: ${testsRepoCommit}" />
   </target>
   <target
     name="cleanPreviousAggregations"
