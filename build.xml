@@ -2,33 +2,6 @@
   name="AggregationTasks"
   basedir="."
   default="default">
-  <property environment="env" />
-    <!--
-    This property file name is itself a property, so it can be overridden
-    on one machine versus another. We do it this way, instead of just specifying
-    -propertyFile on command line, so that the property values can be "nested"
-    in other property values and evaluated lazily.
-  -->
-
-  <fail
-    unless="release"
-    message="release must be specified for this script, such as -Drelease=mars" />
-
-  <property
-    name="aggrPropertyFile"
-    value="aggr.properties" />
-
-  <property file="${aggrPropertyFile}" />
-
-    <!--
-    unrewriteMapsLine is a variable, but should never have to be chagned for current sim rel
-    We make the strong assumption that, in *.b3aggrcon file, this string occurs only in
-    repository location attributes. If not true, more complex parsing/replacement would be required.
-  -->
-
-  <property
-    name="commonRepositoryDownloadURLValue"
-    value="http://download.eclipse.org" />
 
   <target
     name="installAggregatorAndTools"
@@ -642,6 +615,34 @@
     depends="getBuildTimestamp, getJobName, getBuildWorkarea"
     unless="isInitialized">
 
+    <property environment="env" />
+        <!--
+        This property file name is itself a property, so it can be overridden
+        on one machine versus another. We do it this way, instead of just specifying
+        -propertyFile on command line, so that the property values can be "nested"
+        in other property values and evaluated lazily.
+      -->
+
+    <fail
+      unless="release"
+      message="release must be specified for this script, such as -Drelease=mars" />
+
+    <property
+      name="aggrPropertyFile"
+      value="aggr.properties" />
+
+    <property file="${aggrPropertyFile}" />
+
+    <!--
+        unrewriteMapsLine is a variable, but should never have to be changed for current sim rel
+        We make the strong assumption that, in *.b3aggrcon file, this string occurs only in
+        repository location attributes. If not true, more complex parsing/replacement would be required.
+    -->
+
+    <property
+      name="commonRepositoryDownloadURLValue"
+      value="http://download.eclipse.org" />
+
         <!-- often, especially for Huson slaves, it is easiest to set hostForURL "manually" in properties or
       on command line, e.g. -DhostForURL=hudson ... but, if not defined yet, we'll fallback to reasonable guess -->
     <property
@@ -905,9 +906,15 @@
       name="BUILD_INFO_DIR"
       value="${AGGREGATOR_RESULTS}/final/buildInfo" />
     <mkdir dir="${BUILD_INFO_DIR}" />
-    <git-rev-parse repodir="${BUILD_MODEL_DIR}" returnproperty="buildModelCommit"/>
-    <git-rev-parse repodir="${BUILD_TOOLS_DIR}" returnproperty="toolsCommit" />
-    <git-rev-parse repodir="${BUILD_TESTS_DIR}" returnproperty="testsCommit"/>
+    <git-rev-parse
+      repodir="${BUILD_MODEL_DIR}"
+      returnproperty="buildModelCommit" />
+    <git-rev-parse
+      repodir="${BUILD_TOOLS_DIR}"
+      returnproperty="toolsCommit" />
+    <git-rev-parse
+      repodir="${BUILD_TESTS_DIR}"
+      returnproperty="testsCommit" />
 
     <propertyfile file="${BUILD_INFO_DIR}/buildInfo.properties">
       <entry
