@@ -436,7 +436,7 @@
         for example, bug 244603 and bug 279596. -->
     <property
       name="BUILDER_VM_ARGS"
-      value="-vmargs -Xmx1024m -Djava.io.tmpdir=${buildWorkarea}/tmp -Declipse.p2.mirrors=false -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
+      value="-vmargs -Xmx1024m -Djava.io.tmpdir=${javaIOTmpdir} -Declipse.p2.mirrors=false -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <echo message="BUILDER_VM_ARGS: ${BUILDER_VM_ARGS}" />
 
@@ -520,7 +520,7 @@
       for example, bug 244603 and bug 279596. -->
     <property
       name="BUILDER_VM_ARGS"
-      value="-vmargs -Xmx1024m -Djava.io.tmpdir=${buildWorkarea}/tmp -Declipse.p2.mirrors=false -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
+      value="-vmargs -Xmx1024m -Djava.io.tmpdir=${javaIOTmpdir} -Declipse.p2.mirrors=false -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <echo message="BUILDER_VM_ARGS: ${BUILDER_VM_ARGS}" />
 
@@ -577,7 +577,7 @@
       for example, bug 244603 and bug 279596. -->
     <property
       name="BUILDER_VM_ARGS"
-      value="-vmargs -Xmx1024m -Djava.io.tmpdir=${buildWorkarea}/tmp -Declipse.p2.mirrors=false -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
+      value="-vmargs -Xmx1024m -Djava.io.tmpdir=${javaIOTmpdir} -Declipse.p2.mirrors=false -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <echo message="BUILDER_VM_ARGS: ${BUILDER_VM_ARGS}" />
 
@@ -658,6 +658,9 @@
       dir="${eclipseWorkspace}"
       quiet="true" />
 
+    <property name="javaIOTmpdir" value="${buildWorkarea}/tmp" />
+    <mkdir dir="${javaIOTmpdir}" />
+      
     <property
       name="eclipseExecutable"
       value="${ECLIPSE_EXE}" />
@@ -694,6 +697,8 @@
       property="eclipseTestExists" />
 
     <echo message="= = = Properties in init = = = " />
+    <echo message="commit: ${commit}" />
+    <echo message="toolsCommit: ${toolsCommit}" />
     <echo message="aggrPropertyFile: ${aggrPropertyFile}" />
     <echo message="buildId: ${buildTimestamp}" />
     <echo message="user.dir: ${user.dir}" />
@@ -710,6 +715,7 @@
     <echo message="eclipseExists: ${eclipseExists}" />
     <echo message="eclipseTestExists: ${eclipseTestExists}" />
     <echo message="BUILDER_VM_ARGS: ${BUILDER_VM_ARGS}" />
+    <echo message="javaIOTmpdir: ${javaIOTmpdir}" />
     <echo message=" = = = = = = = = = = = = " />
     <echoproperties />
         <!-- quick fail, if set up wrong -->
