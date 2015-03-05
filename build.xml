@@ -88,7 +88,7 @@
       dir="${basedir}"
       failonerror="true">
       <arg
-        line="-data ${eclipseWorkspace} -debug -nosplash --launcher.suppressErrors -vm ${JAVA_EXEC_DIR} -application ${APP_NAME} ${OTHER_ARGS_AGG} ${VM_ARGS}" />
+        line="-data ${eclipseWorkspace} -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME} ${OTHER_ARGS_AGG} -vm ${JAVA_EXEC_DIR} ${VM_ARGS}" />
     </exec>
   </target>
   <target
@@ -170,7 +170,7 @@
       dir="${basedir}"
       failonerror="true">
       <arg
-        line="-data ${eclipseWorkspace} -debug -nosplash --launcher.suppressErrors -vm ${JAVA_EXEC_DIR} -application ${APP_NAME} ${OTHER_ARGS_TOOLS} ${VM_ARGS}" />
+        line="-data ${eclipseWorkspace} -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME} ${OTHER_ARGS_TOOLS} -vm ${JAVA_EXEC_DIR} ${VM_ARGS}" />
     </exec>
   </target>
 
@@ -448,14 +448,15 @@
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
+      <arg value="-consolelog" />
       <arg value="-nosplash" />
       <arg line="-data ${eclipseWorkspace}" />
-      <arg line="-vm ${JAVA_6_HOME}/jre/bin" />
       <arg value="--launcher.suppressErrors" />
       <arg line="-application org.eclipse.b3.cli.headless" />
       <arg value="aggregate" />
       <arg line="--buildId ${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
+      <arg line="-vm ${JAVA_6_HOME}/jre/bin" />
       <arg line="${BUILDER_VM_ARGS}" />
     </exec>
 
@@ -530,14 +531,15 @@
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
+      <arg value="-consolelog" />
       <arg value="-nosplash" />
       <arg line="-data ${eclipseWorkspace}" />
-      <arg line="-vm ${JAVA_6_HOME}/jre/bin" />
       <arg value="--launcher.suppressErrors" />
       <arg line="-application org.eclipse.b3.cli.headless" />
       <arg value="aggregate" />
       <arg line="--buildId ${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
+      <arg line="-vm ${JAVA_6_HOME}/jre/bin" />
       <arg line="${BUILDER_VM_ARGS}" />
     </exec>
 
@@ -587,14 +589,15 @@
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
+      <arg value="-consolelog" />
       <arg value="-nosplash" />
       <arg line="-data ${eclipseWorkspace}" />
-      <arg line="-vm ${JAVA_6_HOME}/jre/bin" />
       <arg value="--launcher.suppressErrors" />
       <arg line="-application org.eclipse.b3.cli.headless" />
       <arg value="aggregate" />
       <arg line="--buildId ${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
+      <arg line="-vm ${JAVA_6_HOME}/jre/bin" />
       <arg line="${BUILDER_VM_ARGS}" />
     </exec>
 
@@ -660,7 +663,10 @@
 
     <property name="javaIOTmpdir" value="${buildWorkarea}/tmp" />
     <mkdir dir="${javaIOTmpdir}" />
-      
+    <!-- in case java.io.tmpdir is "passed in", technically, it is BUILDER_VM_ARGS 
+         that is passed in from aggr.properties.
+    -->
+
     <property
       name="eclipseExecutable"
       value="${ECLIPSE_EXE}" />
