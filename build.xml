@@ -157,9 +157,6 @@
     <attribute name="returnProperty" />
     <sequential>
       <echo message="execute git in @{repodir}" />
-      <var
-        name="@{returnProperty}"
-        unset="true" />
       <echo message="git rev-parse @{reference} returned in @{returnProperty}" />
       <exec
         executable="git"
