@@ -159,7 +159,7 @@
       <echo message="execute git in @{repodir}" />
       <echo message="git rev-parse @{reference} returned in @{returnProperty}" />
       <local name="rc" />
-      <local result="result" />
+      <local name="result" />
       <exec
         executable="git"
         failonerror="false"
