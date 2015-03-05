@@ -954,7 +954,7 @@
     <git-rev-parse
       repodir="${BUILD_MODEL_DIR}"
       returnproperty="buildModelCommit" />
-    <echo message="buildModelCommit: ${buildModelCommit}" />
+    <echo message="In target, buildModelCommit: ${buildModelCommit}" />
   </target>
   <target
     name="gitRevParseTools"
@@ -962,7 +962,7 @@
     <git-rev-parse
       repodir="${BUILD_TOOLS_DIR}"
       returnproperty="toolsCommit" />
-    <echo message="toolsCommit: ${toolsCommit}" />
+    <echo message="In target, toolsCommit: ${toolsCommit}" />
   </target>
   <target
     name="gitRevParseTests"
@@ -970,7 +970,7 @@
     <git-rev-parse
       repodir="${BUILD_TESTS_DIR}"
       returnproperty="testsCommit" />
-    <echo message="testCommit: ${testCommit}" />
+    <echo message="In target, testCommit: ${testCommit}" />
   </target>
   <target
     name="cleanPreviousAggregations"
