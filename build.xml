@@ -159,17 +159,20 @@
       <echo message="execute git in @{repodir}" />
       <echo message="git rev-parse @{reference} returned in @{returnProperty}" />
       <local name="rc" />
+      <local result="result" />
       <exec
         executable="git"
         failonerror="false"
+        outputproperty="result"
         resultproperty="rc"
         dir="@{repodir}">
         <arg line="rev-parse @{reference}" />
       </exec>
       <property
         name="@{returnProperty}"
-        value="${rc}" />
+        value="${result}" />
       <echo message="In macro rc is ${rc}" />
+      <echo message="In macro result is ${result}" />
       <echo message="In macro @{returnProperty} is ${@{returnProperty}}" />
     </sequential>
   </macrodef>
