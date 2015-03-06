@@ -67,13 +67,25 @@
       src="${FULL_FILENAME}"
       dest="${ECLIPSE_HOME}" />
 
-        <!-- weird this chmod is required? probably ant bug -->
+   <!--
+        This .options file is most useful on non-eclipse.org sites, since
+        on eclipse.org, by design, should not go through mirrors, but that's the
+        purpose of the .options ... so list which mirrors that artifacts come from.
+   -->
+    <copy
+      file="${buildWorkarea}/${BUILD_TOOLS_DIR}/p2options/.options"
+      todir="${ECLIPSE_HOME}/.options" />
+
+    <!--
+        Weird this chmod is required? Maybe an ant bug? Maybe no longer needed?
+        (That is, maybe an early bug in packages?)
+    -->
     <chmod
       file="${ECLIPSE_HOME}/eclipse/eclipse"
       perm="ugo+x"
       verbose="true" />
 
-        <!-- and now get latest -->
+    <!-- and now get latest -->
     <exec
       executable="${eclipseExecutable}"
       dir="${basedir}"
@@ -82,6 +94,7 @@
         line="-data ${eclipseWorkspace} -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME} ${OTHER_ARGS_AGG} -vm ${JAVA_EXEC_DIR} ${VM_ARGS}" />
     </exec>
   </target>
+
   <target
     name="installTests"
     depends="init, savePreviousTest"
@@ -111,7 +124,7 @@
       perm="ugo+x"
       verbose="true" />
 
-        <!-- get raw files from git ... this is now done by Hudson 
+        <!-- get raw files from git ... this is now done by Hudson
 
     <echo message="  removing previous HOLD_BRANCH.zip if it exists, in ${BUILD_HOME}" />
 
@@ -136,7 +149,7 @@
         includes="**/*" />
     </copy>
 
-        <!-- cleanup temp working files 
+        <!-- cleanup temp working files
     <delete file="${BUILD_HOME}/HOLD_BRANCH.zip" />
     <delete dir="${BUILD_HOME}/${TMPDIR_TESTS}" />
     -->
@@ -296,12 +309,12 @@
           name="message"
           value="Checkout Failed" />
       </antcall>
-            <!-- 
-             And now must merge what we fetched, to make sure we have 
-             the latest in HEAD. We list diff (- -stat) as just a sanity 
+            <!--
+             And now must merge what we fetched, to make sure we have
+             the latest in HEAD. We list diff (- -stat) as just a sanity
              check to leave in log.
         -->
-        <!-- removed merge when letting Hudson do most the work ... 
+        <!-- removed merge when letting Hudson do most the work ...
       <echo message="git merge - -stat" />
       <exec
         executable="git"
@@ -322,9 +335,9 @@
     </sequential>
   </macrodef>
 
-    <!-- 
-         This can leave repo in "detached" state, which, shouldn't hurt anything we're doing, 
-         as long as Hudson can check out/clone branch next time through. 
+    <!--
+         This can leave repo in "detached" state, which, shouldn't hurt anything we're doing,
+         as long as Hudson can check out/clone branch next time through.
     -->
   <macrodef name="git-checkout">
     <attribute name="dir" />
@@ -353,13 +366,13 @@
     name="getModelFromGit"
     depends="init, cloneRepo, cloneToolsRepo, pullRepo, pullToolsRepo"
     unless="modelRetrived">
-    <!-- 
+    <!--
          While Hudson normall does clone and 'pull', we "check" here to make sure.
-         In particular, in some cases, a build might be triggered by a change in "tools" 
+         In particular, in some cases, a build might be triggered by a change in "tools"
          repo, so even then we want to make sure to get 'latest' of "build" repo.
-         In both cases, we *then* want to get a specific revision, if passed to us by 
-         a previous job. This is so that the various jobs we have, 'validate', 
-         'build', and 'build_clean' can all work on the same revision. 
+         In both cases, we *then* want to get a specific revision, if passed to us by
+         a previous job. This is so that the various jobs we have, 'validate',
+         'build', and 'build_clean' can all work on the same revision.
     -->
     <git-checkout
       dir="${BUILD_MODEL_DIR}"
@@ -428,8 +441,8 @@
 
   </target>
 
-  <!-- 
-       No longer used ... will rely on cleaning all of Hudson workspace manually, 
+  <!--
+       No longer used ... will rely on cleaning all of Hudson workspace manually,
        from time to time. But otherwise, rely on "BUILD_CLEAN" in aggregator.
   -->
   <target
@@ -723,9 +736,9 @@
       name="javaIOTmpdir"
       value="${buildWorkarea}/tmp" />
     <mkdir dir="${javaIOTmpdir}" />
-    <!-- in case java.io.tmpdir is "passed in", technically, it is BUILDER_VM_ARGS 
-         that is passed in from aggr.properties. So, make sure this value matches 
-         the properties. 
+    <!-- in case java.io.tmpdir is "passed in", technically, it is BUILDER_VM_ARGS
+         that is passed in from aggr.properties. So, make sure this value matches
+         the properties.
     -->
 
     <property
@@ -738,7 +751,7 @@
       property="eclipseExists" />
 
     <!--
-         set installEclipseAndTools on command line to force a reinstall, 
+         set installEclipseAndTools on command line to force a reinstall,
          is only done if not installed yet.
     -->
     <condition property="installEclipseAndTools">
@@ -747,9 +760,9 @@
       </not>
     </condition>
 
-    <!-- 
+    <!--
          saveAndInstallEclipseAndTools should only be true if "installEclipseAndTools" are
-         set on command line properties (and a version already exists). 
+         set on command line properties (and a version already exists).
     -->
     <condition property="saveAndInstallEclipseAndTools">
       <and>
