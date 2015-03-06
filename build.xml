@@ -3,6 +3,24 @@
   basedir="."
   default="default">
 
+  <property environment="env" />
+        <!--
+        This property file name is itself a property, so it can be overridden
+        on one machine versus another. We do it this way, instead of just specifying
+        -propertyFile on command line, so that the property values can be "nested"
+        in other property values and evaluated lazily.
+      -->
+
+  <fail
+    unless="release"
+    message="release must be specified for this script, such as -Drelease=mars" />
+
+  <property
+    name="aggrPropertyFile"
+    value="aggr.properties" />
+
+  <loadproperties srcfile="${aggrPropertyFile}" />
+
   <target
     name="installAggregatorAndTools"
     depends="init, savePrevious,installAggregator,installRelengTools"
