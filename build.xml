@@ -1045,6 +1045,12 @@
       <entry
         key="BUILD_NUMBER"
         value="${env.BUILD_NUMBER}" />
+      <entry
+        key="buildTimestamp"
+        value="${buildTimestamp}"/>
+        <entry
+          key="buildId"
+          value="${buildTimestamp}"/>
     </propertyfile>
         <!-- echo the three key ones to end of log, just to have redundant record. -->
     <echo message="commit: ${buildModelCommit}" />
