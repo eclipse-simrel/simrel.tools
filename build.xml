@@ -73,7 +73,7 @@
         purpose of the .options ... so list which mirrors that artifacts come from.
    -->
     <copy
-      file="${buildWorkarea}/${BUILD_TOOLS_DIR}/p2options/.options"
+      file="${buildWorkarea}/${BUILD_TOOLS}/p2options/.options"
       todir="${ECLIPSE_HOME}/.options" />
 
     <!--
@@ -98,7 +98,7 @@
   <target
     name="installTests"
     depends="init, savePreviousTest"
-    unless="eclipseTestExists">
+    unless="eclipseTestsExists">
     <property
       name="APP_NAME"
       value="org.eclipse.equinox.p2.director" />
@@ -840,11 +840,12 @@
     <available
       file="${ECLIPSE_HOME_TEST}/eclipse/dropins/${RELENG_TESTS_DIR}"
       type="dir"
-      property="eclipseTestExists" />
+      property="eclipseTestsExists" />
 
     <echo message="= = = Properties in init = = = " />
     <echo message="commit: ${commit}" />
     <echo message="toolsCommit: ${toolsCommit}" />
+    <echo message="testsCommit: ${testsCommit}" />
     <echo message="aggrPropertyFile: ${aggrPropertyFile}" />
     <echo message="buildId: ${buildTimestamp}" />
     <echo message="user.dir: ${user.dir}" />
@@ -859,7 +860,7 @@
     <echo message="logURL: ${logURL}" />
     <echo message="ECLIPSE_EXE:  ${ECLIPSE_EXE}" />
     <echo message="eclipseExists: ${eclipseExists}" />
-    <echo message="eclipseTestExists: ${eclipseTestExists}" />
+    <echo message="eclipseTestsExists: ${eclipseTestsExists}" />
     <echo message="BUILDER_VM_ARGS: ${BUILDER_VM_ARGS}" />
     <echo message="javaIOTmpdir: ${javaIOTmpdir}" />
     <echo message=" = = = = = = = = = = = = " />
@@ -973,7 +974,7 @@
   <target
     name="savePreviousTest"
     depends="init"
-    if="eclipseTestExists">
+    if="eclipseTestsExists">
         <!-- remember, old ones have to be maually cleaned up, from time to time -->
     <fail unless="buildTimestamp" />
 
