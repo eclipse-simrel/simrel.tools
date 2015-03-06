@@ -637,7 +637,7 @@
       name="aggrPropertyFile"
       value="aggr.properties" />
 
-    <property file="${aggrPropertyFile}" />
+    <loadproperties srcfile="${aggrPropertyFile}" />
 
     <!--
         unrewriteMapsLine is a variable, but should never have to be changed for current sim rel
@@ -837,15 +837,14 @@
     <property
       name="buildWorkarea"
       value="${basedir}" />
-    <echo message="Setting buildWorkarea: ${buildWorkarea}" />
+    <echo message="Setting buildWorkarea as basedir: ${buildWorkarea}" />
   </target>
   <target
     name="getHudsonBuildWorkarea"
-    unless="buildWorkarea"
-    if="env.HUDSON_HOME">
+    unless="buildWorkarea">
     <property
       name="buildWorkarea"
-      value="${env.WORKSPACE}" />
+      value="${WORKSPACE}" />
     <echo message="Setting buildWorkarea from Hudson Builder WORKSPACE: ${buildWorkarea}" />
   </target>
 
