@@ -145,7 +145,7 @@
 -->
     <copy todir="${ECLIPSE_HOME_TEST}/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}">
       <fileset
-        dir="${BUILD_HOME}/${RELENG_TESTS_DIR}/"
+        dir="${BUILD_HOME}/${RELENG_TESTS_DIR}/${RELENG_TESTS_PATH}/"
         includes="**/*" />
     </copy>
 
