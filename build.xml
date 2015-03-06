@@ -714,7 +714,7 @@
       value="${buildWorkarea}/eclipseworkingspace" />
 
     <!-- if the eclipse workspace exists, remove it, to make sure we are starting "fresh". Eclipse will create it. Be sure some "archive
-      artifacts" job saves it away, if desired. -->
+      artifacts" job saves it away, if desired, just for it's ".log", if nothing else. -->
     <delete
       dir="${eclipseWorkspace}"
       quiet="true" />
