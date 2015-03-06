@@ -74,7 +74,7 @@
    -->
     <copy
       file="${buildWorkarea}/${BUILD_TOOLS}/p2options/.options"
-      todir="${ECLIPSE_HOME}/.options" />
+      todir="${ECLIPSE_HOME}/eclipse/.options" />
 
     <!--
         Weird this chmod is required? Maybe an ant bug? Maybe no longer needed?
