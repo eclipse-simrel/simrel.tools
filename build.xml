@@ -598,7 +598,7 @@
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
-      <!-- adding -consolelog makes for too much, uneeded output, since the aggregator
+      <!-- adding -consolelog makes for too much, unneeded output, since the aggregator
            produces its own output, slightly cleaner
            <arg value="-consolelog" />
       -->
