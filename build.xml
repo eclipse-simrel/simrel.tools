@@ -844,7 +844,7 @@
     unless="buildWorkarea">
     <property
       name="buildWorkarea"
-      value="${WORKSPACE}" />
+      value="${env.WORKSPACE}" />
     <echo message="Setting buildWorkarea from Hudson Builder WORKSPACE: ${buildWorkarea}" />
   </target>
 
