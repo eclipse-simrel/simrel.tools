@@ -905,7 +905,7 @@
     <property
       name="buildTimestamp"
       value="${env.BUILD_ID}" />
-    <echo message="Using timestamp from Hudson Build ID." />
+    <echo message="Using timestamp from Hudson Build ID: ${buildTimestamp}" />
   </target>
 
   <target
@@ -921,10 +921,10 @@
   <target
     name="getHudsonJobName"
     unless="jobName"
-    if="JOB_NAME">
+    if="env.JOB_NAME">
     <property
       name="jobName"
-      value="${JOB_NAME}" />
+      value="${env.JOB_NAME}" />
     <echo message="Using jobName from Hudson Builder: ${jobName}" />
   </target>
 
