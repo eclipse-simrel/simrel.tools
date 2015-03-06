@@ -115,7 +115,7 @@
     <untar
       compression="gzip"
       overwrite="true"
-      src="${FULL_FILENAME}"
+      src="${FULL_TEST_FILENAME}"
       dest="${ECLIPSE_HOME_TEST}" />
 
         <!-- weird this chmod is required? probably ant bug -->
@@ -143,7 +143,7 @@
       src="${BUILD_HOME}/HOLD_BRANCH.zip"
       dest="${BUILD_HOME}/${TMPDIR_TESTS}" />
 -->
-    <copy todir="${ECLIPSE_HOME_TEST}/eclipse/dropins/${RELENG_TESTS_DIR}">
+    <copy todir="${ECLIPSE_HOME_TEST}/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}">
       <fileset
         dir="${BUILD_HOME}/${RELENG_TESTS_DIR}/"
         includes="**/*" />
@@ -1040,24 +1040,26 @@
         key="testsCommit"
         value="${testsRepoCommit}" />
       <entry
-        key="JOB_NAME"
+        key="triggerJobName"
         value="${env.JOB_NAME}" />
       <entry
-        key="BUILD_NUMBER"
+        key="triggerJobNumber"
         value="${env.BUILD_NUMBER}" />
       <entry
-        key="buildTimestamp"
-        value="${buildTimestamp}"/>
-        <entry
-          key="buildId"
-          value="${buildTimestamp}"/>
+        key="triggerBuildTimestamp"
+        value="${buildTimestamp}" />
+      <entry
+        key="triggerBuildId"
+        value="${buildTimestamp}" />
     </propertyfile>
         <!-- echo the three key ones to end of log, just to have redundant record. -->
     <echo message="commit: ${buildModelCommit}" />
     <echo message="toolsCommit: ${toolsRepoCommit}" />
     <echo message="testsCommit: ${testsRepoCommit}" />
-    <echo message="JOB_NAME: ${env.JOB_NAME}" />
-    <echo message="BUILD_NUMBER: ${env.BUILD_NUMBER}" />
+    <echo message="triggerJobName: ${env.JOB_NAME}" />
+    <echo message="triggerJobNumber: ${env.BUILD_NUMBER}" />
+    <echo message="triggerBuildTimestamp: ${buildTimestamp}" />
+    <echo message="triggerBuildId: ${triggerBuildId}" />
         <!-- just as well write out everything ... just in case something else needed in future. -->
     <echoproperties destfile="${BUILD_INFO_DIR}/allInfo.properties" />
   </target>
