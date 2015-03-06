@@ -362,9 +362,17 @@
     </sequential>
   </macrodef>
 
+  <!--
+     We never really need/use 'clone' when on Hudson.
+     We do use "pull", to make sure "current", and then
+     in main task we "checkout" the exact commit we want. This is primarily so that
+     all tasks (validate, build-with-Cache, and build-Clean, all operate on exact
+     same input). [Though, still need "exact" input, for that to be completely
+     valid.]
+  -->
   <target
     name="getModelFromGit"
-    depends="init, cloneRepo, cloneToolsRepo, pullRepo, pullToolsRepo"
+    depends="init, cloneRepo, cloneToolsRepo, cloneTestsRepo, pullRepo, pullToolsRepo, pullTestsRepo"
     unless="modelRetrived">
     <!--
          While Hudson normall does clone and 'pull', we "check" here to make sure.
@@ -398,75 +406,93 @@
       repository="git://git.eclipse.org/gitroot/simrel/${BUILD_MODEL}.git"
       dir="${BUILD_HOME}"
       branch="${BRANCH_BUILD}" />
-
   </target>
+
   <target
     name="cloneToolsRepo"
     depends="init"
     unless="localToolsRepoExists">
-
-    <echo message="git clone task for ${BUILD_TOOLS} to execute in ${BUILD_HOME} using branch ${BRANCH_BUILD}" />
-
+    <echo message="git clone task for ${BUILD_TOOLS} to execute in ${BUILD_HOME} using branch ${BRANCH_TOOLS}" />
     <git-clone
       repository="git://git.eclipse.org/gitroot/simrel/${BUILD_TOOLS}.git"
       dir="${BUILD_HOME}"
-      branch="${BRANCH_BUILD}" />
-
+      branch="${BRANCH_TOOLS}" />
   </target>
+
+  <target
+    name="cloneTestsRepo"
+    depends="init"
+    unless="localTestsRepoExists">
+    <echo message="git clone task for ${BUILD_TESTS} to execute in ${BUILD_HOME} using branch ${BRANCH_TESTS}" />
+    <git-clone
+      repository="git://git.eclipse.org/gitroot/simrel/${BUILD_TESTS}.git"
+      dir="${BUILD_HOME}"
+      branch="${BRANCH_TESTS}" />
+  </target>
+
   <target
     name="pullRepo"
     depends="init"
     if="localRepoExists">
-
     <echo message="git pull task to execute in ${BUILD_MODEL_DIR}" />
-        <!-- in macro "pull", we actually do a fetch, then check out -->
+    <!-- in macro "pull", we actually do a fetch, then check out -->
     <git-pull
       dir="${BUILD_MODEL_DIR}"
       branch="${BRANCH_BUILD}"
       origin="${BUILD_ORIGIN}" />
-
   </target>
 
   <target
     name="pullToolsRepo"
     depends="init"
     if="localToolsRepoExists">
-
     <echo message="git pull task to execute in ${BUILD_TOOLS_DIR}" />
-          <!-- in macro "pull", we actually do a fetch, then check out -->
     <git-pull
       dir="${BUILD_TOOLS_DIR}"
       branch="${BRANCH_TOOLS}"
       origin="${TOOLS_ORIGIN}" />
+  </target>
 
+  <target
+    name="pullTestsRepo"
+    depends="init"
+    if="localTestsRepoExists">
+    <echo message="git pull task to execute in ${BUILD_TESTS_DIR}" />
+    <git-pull
+      dir="${BUILD_TESTS_DIR}"
+      branch="${BRANCH_TESTS}"
+      origin="${TESTS_ORIGIN}" />
   </target>
 
   <!--
-       No longer used ... will rely on cleaning all of Hudson workspace manually,
-       from time to time. But otherwise, rely on "BUILD_CLEAN" in aggregator.
+       This is "the key" task. If it succeeds, we run tests (reports), and
+       if they "pass", we promote to "staging".
   -->
   <target
     name="runAggregatorCleanBuild"
     depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools,installTests">
-          <!--
+      <!--
         If not otherwise set in properties file, use these values. Note
         the build.eclipse.org production machine must override these values for property
-        values appropriate for it.
+        values appropriate for it (namely production.properties).
       -->
-
-          <!-- -trustedContributions Eclipse,Equinox -->
+    <!--
+       We no longer "trust" Eclipse and Equinox repos.
+       -trustedContributions Eclipse,Equinox
+    -->
     <property
       name="AGG_APP_ARGS"
       value="${AGGREGATOR_APP_ARGS_CLEAN_BUILD}" />
 
-          <!-- Important: on any non-production machines it is important to _not_ use
+      <!-- Important: on any non-production machines it is important to _not_ use
         eclipse.p2.mirrors=false, so this value should be supplied by calling script's
         properties. Note, we include '-vmargs' here, in case there are not any. Not
         sure if the use of -vmargs _requires_ arguments or not, but probably would.
         note: -Declipse.p2.MD5Check=false may be needed as a workaround for bug [253713]
         (should not actually be required ... but have left note for historical reference)
         note: rememeber that JAVA_6 should not be used for jar processor, see
-        for example, bug 244603 and bug 279596. -->
+        for example, bug 244603 and bug 279596.
+    -->
     <property
       name="BUILDER_VM_ARGS"
       value="-Xmx1024m -Djava.io.tmpdir=${javaIOTmpdir} -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
@@ -531,10 +557,16 @@
       message="build failed"
       file="${BUILD_HOME}/buildStatusFailed" />
   </target>
+
+  <!--
+     Note: many tests would not be valid on "cached" version of repo, but, some might?
+     Currently no tests are called, but, we might alter, so we make sure installed now,
+     in anticipation.
+  -->
   <target
     name="runAggregatorBuildOnly"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools">
-        <!--
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools, installTests">
+    <!--
       If not otherwise set in properties file, use these values. Note
       the build.eclipse.org production machine must override these values for property
       values appropriate for it.
@@ -544,14 +576,16 @@
       name="AGG_APP_ARGS"
       value="${AGGREGATOR_APP_ARGS_BUILDONLY}" />
 
-        <!-- Important: on any non-production machines it is important to _not_ use
+    <!--
+      Important: on any non-production machines it is important to _not_ use
       eclipse.p2.mirrors=false, so this value should be supplied by calling script's
       properties. Note, we include '-vmargs' here, in case there are not any. Not
       sure if the use of -vmargs _requires_ arguments or not, but probably would.
       note: -Declipse.p2.MD5Check=false may be needed as a workaround for bug [253713]
-      (should not actually be required ... but have left note for historical reference)
+      (should not be required any longer ... but have left note for historical reference)
       note: rememeber that JAVA_6 should not be used for jar processor, see
-      for example, bug 244603 and bug 279596. -->
+      for example, bug 244603 and bug 279596.
+    -->
     <property
       name="BUILDER_VM_ARGS"
       value="-Xmx1024m -Djava.io.tmpdir=${javaIOTmpdir} -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
@@ -564,7 +598,10 @@
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
-      <!-- <arg value="-consolelog" /> -->
+      <!-- adding -consolelog makes for too much, uneeded output, since the aggregator
+           produces its own output, slightly cleaner
+           <arg value="-consolelog" />
+      -->
       <arg value="-nosplash" />
       <arg line="-data ${eclipseWorkspace}" />
       <arg value="--launcher.suppressErrors" />
@@ -589,9 +626,15 @@
 
   </target>
 
+  <!--
+     Note, we currently have no "tests" for the "validate only" case, but we could, might
+     someday, so we go ahead an install, in anticipation. For example, we might simply
+     test that all b3aggrcon files specify unique URL (to simple repository) or
+     that "versions" are specified in *.b3aggrcon file.
+  -->
   <target
     name="runAggregatorValidateOnly"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools">
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools, installTests">
     <!--
       If not otherwise set in properties file, use these values. Note
       the build.eclipse.org production machine must override these values for property
@@ -602,14 +645,16 @@
       name="AGG_APP_ARGS"
       value="${AGGREGATOR_APP_ARGS_VALIDATEONLY}" />
 
-        <!-- Important: on any non-production machines it is important to _not_ use
+    <!--
+      Important: on any non-production machines it is important to _not_ use
       eclipse.p2.mirrors=false, so this value should be supplied by calling script's
       properties. Note, we include '-vmargs' here, in case there are not any. Not
       sure if the use of -vmargs _requires_ arguments or not, but probably would.
       note: -Declipse.p2.MD5Check=false may be needed as a workaround for bug [253713]
       (should not actually be required ... but have left note for historical reference)
       note: rememeber that JAVA_6 should not be used for jar processor, see
-      for example, bug 244603 and bug 279596. -->
+      for example, bug 244603 and bug 279596.
+    -->
     <property
       name="BUILDER_VM_ARGS"
       value="-Xmx1024m -Djava.io.tmpdir=${javaIOTmpdir} -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
@@ -652,6 +697,10 @@
     depends="getBuildTimestamp, getJobName, getBuildWorkarea"
     unless="isInitialized">
 
+    <fail
+      unless="release"
+      message="release must be specified for this script, such as -Drelease=mars" />
+
     <property environment="env" />
         <!--
         This property file name is itself a property, so it can be overridden
@@ -659,29 +708,39 @@
         -propertyFile on command line, so that the property values can be "nested"
         in other property values and evaluated lazily.
       -->
-
-    <fail
-      unless="release"
-      message="release must be specified for this script, such as -Drelease=mars" />
-
     <property
       name="aggrPropertyFile"
       value="aggr.properties" />
 
     <loadproperties srcfile="${aggrPropertyFile}" />
 
+    <!-- quick fail, if set up wrong -->
+    <fail
+      unless="BUILD_HOME"
+      message="BUILD_HOME must be set before running this script" />
+
     <!--
-        unrewriteMapsLine is a variable, but should never have to be changed for current sim rel
-        We make the strong assumption that, in *.b3aggrcon file, this string occurs only in
-        repository location attributes. If not true, more complex parsing/replacement would be required.
+        rewriteRepositoryURLValue is an important variable, passed in through
+        production.properties. It is the trigger to change http:// values, to
+        file:// values.
+
+        At one point, we needed, unrewriteMapsLine, to know how to "change back" and
+        now use commonRepositoryDownloadURLValue to know "what to look for" to change
+        to rewriteRepositoryURLValue, but this should not be needed to be changed,
+        since we make the strong assumption that, in *.b3aggrcon files, this string
+        occurs only in repository location attributes. If not true, more complex
+        parsing/replacement would be required.
     -->
 
     <property
       name="commonRepositoryDownloadURLValue"
       value="http://download.eclipse.org" />
 
-        <!-- often, especially for Huson slaves, it is easiest to set hostForURL "manually" in properties or
-      on command line, e.g. -DhostForURL=hudson ... but, if not defined yet, we'll fallback to reasonable guess -->
+    <!--
+      Often, especially for Huson slaves, it is easiest to set hostForURL "manually" in properties or
+      on command line, e.g. -DhostForURL=hudson ... but, if not defined yet, we'll fallback to reasonable guess.
+      Note: not sure this is needed any longer?
+    -->
     <property
       name="hostForURL"
       value="${HOSTNAME}" />
@@ -704,30 +763,36 @@
       else="${BRANCH_BUILD}">
       <isset property="commit" />
     </condition>
+
     <condition
       property="toolsCommitOrBranch"
       value="${toolsCommit}"
       else="${BRANCH_TOOLS}">
       <isset property="toolsCommit" />
     </condition>
+
     <condition
       property="testsCommitOrBranch"
       value="${testsCommit}"
       else="${BRANCH_TESTS}">
       <isset property="testsCommit" />
     </condition>
+
     <condition
       property="logURL"
       value="${LOG_URL}"
       else="${hostForURL}">
       <isset property="LOG_URL" />
     </condition>
+
     <property
       name="eclipseWorkspace"
       value="${buildWorkarea}/eclipseworkingspace" />
 
-    <!-- if the eclipse workspace exists, remove it, to make sure we are starting "fresh". Eclipse will create it. Be sure some "archive
-      artifacts" job saves it away, if desired, just for it's ".log", if nothing else. -->
+    <!--
+      If the eclipse workspace exists, remove it, to make sure we are starting "fresh". Eclipse will create it. Be sure some "archive
+      artifacts" job saves it away, if desired, just for it's ".log", if nothing else.
+    -->
     <delete
       dir="${eclipseWorkspace}"
       quiet="true" />
@@ -736,7 +801,8 @@
       name="javaIOTmpdir"
       value="${buildWorkarea}/tmp" />
     <mkdir dir="${javaIOTmpdir}" />
-    <!-- in case java.io.tmpdir is "passed in", technically, it is BUILDER_VM_ARGS
+    <!--
+         In case java.io.tmpdir is "passed in", technically, it is BUILDER_VM_ARGS
          that is passed in from aggr.properties. So, make sure this value matches
          the properties.
     -->
@@ -798,12 +864,10 @@
     <echo message="javaIOTmpdir: ${javaIOTmpdir}" />
     <echo message=" = = = = = = = = = = = = " />
     <echoproperties />
-        <!-- quick fail, if set up wrong -->
-    <fail
-      unless="BUILD_HOME"
-      message="BUILD_HOME must be set before running this script" />
 
-        <!-- remove "build failed" status file, if there is one from previous run -->
+    <!--
+      remove "build failed" status file, if there is one from previous run.
+    -->
     <delete
       failonerror="false"
       quiet="true">
@@ -812,7 +876,7 @@
       </fileset>
     </delete>
 
-        <!--
+    <!--
       no need to initialize twice
     -->
     <property
@@ -820,6 +884,7 @@
       value="true" />
 
   </target>
+
   <target
     name="getBuildTimestamp"
     depends="getHudsonTimestamp"
@@ -830,8 +895,9 @@
         pattern="yyyy-MM-dd_HH-mm-ss"
         timezone="UTC_TIME" />
     </tstamp>
-    <echo message="Using ant computed timestamp" />
+    <echo message="Using ant computed timestamp. Why?" />
   </target>
+
   <target
     name="getHudsonTimestamp"
     unless="buildTimestamp"
@@ -839,7 +905,7 @@
     <property
       name="buildTimestamp"
       value="${env.BUILD_ID}" />
-    <echo message="Using timestamp from Hudson Build ID" />
+    <echo message="Using timestamp from Hudson Build ID." />
   </target>
 
   <target
@@ -849,8 +915,9 @@
     <property
       name="jobName"
       value="localbuild" />
-    <echo message="Using default jobName: localbuild" />
+    <echo message="Using default jobName: localbuild. Why?" />
   </target>
+
   <target
     name="getHudsonJobName"
     unless="jobName"
@@ -870,6 +937,7 @@
       value="${basedir}" />
     <echo message="Setting buildWorkarea as basedir: ${buildWorkarea}" />
   </target>
+
   <target
     name="getHudsonBuildWorkarea"
     unless="buildWorkarea">
@@ -884,7 +952,12 @@
     depends="init"
     if="saveAndInstallEclipseAndTools"
     unless="previousSaved">
-        <!-- remember, old ones have to be maually cleaned up, from time to time -->
+
+    <!--
+        Remember, old, saved versions may have to be maually cleaned up,
+        from time to time. But probably handled well enough by an occasional,
+        manual "clean workspace" from Hudson's web interface.
+    -->
     <move
       verbose="true"
       todir="${ECLIPSE_HOME}/eclipse${buildTimestamp}">
@@ -929,7 +1002,7 @@
     <echo message="        From: ${commonRepositoryDownloadURLValue}" />
     <echo message="          To: ${rewriteRepositoryURLValue}" />
     <echo message="   Excluding no files since no composite artifacts, just agregate" />
-        <!--
+    <!--
       <echo message=" Excluding: ep.b3aggrcon"/>
       <echo message=" Excluding: ep.b3aggrcon, equinox.b3aggrcon"/>
     -->
@@ -1006,6 +1079,13 @@
       returnproperty="testsRepoCommit" />
     <echo message="In target, testsRepoCommit: ${testsRepoCommit}" />
   </target>
+
+
+    <!--
+         No longer used ... we will rely on cleaning all of Hudson workspace manually,
+         from time to time, from Hudson't web interface.
+         But otherwise, rely on "BUILD_CLEAN" in aggregator to get a clean aggregation.
+    -->
   <target
     name="cleanPreviousAggregations"
     unless="nocleanAggregations">
