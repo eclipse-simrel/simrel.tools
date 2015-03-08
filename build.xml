@@ -74,7 +74,7 @@
    -->
     <copy
       file="${buildWorkarea}/${BUILD_TOOLS}/p2options/.options"
-      todir="${ECLIPSE_HOME}/eclipse/.options" />
+      todir="${ECLIPSE_HOME}/eclipse/" />
 
     <!--
         Weird this chmod is required? Maybe an ant bug? Maybe no longer needed?
@@ -108,7 +108,6 @@
     <property
       name="VM_ARGS"
       value="-vmargs -Xmx256m" />
-
 
     <mkdir dir="${ECLIPSE_HOME_TEST}" />
 
