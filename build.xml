@@ -1082,7 +1082,7 @@
     <echo message="triggerJobName: ${env.JOB_NAME}" />
     <echo message="triggerJobNumber: ${env.BUILD_NUMBER}" />
     <echo message="triggerBuildTimestamp: ${buildTimestamp}" />
-    <echo message="triggerBuildId: ${triggerBuildId}" />
+    <echo message="triggerBuildId: ${buildTimestamp}" />
         <!-- just as well write out everything ... just in case something else needed in future. -->
     <echoproperties destfile="${BUILD_INFO_DIR}/allInfo.properties" />
   </target>
