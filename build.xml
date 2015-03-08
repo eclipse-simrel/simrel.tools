@@ -71,11 +71,11 @@
         This .options file is most useful on non-eclipse.org sites, since
         on eclipse.org, by design, should not go through mirrors, but that's the
         purpose of the .options ... so list which mirrors that artifacts come from.
-   -->
+
     <copy
       file="${buildWorkarea}/${BUILD_TOOLS}/p2options/.options"
       todir="${ECLIPSE_HOME}/eclipse/" />
-
+    -->
     <!--
         Weird this chmod is required? Maybe an ant bug? Maybe no longer needed?
         (That is, maybe an early bug in packages?)
@@ -498,24 +498,32 @@
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <echo message="BUILDER_VM_ARGS: -vmargs ${BUILDER_VM_ARGS}" />
 
-     <!-- <antcall target="cleanPreviousAggregations" /> -->
-
     <exec
       executable="${eclipseExecutable}"
       dir="${basedir}"
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
-      <!-- <arg value="-consolelog" /> -->
+      <arg value="file://${buildWorkarea}/${BUILD_TOOLS}/p2options/.options" />
+      <!--
+        Adding -consolelog makes for too much, unneeded output, since the aggregator
+        produces its verbose own output, slightly cleaner.
+        <arg value="-consolelog" />
+      -->
       <arg value="-nosplash" />
-      <arg line="-data ${eclipseWorkspace}" />
+      <arg value="-data" />
+      <arg value="${eclipseWorkspace}" />
       <arg value="--launcher.suppressErrors" />
-      <arg line="-application org.eclipse.b3.cli.headless" />
+      <arg value="-application" />
+      <arg value="org.eclipse.b3.cli.headless" />
       <arg value="aggregate" />
-      <arg line="--buildId ${buildTimestamp}" />
+      <arg value="--buildId" />
+      <arg value="${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
-      <arg line="-vm ${JAVA_6_HOME}/jre/bin" />
-      <arg line="-vmargs ${BUILDER_VM_ARGS}" />
+      <arg value="-vm" />
+      <arg value="${JAVA_6_HOME}/jre/bin" />
+      <arg value="-vmargs" />
+      <arg line="${BUILDER_VM_ARGS}" />
     </exec>
 
     <antcall target="checkStatus">
@@ -529,7 +537,7 @@
 
     <antcall target="createBuildinfo" />
 
-    <ant antfile="${buildWorkarea}/${${RELENG_TESTS_BUNDLE_ID}/runTests.xml"/>
+    <ant antfile="${buildWorkarea}/${${RELENG_TESTS_BUNDLE_ID}/runTests.xml" />
 
   </target>
 
@@ -599,19 +607,26 @@
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
-      <!-- adding -consolelog makes for too much, unneeded output, since the aggregator
-           produces its own output, slightly cleaner
-           <arg value="-consolelog" />
+      <arg value="file://${buildWorkarea}/${BUILD_TOOLS}/p2options/.options" />
+      <!--
+        Adding -consolelog makes for too much, unneeded output, since the aggregator
+        produces its verbose own output, slightly cleaner.
+        <arg value="-consolelog" />
       -->
       <arg value="-nosplash" />
-      <arg line="-data ${eclipseWorkspace}" />
+      <arg value="-data" />
+      <arg value="${eclipseWorkspace}" />
       <arg value="--launcher.suppressErrors" />
-      <arg line="-application org.eclipse.b3.cli.headless" />
+      <arg value="-application" />
+      <arg value="org.eclipse.b3.cli.headless" />
       <arg value="aggregate" />
-      <arg line="--buildId ${buildTimestamp}" />
+      <arg value="--buildId" />
+      <arg value="${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
-      <arg line="-vm ${JAVA_6_HOME}/jre/bin" />
-      <arg line="-vmargs ${BUILDER_VM_ARGS}" />
+      <arg value="-vm" />
+      <arg value="${JAVA_6_HOME}/jre/bin" />
+      <arg value="-vmargs" />
+      <arg line="${BUILDER_VM_ARGS}" />
     </exec>
 
     <antcall target="checkStatus">
@@ -668,16 +683,26 @@
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
-      <!-- <arg value="-consolelog" /> -->
+      <arg value="file://${buildWorkarea}/${BUILD_TOOLS}/p2options/.options" />
+      <!--
+        Adding -consolelog makes for too much, unneeded output, since the aggregator
+        produces its verbose own output, slightly cleaner.
+        <arg value="-consolelog" />
+      -->
       <arg value="-nosplash" />
-      <arg line="-data ${eclipseWorkspace}" />
+      <arg value="-data" />
+      <arg value="${eclipseWorkspace}" />
       <arg value="--launcher.suppressErrors" />
-      <arg line="-application org.eclipse.b3.cli.headless" />
+      <arg value="-application" />
+      <arg value="org.eclipse.b3.cli.headless" />
       <arg value="aggregate" />
-      <arg line="--buildId ${buildTimestamp}" />
+      <arg value="--buildId" />
+      <arg value="${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
-      <arg line="-vm ${JAVA_6_HOME}/jre/bin" />
-      <arg line="-vmargs ${BUILDER_VM_ARGS}" />
+      <arg value="-vm" />
+      <arg value="${JAVA_6_HOME}/jre/bin" />
+      <arg value="-vmargs" />
+      <arg line="${BUILDER_VM_ARGS}" />
     </exec>
 
     <antcall target="checkStatus">
