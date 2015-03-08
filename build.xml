@@ -515,7 +515,7 @@
 
     <antcall target="createBuildinfo" />
 
-    <ant antfile="${buildWorkarea}/${RELENG_TESTS_BUNDLE_ID}/runTests.xml" />
+    <ant antfile="${buildWorkarea}/${RELENG_TESTS_BUNDLE_ID}/runTests.xml" target="cleanBuild" dir="${buildWorkarea}"/>
 
   </target>
 
@@ -618,6 +618,8 @@
 
     <antcall target="createBuildinfo" />
 
+    <ant antfile="${buildWorkarea}/${RELENG_TESTS_BUNDLE_ID}/runTests.xml" target="cachedBuild" dir="${buildWorkarea}"/>
+
   </target>
 
   <!--
@@ -692,7 +694,10 @@
         value="Aggregation Failed" />
     </antcall>
 
+    <!-- setting dir to our workspace, so tests done on what "we" have -->
     <antcall target="createBuildinfo" />
+
+    <ant antfile="${buildWorkarea}/${RELENG_TESTS_BUNDLE_ID}/runTests.xml" target="validateOnly" dir="${buildWorkarea}"/>
 
   </target>
 
