@@ -515,7 +515,7 @@
 
     <antcall target="createBuildinfo" />
 
-    <ant antfile="${buildWorkarea}/${${RELENG_TESTS_BUNDLE_ID}/runTests.xml" />
+    <ant antfile="${buildWorkarea}/${RELENG_TESTS_BUNDLE_ID}/runTests.xml" />
 
   </target>
 
