@@ -98,7 +98,7 @@
   <target
     name="installTests"
     depends="init, savePreviousTest"
-    unless="eclipseTestsExists">
+    if="installEclipseTests">
     <property
       name="APP_NAME"
       value="org.eclipse.equinox.p2.director" />
@@ -283,6 +283,7 @@
         dir="@{dir}">
         <arg line="fetch @{origin}" />
       </exec>
+
       <antcall target="checkStatus">
         <param
           name="status"
@@ -308,35 +309,12 @@
           name="message"
           value="Checkout Failed" />
       </antcall>
-            <!--
-             And now must merge what we fetched, to make sure we have
-             the latest in HEAD. We list diff (- -stat) as just a sanity
-             check to leave in log.
-        -->
-        <!-- removed merge when letting Hudson do most the work ...
-      <echo message="git merge - -stat" />
-      <exec
-        executable="git"
-        failonerror="false"
-        resultproperty="RCMerge"
-        dir="@{dir}">
-        <arg line="merge - -stat" />
-      </exec>
-      <antcall target="checkStatus">
-        <param
-          name="status"
-          value="${RCMerge}" />
-        <param
-          name="message"
-          value="Merge Failed" />
-      </antcall>
-          -->
     </sequential>
   </macrodef>
 
     <!--
          This can leave repo in "detached" state, which, shouldn't hurt anything we're doing,
-         as long as Hudson can check out/clone branch next time through.
+         as long as Hudson can check out/clone branch the next time the job runs.
     -->
   <macrodef name="git-checkout">
     <attribute name="dir" />
@@ -366,7 +344,7 @@
      We do use "pull", to make sure "current", and then
      in main task we "checkout" the exact commit we want. This is primarily so that
      all tasks (validate, build-with-Cache, and build-Clean, all operate on exact
-     same input). [Though, still need "exact" input, for that to be completely
+     same input). [Though, still need "exact" input in b3aggrcon files, for that to be completely
      valid.]
   -->
   <target
@@ -868,6 +846,25 @@
       type="dir"
       property="eclipseTestsExists" />
 
+      <!--
+           set installEclipseTests on command line to force a reinstall,
+           else is done only if not installed yet.
+      -->
+      <condition property="installEclipseTests">
+        <not>
+          <isset property="eclipseTestsExists" />
+        </not>
+      </condition>
+      <!--
+           saveAndInstallEclipseTests should only be true if "installEclipseTests" are
+           set on command line properties (and a version already exists).
+      -->
+      <condition property="saveAndInstallEclipseTests">
+        <and>
+          <isset property="eclipseTestsExists" />
+          <isset property="installEclipseTests" />
+        </and>
+      </condition>
     <echo message="= = = Properties in init = = = " />
     <echo message="commit: ${commit}" />
     <echo message="toolsCommit: ${toolsCommit}" />
@@ -1000,7 +997,7 @@
   <target
     name="savePreviousTest"
     depends="init"
-    if="eclipseTestsExists">
+    if="saveAndInstallEclipseTests">
         <!-- remember, old ones have to be maually cleaned up, from time to time -->
     <fail unless="buildTimestamp" />
 
