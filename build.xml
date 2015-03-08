@@ -515,7 +515,7 @@
 
     <antcall target="createBuildinfo" />
 
-    <ant antfile="${buildWorkarea}/${RELENG_TESTS_BUNDLE_ID}/runTests.xml" target="cleanBuild" dir="${buildWorkarea}"/>
+    <ant antfile="${buildWorkarea}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml" target="cleanBuild" dir="${buildWorkarea}"/>
 
   </target>
 
@@ -618,7 +618,7 @@
 
     <antcall target="createBuildinfo" />
 
-    <ant antfile="${buildWorkarea}/${RELENG_TESTS_BUNDLE_ID}/runTests.xml" target="cachedBuild" dir="${buildWorkarea}"/>
+    <ant antfile="${buildWorkarea}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml" target="cachedBuild" dir="${buildWorkarea}"/>
 
   </target>
 
@@ -697,7 +697,7 @@
     <!-- setting dir to our workspace, so tests done on what "we" have -->
     <antcall target="createBuildinfo" />
 
-    <ant antfile="${buildWorkarea}/${RELENG_TESTS_BUNDLE_ID}/runTests.xml" target="validateOnly" dir="${buildWorkarea}"/>
+    <ant antfile="${buildWorkarea}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml" target="validateOnly" dir="${buildWorkarea}"/>
 
   </target>
 
