@@ -98,7 +98,7 @@ AGGREGATOR_APP_ARGS_VALIDATEONLY="${AGGREGATOR_APP_BASE} --action VALIDATE"
 
 # NOTE: quotes needed in bash scripts ... NOT in ant properties! 
 # -Declipse.p2.mirrors=false
-BUILDER_VM_ARGS="-vmargs -Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"
+BUILDER_VM_ARGS="-Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"
 
 # default for BRANCH_BUILD is master, so for maintenance, build branch 
 # needs to be specified on command line, such as -DBRANCH_BUILD=Kepler_maintenance
