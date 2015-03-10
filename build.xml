@@ -459,7 +459,7 @@
     -->
     <property
       name="AGG_APP_ARGS"
-        value="${AGGREGATOR_APP_ARGS_BUILD}" />
+        value="${AGGREGATOR_APP_ARGS_BUILDONLY}" />
       <!-- temp
       value="${AGGREGATOR_APP_ARGS_CLEAN_BUILD}" />
       -->
