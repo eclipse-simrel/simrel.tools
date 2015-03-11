@@ -475,7 +475,7 @@
     -->
     <property
       name="BUILDER_VM_ARGS"
-      value="-Xmx1024m -Djava.io.tmpdir=${javaIOTmpdir} -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
+      value="-Xmx1024m -Djava.io.tmpdir=${javaIOTmpdir} -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin -Declipse.p2.mirrors=false" />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <echo message="BUILDER_VM_ARGS: -vmargs ${BUILDER_VM_ARGS}" />
 
@@ -578,7 +578,7 @@
     -->
     <property
       name="BUILDER_VM_ARGS"
-      value="-Xmx1024m -Djava.io.tmpdir=${javaIOTmpdir} -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
+      value="-Xmx1024m -Djava.io.tmpdir=${javaIOTmpdir} -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin -Declipse.p2.mirrors=false" />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <echo message="BUILDER_VM_ARGS: -vmargs ${BUILDER_VM_ARGS}" />
 
@@ -656,7 +656,7 @@
     -->
     <property
       name="BUILDER_VM_ARGS"
-      value="-Xmx1024m -Djava.io.tmpdir=${javaIOTmpdir} -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin" />
+      value="-Xmx1024m -Djava.io.tmpdir=${javaIOTmpdir} -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin -Declipse.p2.mirrors=false" />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <echo message="BUILDER_VM_ARGS: -vmargs ${BUILDER_VM_ARGS}" />
 
