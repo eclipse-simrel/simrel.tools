@@ -26,8 +26,8 @@ then
     fi
 fi
 
-featuresDirectory="${toDirectory}"${AGGR}/features
-pluginsDirectory="${toDirectory}"${AGGR}/plugins
+featuresDirectory="${toDirectory}/features"
+pluginsDirectory="${toDirectory}/plugins"
 
 if [ ! -e "${featuresDirectory}" ]
 then 

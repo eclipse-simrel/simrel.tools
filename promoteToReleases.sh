@@ -139,7 +139,7 @@ else
         echo ""
 
         # plugins and features
-        rsync -rvp ${fromDirectory}${AGGR}/* ${toSubDir}${AGGR}/
+        rsync -rvp ${fromDirectory}/* ${toSubDir}/
         checkForErrorExit $? "could not copy files as expected"
 
         # technically, would not need this, if no 'aggregate' directory. 
