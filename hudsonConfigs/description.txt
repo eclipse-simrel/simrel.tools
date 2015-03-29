@@ -8,3 +8,14 @@ directories. Such as, on eclipse build machine:
 
 find /shared/jobs -regex ".*/simrel\..*/config.xml" -exec rsync -aR '{}'/ ~/temp   \; 2>/dev/null
 
+This command seems easier: 
+scpr -a --relative  build:/shared/jobs/simrel.*/config.xml .
+
+Remember, for HIPP instance, won't have direct file access, so either need to do with
+a job, or plugin, or use 
+<url to job>/config.xml
+
+Note: latest version is this "shared" directory, actually includes changes needed 
+to move to "HIPP" instance. So ... if ever need to "move back" to shared, may want to
+backup a version? 
+

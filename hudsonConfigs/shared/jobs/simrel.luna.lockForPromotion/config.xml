@@ -4,14 +4,14 @@
   <description>This manual-only job will effectively lock-out other simrel-build jobs, allowing time for someone to do work directly on build machine ... such as run the promote script. </description>
   <project-properties class="java.util.concurrent.ConcurrentHashMap">
     <entry>
-      <string>hudson-plugins-checkstyle-CheckStylePublisher</string>
+      <string>hudson-plugins-dry-DryPublisher</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
         <modified>false</modified>
       </external-property>
     </entry>
     <entry>
-      <string>hudson-plugins-dry-DryPublisher</string>
+      <string>hudson-plugins-checkstyle-CheckStylePublisher</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
         <modified>false</modified>
@@ -25,17 +25,17 @@
       </boolean-property>
     </entry>
     <entry>
+      <string>org-hudsonci-plugins-snapshotmonitor-SnapshotTrigger</string>
+      <trigger-property>
+        <propertyOverridden>false</propertyOverridden>
+      </trigger-property>
+    </entry>
+    <entry>
       <string>hudson-plugins-disk_usage-DiskUsageProperty</string>
       <base-property>
         <originalValue class="hudson.plugins.disk_usage.DiskUsageProperty"/>
         <propertyOverridden>false</propertyOverridden>
       </base-property>
-    </entry>
-    <entry>
-      <string>org-hudsonci-plugins-snapshotmonitor-SnapshotTrigger</string>
-      <trigger-property>
-        <propertyOverridden>false</propertyOverridden>
-      </trigger-property>
     </entry>
     <entry>
       <string>org-hudsonci-plugins-snapshotmonitor-WatchedDependenciesProperty</string>
@@ -63,12 +63,6 @@
       </log-rotator-property>
     </entry>
     <entry>
-      <string>scmCheckoutRetryCount</string>
-      <integer-property>
-        <propertyOverridden>false</propertyOverridden>
-      </integer-property>
-    </entry>
-    <entry>
       <string>blockBuildWhenUpstreamBuilding</string>
       <boolean-property>
         <originalValue class="boolean">false</originalValue>
@@ -76,11 +70,10 @@
       </boolean-property>
     </entry>
     <entry>
-      <string>hudson-plugins-git-GitPublisher</string>
-      <external-property>
+      <string>scmCheckoutRetryCount</string>
+      <integer-property>
         <propertyOverridden>false</propertyOverridden>
-        <modified>false</modified>
-      </external-property>
+      </integer-property>
     </entry>
     <entry>
       <string>org-hudsonci-maven-plugin-dependencymonitor-DependencyNotifier</string>
@@ -90,7 +83,7 @@
       </external-property>
     </entry>
     <entry>
-      <string>org-hudsonci-maven-plugin-artifactrecorder-ArtifactArchiver</string>
+      <string>hudson-plugins-git-GitPublisher</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
         <modified>false</modified>
@@ -104,7 +97,21 @@
       </external-property>
     </entry>
     <entry>
+      <string>org-hudsonci-maven-plugin-artifactrecorder-ArtifactArchiver</string>
+      <external-property>
+        <propertyOverridden>false</propertyOverridden>
+        <modified>false</modified>
+      </external-property>
+    </entry>
+    <entry>
       <string>hudson-tasks-Mailer</string>
+      <external-property>
+        <propertyOverridden>false</propertyOverridden>
+        <modified>false</modified>
+      </external-property>
+    </entry>
+    <entry>
+      <string>hudson-tasks-test-AggregatedTestResultPublisher</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
         <modified>false</modified>
@@ -118,14 +125,14 @@
       </boolean-property>
     </entry>
     <entry>
-      <string>hudson-tasks-test-AggregatedTestResultPublisher</string>
+      <string>hudson-tasks-junit-JUnitResultArchiver</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
         <modified>false</modified>
       </external-property>
     </entry>
     <entry>
-      <string>hudson-tasks-junit-JUnitResultArchiver</string>
+      <string>hudson-tasks-Fingerprinter</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
         <modified>false</modified>
@@ -137,7 +144,7 @@
         <originalValue class="hudson.plugins.locksandlatches.LockWrapper">
           <locks>
             <hudson.plugins.locksandlatches.LockWrapper_-LockWaitConfig>
-              <name>simrel-lock</name>
+              <name>simrel-lock-maintenance</name>
             </hudson.plugins.locksandlatches.LockWrapper_-LockWaitConfig>
           </locks>
         </originalValue>
@@ -146,14 +153,14 @@
       </external-property>
     </entry>
     <entry>
-      <string>hudson-tasks-Fingerprinter</string>
+      <string>hudson-plugins-sonar-SonarPublisher</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
         <modified>false</modified>
       </external-property>
     </entry>
     <entry>
-      <string>hudson-plugins-sonar-SonarPublisher</string>
+      <string>hudson-tasks-JavadocArchiver</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
         <modified>false</modified>
@@ -167,13 +174,6 @@
       </copy-write-list-property>
     </entry>
     <entry>
-      <string>hudson-tasks-JavadocArchiver</string>
-      <external-property>
-        <propertyOverridden>false</propertyOverridden>
-        <modified>false</modified>
-      </external-property>
-    </entry>
-    <entry>
       <string>hudson-plugins-build_timeout-BuildTimeoutWrapper</string>
       <external-property>
         <originalValue class="hudson.plugins.build_timeout.BuildTimeoutWrapper">
@@ -185,18 +185,18 @@
       </external-property>
     </entry>
     <entry>
-      <string>customWorkspace</string>
-      <string-property>
-        <originalValue class="string">/shared/simrel/luna/org.eclipse.simrel.tools/</originalValue>
-        <propertyOverridden>false</propertyOverridden>
-      </string-property>
-    </entry>
-    <entry>
       <string>hudson-plugins-emailext-ExtendedEmailPublisher</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
         <modified>false</modified>
       </external-property>
+    </entry>
+    <entry>
+      <string>customWorkspace</string>
+      <string-property>
+        <originalValue class="string">/shared/simrel/luna/org.eclipse.simrel.tools/</originalValue>
+        <propertyOverridden>false</propertyOverridden>
+      </string-property>
     </entry>
     <entry>
       <string>quietPeriod</string>
@@ -230,7 +230,11 @@
       <describable-list-property>
         <originalValue class="hudson.util.DescribableList">
           <hudson.tasks.Shell>
-            <command>stagingsegment=staging release=luna ./pauseAll.sh</command>
+            <command>stagingsegment=maintenance release=luna ./pauseAll.sh</command>
+          </hudson.tasks.Shell>
+          <hudson.tasks.Shell>
+            <command>echo &quot;Triggering EPP Luna build...&quot; 
+curl https://hudson.eclipse.org/packaging/job/luna.epp-tycho-build/buildWithParameters?token=Yah6CohtYwO6b?6P</command>
           </hudson.tasks.Shell>
         </originalValue>
         <propertyOverridden>false</propertyOverridden>
@@ -288,18 +292,18 @@
       </external-property>
     </entry>
     <entry>
-      <string>scm</string>
-      <scm-property>
-        <originalValue class="hudson.scm.NullSCM"/>
-        <propertyOverridden>false</propertyOverridden>
-      </scm-property>
-    </entry>
-    <entry>
       <string>hudson-plugins-findbugs-FindBugsPublisher</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
         <modified>false</modified>
       </external-property>
+    </entry>
+    <entry>
+      <string>scm</string>
+      <scm-property>
+        <originalValue class="hudson.scm.NullSCM"/>
+        <propertyOverridden>false</propertyOverridden>
+      </scm-property>
     </entry>
     <entry>
       <string>hudson-triggers-TimerTrigger</string>
@@ -320,13 +324,20 @@
   <creationTime>1375814750247</creationTime>
   <properties>
     <hudson.security.AuthorizationMatrixProperty>
+      <permission>hudson.model.Item.Delete:mknauer</permission>
       <permission>hudson.model.Item.Delete:david_williams</permission>
-      <permission>hudson.model.Item.Workspace:david_williams</permission>
-      <permission>hudson.model.Run.Delete:david_williams</permission>
-      <permission>hudson.model.Item.Configure:david_williams</permission>
-      <permission>hudson.model.Item.Read:david_williams</permission>
-      <permission>hudson.model.Run.Update:david_williams</permission>
+      <permission>hudson.model.Item.Build:mknauer</permission>
       <permission>hudson.model.Item.Build:david_williams</permission>
+      <permission>hudson.model.Item.Configure:mknauer</permission>
+      <permission>hudson.model.Item.Configure:david_williams</permission>
+      <permission>hudson.model.Run.Delete:mknauer</permission>
+      <permission>hudson.model.Run.Delete:david_williams</permission>
+      <permission>hudson.model.Item.Workspace:mknauer</permission>
+      <permission>hudson.model.Item.Workspace:david_williams</permission>
+      <permission>hudson.model.Run.Update:mknauer</permission>
+      <permission>hudson.model.Run.Update:david_williams</permission>
+      <permission>hudson.model.Item.Read:mknauer</permission>
+      <permission>hudson.model.Item.Read:david_williams</permission>
     </hudson.security.AuthorizationMatrixProperty>
   </properties>
   <cascadingChildrenNames class="java.util.concurrent.CopyOnWriteArraySet"/>

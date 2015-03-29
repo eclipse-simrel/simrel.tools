@@ -7,14 +7,14 @@ Neither should have to be ran very often ... only if the tools or tests change. 
 </description>
   <project-properties class="java.util.concurrent.ConcurrentHashMap">
     <entry>
-      <string>hudson-plugins-dry-DryPublisher</string>
+      <string>hudson-plugins-checkstyle-CheckStylePublisher</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
         <modified>false</modified>
       </external-property>
     </entry>
     <entry>
-      <string>hudson-plugins-checkstyle-CheckStylePublisher</string>
+      <string>hudson-plugins-dry-DryPublisher</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
         <modified>false</modified>
@@ -28,17 +28,17 @@ Neither should have to be ran very often ... only if the tools or tests change. 
       </boolean-property>
     </entry>
     <entry>
-      <string>org-hudsonci-plugins-snapshotmonitor-SnapshotTrigger</string>
-      <trigger-property>
-        <propertyOverridden>false</propertyOverridden>
-      </trigger-property>
-    </entry>
-    <entry>
       <string>hudson-plugins-disk_usage-DiskUsageProperty</string>
       <base-property>
         <originalValue class="hudson.plugins.disk_usage.DiskUsageProperty"/>
         <propertyOverridden>false</propertyOverridden>
       </base-property>
+    </entry>
+    <entry>
+      <string>org-hudsonci-plugins-snapshotmonitor-SnapshotTrigger</string>
+      <trigger-property>
+        <propertyOverridden>false</propertyOverridden>
+      </trigger-property>
     </entry>
     <entry>
       <string>org-hudsonci-plugins-snapshotmonitor-WatchedDependenciesProperty</string>
@@ -66,12 +66,6 @@ Neither should have to be ran very often ... only if the tools or tests change. 
       </log-rotator-property>
     </entry>
     <entry>
-      <string>scmCheckoutRetryCount</string>
-      <integer-property>
-        <propertyOverridden>false</propertyOverridden>
-      </integer-property>
-    </entry>
-    <entry>
       <string>blockBuildWhenUpstreamBuilding</string>
       <boolean-property>
         <originalValue class="boolean">false</originalValue>
@@ -79,11 +73,10 @@ Neither should have to be ran very often ... only if the tools or tests change. 
       </boolean-property>
     </entry>
     <entry>
-      <string>org-hudsonci-maven-plugin-dependencymonitor-DependencyNotifier</string>
-      <external-property>
+      <string>scmCheckoutRetryCount</string>
+      <integer-property>
         <propertyOverridden>false</propertyOverridden>
-        <modified>false</modified>
-      </external-property>
+      </integer-property>
     </entry>
     <entry>
       <string>hudson-plugins-git-GitPublisher</string>
@@ -93,7 +86,7 @@ Neither should have to be ran very often ... only if the tools or tests change. 
       </external-property>
     </entry>
     <entry>
-      <string>hudson-plugins-xvnc-Xvnc</string>
+      <string>org-hudsonci-maven-plugin-dependencymonitor-DependencyNotifier</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
         <modified>false</modified>
@@ -101,6 +94,13 @@ Neither should have to be ran very often ... only if the tools or tests change. 
     </entry>
     <entry>
       <string>org-hudsonci-maven-plugin-artifactrecorder-ArtifactArchiver</string>
+      <external-property>
+        <propertyOverridden>false</propertyOverridden>
+        <modified>false</modified>
+      </external-property>
+    </entry>
+    <entry>
+      <string>hudson-plugins-xvnc-Xvnc</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
         <modified>false</modified>
@@ -119,13 +119,6 @@ Neither should have to be ran very often ... only if the tools or tests change. 
       </external-property>
     </entry>
     <entry>
-      <string>hudson-tasks-test-AggregatedTestResultPublisher</string>
-      <external-property>
-        <propertyOverridden>false</propertyOverridden>
-        <modified>false</modified>
-      </external-property>
-    </entry>
-    <entry>
       <string>cleanWorkspaceRequired</string>
       <boolean-property>
         <originalValue class="boolean">false</originalValue>
@@ -133,10 +126,24 @@ Neither should have to be ran very often ... only if the tools or tests change. 
       </boolean-property>
     </entry>
     <entry>
+      <string>hudson-tasks-test-AggregatedTestResultPublisher</string>
+      <external-property>
+        <propertyOverridden>false</propertyOverridden>
+        <modified>false</modified>
+      </external-property>
+    </entry>
+    <entry>
       <string>hudson-tasks-junit-JUnitResultArchiver</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
         <modified>false</modified>
+      </external-property>
+    </entry>
+    <entry>
+      <string>hudson-plugins-locksandlatches-LockWrapper</string>
+      <external-property>
+        <propertyOverridden>false</propertyOverridden>
+        <modified>true</modified>
       </external-property>
     </entry>
     <entry>
@@ -147,28 +154,7 @@ Neither should have to be ran very often ... only if the tools or tests change. 
       </external-property>
     </entry>
     <entry>
-      <string>hudson-plugins-locksandlatches-LockWrapper</string>
-      <external-property>
-        <originalValue class="hudson.plugins.locksandlatches.LockWrapper">
-          <locks>
-            <hudson.plugins.locksandlatches.LockWrapper_-LockWaitConfig>
-              <name>(default)</name>
-            </hudson.plugins.locksandlatches.LockWrapper_-LockWaitConfig>
-          </locks>
-        </originalValue>
-        <propertyOverridden>false</propertyOverridden>
-        <modified>false</modified>
-      </external-property>
-    </entry>
-    <entry>
       <string>hudson-plugins-sonar-SonarPublisher</string>
-      <external-property>
-        <propertyOverridden>false</propertyOverridden>
-        <modified>false</modified>
-      </external-property>
-    </entry>
-    <entry>
-      <string>hudson-tasks-JavadocArchiver</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
         <modified>false</modified>
@@ -188,9 +174,9 @@ Neither should have to be ran very often ... only if the tools or tests change. 
               <hudson.model.StringParameterDefinition>
                 <name>release</name>
                 <description>The release to install for. Either Either 
-luna
+mars
 or 
-mars</description>
+luna</description>
                 <defaultValue>mars</defaultValue>
               </hudson.model.StringParameterDefinition>
             </parameterDefinitions>
@@ -198,6 +184,13 @@ mars</description>
         </originalValue>
         <propertyOverridden>false</propertyOverridden>
       </copy-write-list-property>
+    </entry>
+    <entry>
+      <string>hudson-tasks-JavadocArchiver</string>
+      <external-property>
+        <propertyOverridden>false</propertyOverridden>
+        <modified>false</modified>
+      </external-property>
     </entry>
     <entry>
       <string>hudson-plugins-build_timeout-BuildTimeoutWrapper</string>
@@ -211,17 +204,17 @@ mars</description>
       </external-property>
     </entry>
     <entry>
-      <string>customWorkspace</string>
-      <string-property>
-        <propertyOverridden>false</propertyOverridden>
-      </string-property>
-    </entry>
-    <entry>
       <string>hudson-plugins-emailext-ExtendedEmailPublisher</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
         <modified>false</modified>
       </external-property>
+    </entry>
+    <entry>
+      <string>customWorkspace</string>
+      <string-property>
+        <propertyOverridden>false</propertyOverridden>
+      </string-property>
     </entry>
     <entry>
       <string>quietPeriod</string>
@@ -273,7 +266,7 @@ mars</description>
       <string>appointedNode</string>
       <base-property>
         <originalValue class="appointed-node-property">
-          <nodeName>master||(hudson-slave1||hudson-slave4)</nodeName>
+          <nodeName>hudson-slave2</nodeName>
           <advancedAffinityChooser>true</advancedAffinityChooser>
           <canRoam>false</canRoam>
         </originalValue>
@@ -308,18 +301,18 @@ mars</description>
       </external-property>
     </entry>
     <entry>
-      <string>hudson-plugins-findbugs-FindBugsPublisher</string>
-      <external-property>
-        <propertyOverridden>false</propertyOverridden>
-        <modified>false</modified>
-      </external-property>
-    </entry>
-    <entry>
       <string>scm</string>
       <scm-property>
         <originalValue class="hudson.scm.NullSCM"/>
         <propertyOverridden>false</propertyOverridden>
       </scm-property>
+    </entry>
+    <entry>
+      <string>hudson-plugins-findbugs-FindBugsPublisher</string>
+      <external-property>
+        <propertyOverridden>false</propertyOverridden>
+        <modified>false</modified>
+      </external-property>
     </entry>
     <entry>
       <string>hudson-triggers-TimerTrigger</string>
@@ -341,13 +334,13 @@ mars</description>
   <properties>
     <hudson.security.AuthorizationMatrixProperty>
       <permission>hudson.model.Item.Delete:david_williams</permission>
-      <permission>hudson.model.Item.Workspace:david_williams</permission>
-      <permission>hudson.model.Run.Delete:david_williams</permission>
+      <permission>hudson.model.Item.Build:david_williams</permission>
       <permission>hudson.model.Item.Configure:david_williams</permission>
+      <permission>hudson.model.Run.Delete:david_williams</permission>
+      <permission>hudson.model.Item.Workspace:david_williams</permission>
+      <permission>hudson.model.Run.Update:david_williams</permission>
       <permission>hudson.model.Item.Read:anonymous</permission>
       <permission>hudson.model.Item.Read:david_williams</permission>
-      <permission>hudson.model.Run.Update:david_williams</permission>
-      <permission>hudson.model.Item.Build:david_williams</permission>
     </hudson.security.AuthorizationMatrixProperty>
   </properties>
   <cascadingChildrenNames class="java.util.concurrent.CopyOnWriteArraySet"/>

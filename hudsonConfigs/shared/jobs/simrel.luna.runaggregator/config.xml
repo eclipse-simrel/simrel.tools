@@ -55,10 +55,10 @@
       <string>logRotator</string>
       <log-rotator-property>
         <originalValue class="hudson.tasks.LogRotator">
-          <daysToKeep>5</daysToKeep>
+          <daysToKeep>-1</daysToKeep>
           <numToKeep>10</numToKeep>
-          <artifactDaysToKeep>5</artifactDaysToKeep>
-          <artifactNumToKeep>10</artifactNumToKeep>
+          <artifactDaysToKeep>-1</artifactDaysToKeep>
+          <artifactNumToKeep>-1</artifactNumToKeep>
         </originalValue>
         <propertyOverridden>false</propertyOverridden>
       </log-rotator-property>
@@ -150,12 +150,12 @@
         <originalValue class="hudson.plugins.locksandlatches.LockWrapper">
           <locks>
             <hudson.plugins.locksandlatches.LockWrapper_-LockWaitConfig>
-              <name>simrel-lock</name>
+              <name>simrel-lock-maintenance</name>
             </hudson.plugins.locksandlatches.LockWrapper_-LockWaitConfig>
           </locks>
         </originalValue>
         <propertyOverridden>false</propertyOverridden>
-        <modified>false</modified>
+        <modified>true</modified>
       </external-property>
     </entry>
     <entry>
@@ -199,8 +199,26 @@
     <entry>
       <string>hudson-plugins-emailext-ExtendedEmailPublisher</string>
       <external-property>
+        <originalValue class="hudson.plugins.emailext.ExtendedEmailPublisher">
+          <recipientList>david_williams@us.ibm.com</recipientList>
+          <configuredTriggers>
+            <hudson.plugins.emailext.plugins.trigger.SuccessTrigger>
+              <email>
+                <recipientList></recipientList>
+                <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+                <body>$PROJECT_DEFAULT_CONTENT</body>
+                <sendToDevelopers>false</sendToDevelopers>
+                <includeCulprits>false</includeCulprits>
+                <sendToRecipientList>true</sendToRecipientList>
+              </email>
+            </hudson.plugins.emailext.plugins.trigger.SuccessTrigger>
+          </configuredTriggers>
+          <contentType>default</contentType>
+          <defaultSubject>$DEFAULT_SUBJECT</defaultSubject>
+          <defaultContent>$DEFAULT_CONTENT</defaultContent>
+        </originalValue>
         <propertyOverridden>false</propertyOverridden>
-        <modified>false</modified>
+        <modified>true</modified>
       </external-property>
     </entry>
     <entry>
@@ -213,7 +231,7 @@
       <string>hudson-tasks-BuildTrigger</string>
       <external-property>
         <propertyOverridden>false</propertyOverridden>
-        <modified>false</modified>
+        <modified>true</modified>
       </external-property>
     </entry>
     <entry>
@@ -240,8 +258,8 @@
             <properties>buildWorkarea=/shared/simrel/luna/
 aggrPropertyFile=production.properties
 release=luna
-BRANCH_BUILD=master
-stagingsegment=staging</properties>
+BRANCH_BUILD=Luna_maintenance
+stagingsegment=maintenance</properties>
           </hudson.tasks.Ant>
         </originalValue>
         <propertyOverridden>false</propertyOverridden>
@@ -341,7 +359,7 @@ stagingsegment=staging</properties>
           </remoteRepositories>
           <branches>
             <hudson.plugins.git.BranchSpec>
-              <name>master</name>
+              <name>Luna_maintenance</name>
             </hudson.plugins.git.BranchSpec>
           </branches>
           <mergeOptions/>
@@ -366,6 +384,9 @@ stagingsegment=staging</properties>
     <entry>
       <string>hudson-triggers-TimerTrigger</string>
       <trigger-property>
+        <originalValue class="hudson.triggers.TimerTrigger">
+          <spec>0 6 * * 1</spec>
+        </originalValue>
         <propertyOverridden>false</propertyOverridden>
       </trigger-property>
     </entry>
@@ -382,15 +403,16 @@ stagingsegment=staging</properties>
   <creationTime>1375813209055</creationTime>
   <properties>
     <hudson.security.AuthorizationMatrixProperty>
-      <permission>hudson.model.Item.Delete:david_williams</permission>
-      <permission>hudson.model.Item.Workspace:david_williams</permission>
-      <permission>hudson.model.Run.Delete:david_williams</permission>
       <permission>hudson.model.Item.Configure:david_williams</permission>
       <permission>hudson.model.Item.Read:ROLE_CALLISTO-DEV</permission>
       <permission>hudson.model.Item.Read:david_williams</permission>
-      <permission>hudson.model.Run.Update:david_williams</permission>
+      <permission>hudson.model.Item.Delete:david_williams</permission>
       <permission>hudson.model.Item.Build:ROLE_CALLISTO-DEV</permission>
       <permission>hudson.model.Item.Build:david_williams</permission>
+      <permission>hudson.model.Run.Delete:david_williams</permission>
+      <permission>hudson.model.Run.Update:david_williams</permission>
+      <permission>hudson.model.Item.Workspace:ROLE_CALLISTO-DEV</permission>
+      <permission>hudson.model.Item.Workspace:david_williams</permission>
     </hudson.security.AuthorizationMatrixProperty>
   </properties>
   <cascadingChildrenNames class="java.util.concurrent.CopyOnWriteArraySet"/>
@@ -451,7 +473,7 @@ stagingsegment=staging</properties>
     <skipTag>false</skipTag>
   </scm>
   <canRoam>false</canRoam>
-  <disabled>false</disabled>
+  <disabled>true</disabled>
   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
   <concurrentBuild>false</concurrentBuild>
