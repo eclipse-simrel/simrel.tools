@@ -133,7 +133,7 @@ case "$stream" in
         *)
             usage
             exit 1
-			;;
+      ;;
 esac
 
 # finds file on users path, before current directory

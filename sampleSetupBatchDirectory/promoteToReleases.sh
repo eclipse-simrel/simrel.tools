@@ -96,7 +96,7 @@ case "$stream" in
         *)
             usage
             exit 1
-			;;
+      ;;
 esac
 
 
@@ -167,6 +167,6 @@ else
         #rsync -vp ${fromDirectory}/p2.index ${toSubDir}
         #checkForErrorExit $? "could not copy files as expected"
         echo -e "\n\tremember to add p2.index by hand"
-    fi	
+    fi  
 fi
 

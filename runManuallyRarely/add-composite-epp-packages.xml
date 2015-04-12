@@ -1,11 +1,11 @@
 <project
     default="createcomposite"
     basedir=".">
-	<!-- 
-	A "manual" task that should only have to be ran once
-	With something like 
-	./antRunner add-composite-epp-packages.xml 
-	-->
+  <!-- 
+  A "manual" task that should only have to be ran once
+  With something like 
+  ./antRunner add-composite-epp-packages.xml 
+  -->
     <target
         name="createcomposite">
         <p2.composite.repository>

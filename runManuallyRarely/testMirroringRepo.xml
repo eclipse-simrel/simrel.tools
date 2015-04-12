@@ -1,7 +1,7 @@
 <project
   default="p2Mirror"
   basedir=".">
-	<!-- for misc manual tests only -->
+  <!-- for misc manual tests only -->
   <property
     name="todir"
     value="/shared/simrel/temp" />
