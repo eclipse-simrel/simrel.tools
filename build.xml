@@ -515,7 +515,16 @@
 
     <antcall target="createBuildinfo" />
 
-    <ant antfile="${buildWorkarea}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml" target="cleanBuild" dir="${buildWorkarea}"/>
+    <!--
+         The tests depend on the symbolic link of "latests" being created,
+         so we pause a few seconds for NSF to catch up.
+    -->
+    <sleep seconds="2"/>
+
+    <ant
+      antfile="${buildWorkarea}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
+      target="cleanBuild"
+      dir="${buildWorkarea}" />
 
   </target>
 
@@ -618,7 +627,10 @@
 
     <antcall target="createBuildinfo" />
 
-    <ant antfile="${buildWorkarea}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml" target="cachedBuild" dir="${buildWorkarea}"/>
+    <ant
+      antfile="${buildWorkarea}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
+      target="cachedBuild"
+      dir="${buildWorkarea}" />
 
   </target>
 
@@ -697,7 +709,10 @@
     <!-- setting dir to our workspace, so tests done on what "we" have -->
     <antcall target="createBuildinfo" />
 
-    <ant antfile="${buildWorkarea}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml" target="validateOnly" dir="${buildWorkarea}"/>
+    <ant
+      antfile="${buildWorkarea}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
+      target="validateOnly"
+      dir="${buildWorkarea}" />
 
   </target>
 
@@ -855,21 +870,21 @@
            set installEclipseTests on command line to force a reinstall,
            else is done only if not installed yet.
       -->
-      <condition property="installEclipseTests">
-        <not>
-          <isset property="eclipseTestsExists" />
-        </not>
-      </condition>
+    <condition property="installEclipseTests">
+      <not>
+        <isset property="eclipseTestsExists" />
+      </not>
+    </condition>
       <!--
            saveAndInstallEclipseTests should only be true if "installEclipseTests" are
            set on command line properties (and a version already exists).
       -->
-      <condition property="saveAndInstallEclipseTests">
-        <and>
-          <isset property="eclipseTestsExists" />
-          <isset property="installEclipseTests" />
-        </and>
-      </condition>
+    <condition property="saveAndInstallEclipseTests">
+      <and>
+        <isset property="eclipseTestsExists" />
+        <isset property="installEclipseTests" />
+      </and>
+    </condition>
     <echo message="= = = Properties in init = = = " />
     <echo message="commit: ${commit}" />
     <echo message="toolsCommit: ${toolsCommit}" />
