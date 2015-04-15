@@ -48,7 +48,7 @@ RELENG_TESTS_DIR=org.eclipse.simrel.tests
 BUILD_TESTS_DIR=${BUILD_HOME}/${RELENG_TESTS_DIR}
 
 # we use Java 6 by default. https://bugs.eclipse.org/bugs/show_bug.cgi?id=340267
-export JAVA_HOME=${JAVA_7_HOME}
+export JAVA_HOME=${JAVA_6_HOME}
 export JAVA_EXEC_DIR=${JAVA_HOME}/jre/bin
 export JAVA_CMD=${JAVA_EXEC_DIR}/java
 
@@ -94,7 +94,7 @@ AGGREGATOR_APP_ARGS_VALIDATEONLY="${AGGREGATOR_APP_BASE} --action VALIDATE"
 
 # NOTE: quotes needed in bash scripts ... NOT in ant properties! 
 # -Declipse.p2.mirrors=false
-BUILDER_VM_ARGS="-Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_8_HOME}/jre/bin"
+BUILDER_VM_ARGS="-Xmx1024m -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin"
 
 BRANCH_BUILD=${BRANCH_BUILD:-master}
 TMPDIR_BUILD=sbbuild
