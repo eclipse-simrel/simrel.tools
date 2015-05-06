@@ -28,8 +28,7 @@ then
     BUILDFILESTR=" -file $BUILDFILE"
 fi 
 
-# we MUST use java 5, when using process/pack artifacts! 
-export devJRE=${JAVA_6_HOME}/jre/bin/java
+export devJRE=${JAVA_8_HOME}/jre/bin/java
 
 ibmDevArgs="-Xms128M -Xmx256M -Dosgi.ws=gtk -Dosgi.os=linux -Dosgi.arch=x86" 
 

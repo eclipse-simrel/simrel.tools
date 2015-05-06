@@ -470,9 +470,11 @@
         note: rememeber that JAVA_6 should not be used for jar processor, see
         for example, bug 244603 and bug 279596.
     -->
+    
+    <!-- -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin -Declipse.p2.mirrors=false" -->
     <property
       name="BUILDER_VM_ARGS"
-      value="-Xmx1024m -Djava.io.tmpdir=${javaIOTmpdir} -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin -Declipse.p2.mirrors=false" />
+      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp"  />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <echo message="BUILDER_VM_ARGS: -vmargs ${BUILDER_VM_ARGS}" />
 
@@ -499,7 +501,7 @@
       <arg value="${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
       <arg value="-vm" />
-      <arg value="${JAVA_6_HOME}/jre/bin" />
+      <arg value="${JAVA_8_HOME}/jre/bin" />
       <arg value="-vmargs" />
       <arg line="${BUILDER_VM_ARGS}" />
     </exec>
@@ -519,7 +521,13 @@
          The tests depend on the symbolic link of "latests" being created,
          so we pause a few seconds for NSF to catch up.
     -->
+    <echo message="Waiting 2 seconds..." />
     <sleep seconds="2"/>
+      <echo message="Waiting 2 seconds..." />
+      <sleep seconds="2"/>
+      <echo message="Waiting 2 seconds..." />
+      <sleep seconds="2"/>
+    
 
     <ant
       antfile="${buildWorkarea}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
@@ -582,9 +590,10 @@
       note: rememeber that JAVA_6 should not be used for jar processor, see
       for example, bug 244603 and bug 279596.
     -->
+      <!-- -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin -Declipse.p2.mirrors=false" -->
     <property
       name="BUILDER_VM_ARGS"
-      value="-Xmx1024m -Djava.io.tmpdir=${javaIOTmpdir} -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin -Declipse.p2.mirrors=false" />
+      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp"  />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <echo message="BUILDER_VM_ARGS: -vmargs ${BUILDER_VM_ARGS}" />
 
@@ -611,7 +620,7 @@
       <arg value="${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
       <arg value="-vm" />
-      <arg value="${JAVA_6_HOME}/jre/bin" />
+      <arg value="${JAVA_8_HOME}/jre/bin" />
       <arg value="-vmargs" />
       <arg line="${BUILDER_VM_ARGS}" />
     </exec>
@@ -663,9 +672,10 @@
       note: rememeber that JAVA_6 should not be used for jar processor, see
       for example, bug 244603 and bug 279596.
     -->
+<!--    -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin -Declipse.p2.mirrors=false" -->
     <property
       name="BUILDER_VM_ARGS"
-      value="-Xmx1024m -Djava.io.tmpdir=${javaIOTmpdir} -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin -Declipse.p2.mirrors=false" />
+      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp"  />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <echo message="BUILDER_VM_ARGS: -vmargs ${BUILDER_VM_ARGS}" />
 
