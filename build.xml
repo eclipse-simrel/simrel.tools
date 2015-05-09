@@ -276,6 +276,7 @@
           value="Reset Failed" />
       </antcall>
       <echo message="git fetch @{origin}" />
+      
       <exec
         executable="git"
         failonerror="false"
@@ -638,7 +639,7 @@
 
     <ant
       antfile="${buildWorkarea}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
-      target="cachedBuild"
+      target="cachedBuildTests"
       dir="${buildWorkarea}" />
 
   </target>
@@ -721,7 +722,7 @@
 
     <ant
       antfile="${buildWorkarea}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
-      target="validateOnly"
+      target="validateOnlyTests"
       dir="${buildWorkarea}" />
 
   </target>
