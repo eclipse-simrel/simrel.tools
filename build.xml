@@ -643,7 +643,7 @@
 
     <ant
       antfile="${BUILD_HOME}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
-      target="cachedBuild"
+      target="cachedBuildTests"
       dir="${BUILD_HOME}" />
 
   </target>
@@ -726,7 +726,7 @@
 
     <ant
       antfile="${BUILD_HOME}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
-      target="validateOnly"
+      target="validateOnlyTests"
       dir="${BUILD_HOME}" />
 
   </target>
