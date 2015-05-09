@@ -192,7 +192,7 @@
       <local name="result" />
       <exec
         executable="git"
-        failonerror="false"
+        failonerror="true"
         outputproperty="result"
         resultproperty="rc"
         dir="@{repodir}">
@@ -215,7 +215,7 @@
       <echo message="git clone -b @{branch} @{repository} --config core.autocrlf=input --config merge.defaultToUpstream=true" />
       <exec
         executable="git"
-        failonerror="false"
+        failonerror="true"
         resultproperty="cloneResult"
         dir="@{dir}">
         <arg line="clone -b @{branch} @{repository} --config core.autocrlf=input --config merge.defaultToUpstream=true" />
@@ -246,7 +246,7 @@
       <echo message="git clean -d -ff -x" />
       <exec
         executable="git"
-        failonerror="false"
+        failonerror="true"
         resultproperty="RCclean"
         dir="@{dir}">
         <arg line="clean -d -ff -x" />
@@ -262,7 +262,7 @@
       <echo message="git reset --hard" />
       <exec
         executable="git"
-        failonerror="false"
+        failonerror="true"
         resultproperty="RCreset"
         dir="@{dir}">
         <arg line="reset --hard" />
@@ -279,7 +279,7 @@
       
       <exec
         executable="git"
-        failonerror="false"
+        failonerror="true"
         resultproperty="RCfetch"
         dir="@{dir}">
         <arg line="fetch @{origin}" />
@@ -297,7 +297,7 @@
       <echo message="git checkout -B @{branch} --track @{origin}/@{branch}" />
       <exec
         executable="git"
-        failonerror="false"
+        failonerror="true"
         resultproperty="RCcheckout"
         dir="@{dir}">
         <arg line="checkout -B @{branch} --track @{origin}/@{branch}" />
@@ -324,7 +324,7 @@
       <echo message="execute git checkout @{commit} in @{dir}" />
       <exec
         executable="git"
-        failonerror="false"
+        failonerror="true"
         resultproperty="RCcheckout"
         dir="@{dir}">
         <arg line="checkout @{commit}" />
@@ -924,7 +924,7 @@
       remove "build failed" status file, if there is one from previous run.
     -->
     <delete
-      failonerror="false"
+      failonerror="true"
       quiet="true">
       <fileset dir="${BUILD_HOME}">
         <include name="buildStatusFailed" />
@@ -1160,7 +1160,7 @@
     <echo message="Removing any previous aggregation results, from ${AGGREGATOR_RESULTS}" />
     <delete
       dir="${AGGREGATOR_RESULTS}"
-      failonerror="false" />
+      failonerror="true" />
     <mkdir dir="${AGGREGATOR_RESULTS}" />
   </target>
 
