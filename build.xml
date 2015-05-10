@@ -535,7 +535,8 @@
 
     <!-- runTests can be ran as manual job, but then should use custom workspace, 
          to run against previous build, and acquire the lock, for that job -->
-  <target name="runTests">
+  <target name="runTests"
+      depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools,installTests">
     <ant
       antfile="${BUILD_HOME}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
       target="cleanBuildTests"
