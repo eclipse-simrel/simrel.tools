@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+function createXZ
+{
+  # First get back to XML file
+  # Then XZ compress that xml file
+  # then add p2.index
+  #
+
+  # The BUILDMACHINE_SITE is the abolute directory to the simple repo directory.
+  # (We typically create on the build machine, before copying (rsync'ing) to downloads server).
+  # If a variable is passed to this script, is is assumed to be that site. Otherwise, we
+  # assume BUILDMACHINE_SITE is already an environment variable.
+
+  if [[ -n "$1" ]]
+  then
+    BUILDMACHINE_SITE=$1
+  fi
+
+  if [[ -z "${BUILDMACHINE_SITE}" ]]
+  then
+    echo -e "\n\tERROR: this script requires env variable of BUILDMACHINE_SITE,"
+    echo "     \tthat is, the directory of the simple repo, that contains content.jar."
+    return 1
+  fi
+
+  # confirm content.jar exists. Note: strong assumption the jar already exists.
+  # In theory, if it did not, we could create the jar from the content.xml file,
+  # And then create the XZ compressed version of the xml file.
+  CONTENT_JAR_FILE="${BUILDMACHINE_SITE}/content.jar"
+  if [[ ! -e "${CONTENT_JAR_FILE}" ]]
+  then
+    echo -e "\n\tERROR: content.jar file did not exist at ${BUILDMACHINE_SITE}."
+    return 1
+  fi
+
+  # Notice we overwrite the xml file, if it already exists.
+  unzip -o "${CONTENT_JAR_FILE}" -d "${BUILDMACHINE_SITE}"
+  RC=$?
+  if [[ $RC != 0 ]]
+  then
+    echo "ERROR: could not unzip ${CONTENT_JAR_FILE}."
+    return $RC
+  fi
+
+  CONTENT_XML_FILE="${BUILDMACHINE_SITE}/content.xml"
+  # We will check the content.xml really exists. In some strange world, the content.jar
+  # could contain something else.
+  if [[ ! -e "${CONTENT_XML_FILE}" ]]
+  then
+    echo -e "\n\tERROR: content.xml file did not exist at ${BUILDMACHINE_SITE}."
+    return 1
+  fi
+
+  # finally, compress it, using "extra effort"
+  # Nice thing about xz, relative to other compression methods, it can take
+  # longer to compress it, but not longer to decompress it.
+  # We use 'which' to find the executable, just so we can test if it happens 
+  # to not exist on this particular machine, for some reason.
+  XZ_EXE=$(which xz)
+  if [[ $? != 0 || -z "${XZ_EXE}" ]]
+  then
+    echo -e "\n\tERROR: xz executable did not exist."
+    return 1
+  fi 
+  $XZ_EXE -e --force "${CONTENT_XML_FILE}"
+  RC=$?
+  if [[ $RC != 0 ]]
+  then
+    echo "ERROR: could not compress, using $XZ_EXE -e ${CONTENT_XML_FILE}."
+    return $RC
+  fi
+
+  # Notice we just overwrite a p2.index file, if it already exists.
+  P2_INDEX_FILE="${BUILDMACHINE_SITE}/p2.index"
+  echo "metadata.repository.factory.order= content.xml.xz,content.xml,!" > "${P2_INDEX_FILE}"
+  echo "version=1" >> "${P2_INDEX_FILE}"
+
+  # In the distant future, there might be a time we'd provide only the xz compressed version.
+  # If so, the p2.index file would be
+  #   metadata.repository.factory.order= content.xml.xz,!
+  #   version=1
+  # See bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=464614
+
+}
