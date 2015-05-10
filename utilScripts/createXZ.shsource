@@ -55,14 +55,14 @@ function createXZ
   # finally, compress it, using "extra effort"
   # Nice thing about xz, relative to other compression methods, it can take
   # longer to compress it, but not longer to decompress it.
-  # We use 'which' to find the executable, just so we can test if it happens 
+  # We use 'which' to find the executable, just so we can test if it happens
   # to not exist on this particular machine, for some reason.
   XZ_EXE=$(which xz)
   if [[ $? != 0 || -z "${XZ_EXE}" ]]
   then
     echo -e "\n\tERROR: xz executable did not exist."
     return 1
-  fi 
+  fi
   $XZ_EXE -e --force "${CONTENT_XML_FILE}"
   RC=$?
   if [[ $RC != 0 ]]

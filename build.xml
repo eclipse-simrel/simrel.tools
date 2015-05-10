@@ -73,7 +73,7 @@
         purpose of the .options ... so list which mirrors that artifacts come from.
 
     <copy
-      file="${buildWorkarea}/${BUILD_TOOLS}/p2options/.options"
+      file="${BUILD_HOME}/${BUILD_TOOLS}/p2options/.options"
       todir="${ECLIPSE_HOME}/eclipse/" />
     -->
     <!--
@@ -485,7 +485,7 @@
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
-      <arg value="file://${buildWorkarea}/${BUILD_TOOLS}/p2options/.options" />
+      <arg value="file://${BUILD_HOME}/${BUILD_TOOLS}/p2options/.options" />
       <!--
         Adding -consolelog makes for too much, unneeded output, since the aggregator
         produces its verbose own output, slightly cleaner.
@@ -531,9 +531,9 @@
 
 
     <ant
-      antfile="${buildWorkarea}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
+      antfile="${BUILD_HOME}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
       target="cleanBuild"
-      dir="${buildWorkarea}" />
+      dir="${BUILD_HOME}" />
 
   </target>
 
@@ -604,7 +604,7 @@
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
-      <arg value="file://${buildWorkarea}/${BUILD_TOOLS}/p2options/.options" />
+      <arg value="file://${BUILD_HOME}/${BUILD_TOOLS}/p2options/.options" />
       <!--
         Adding -consolelog makes for too much, unneeded output, since the aggregator
         produces its verbose own output, slightly cleaner.
@@ -638,9 +638,9 @@
     <antcall target="createBuildinfo" />
 
     <ant
-      antfile="${buildWorkarea}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
+      antfile="${BUILD_HOME}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
       target="cachedBuildTests"
-      dir="${buildWorkarea}" />
+      dir="${BUILD_HOME}" />
 
   </target>
 
@@ -686,7 +686,7 @@
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
-      <arg value="file://${buildWorkarea}/${BUILD_TOOLS}/p2options/.options" />
+      <arg value="file://${BUILD_HOME}/${BUILD_TOOLS}/p2options/.options" />
       <!--
         Adding -consolelog makes for too much, unneeded output, since the aggregator
         produces its verbose own output, slightly cleaner.
@@ -721,15 +721,15 @@
     <antcall target="createBuildinfo" />
 
     <ant
-      antfile="${buildWorkarea}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
+      antfile="${BUILD_HOME}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
       target="validateOnlyTests"
-      dir="${buildWorkarea}" />
+      dir="${BUILD_HOME}" />
 
   </target>
 
   <target
     name="init"
-    depends="getBuildTimestamp, getJobName, getBuildWorkarea"
+    depends="getBuildTimestamp, getJobName, getBUILD_HOME"
     unless="isInitialized">
 
     <fail
@@ -748,11 +748,6 @@
       value="aggr.properties" />
 
     <loadproperties srcfile="${aggrPropertyFile}" />
-
-    <!-- quick fail, if set up wrong -->
-    <fail
-      unless="BUILD_HOME"
-      message="BUILD_HOME must be set before running this script" />
 
     <!--
         rewriteRepositoryURLValue is an important variable, passed in through
@@ -822,7 +817,7 @@
 
     <property
       name="eclipseWorkspace"
-      value="${buildWorkarea}/eclipseworkingspace" />
+      value="${BUILD_HOME}/eclipseworkingspace" />
 
     <!--
       If the eclipse workspace exists, remove it, to make sure we are starting "fresh". Eclipse will create it. Be sure some "archive
@@ -834,7 +829,7 @@
 
     <property
       name="javaIOTmpdir"
-      value="${buildWorkarea}/tmp" />
+      value="${BUILD_HOME}/tmp" />
     <mkdir dir="${javaIOTmpdir}" />
     <!--
          In case java.io.tmpdir is "passed in", technically, it is BUILDER_VM_ARGS
@@ -904,7 +899,7 @@
     <echo message="buildId: ${buildTimestamp}" />
     <echo message="user.dir: ${user.dir}" />
     <echo message="user.home: ${user.home}" />
-    <echo message="buildWorkarea (HUDSON workspace): ${buildWorkarea}" />
+    <echo message="BUILD_HOME (HUDSON workspace): ${BUILD_HOME}" />
     <echo message="Eclipse WORKSPACE: ${eclipseWorkspace}" />
     <echo message="PATH: ${env.PATH}" />
     <echo message="JAVA_HOME: ${JAVA_HOME}" />
@@ -984,22 +979,22 @@
   </target>
 
   <target
-    name="getBuildWorkarea"
+    name="getBUILD_HOME"
     depends="getJobName, getHudsonBuildWorkarea"
-    unless="buildWorkarea">
+    unless="BUILD_HOME">
     <property
-      name="buildWorkarea"
+      name="BUILD_HOME"
       value="${basedir}" />
-    <echo message="Setting buildWorkarea as basedir: ${buildWorkarea}" />
+    <echo message="Setting BUILD_HOME as basedir: ${BUILD_HOME}" />
   </target>
 
   <target
     name="getHudsonBuildWorkarea"
-    unless="buildWorkarea">
+    unless="BUILD_HOME">
     <property
-      name="buildWorkarea"
+      name="BUILD_HOME"
       value="${env.WORKSPACE}" />
-    <echo message="Setting buildWorkarea from Hudson Builder WORKSPACE: ${buildWorkarea}" />
+    <echo message="Setting BUILD_HOME from Hudson Builder WORKSPACE: ${BUILD_HOME}" />
   </target>
 
   <target
