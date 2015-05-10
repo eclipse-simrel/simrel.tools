@@ -1,23 +1,22 @@
 
-See 
+See
 https://wiki.eclipse.org/Equinox/p2/p2.mirrorsURL
-for information about using this .options files, and other useful 
-facts about p2 mirroring. 
+for information about using this .options files, and other useful
+facts about p2 mirroring.
 
-May need to (essentially) capture literal "console log"? 
+May need to (essentially) capture literal "console log"?
 2>&1 | tee fulllog.txt
 
-An easy "histogrom" one-liner: 
-grep Selected fulllog.txt | cut -d ":" -f 5- | cut -d "(" -f 2 | cut -d "/" -f 1,2,3 |  sort | uniq -c | sort -r -n 
+An easy "histogrom" one-liner:
+grep Selected fulllog.txt | cut -d ":" -f 5- | cut -d "(" -f 2 | cut -d "/" -f 1,2,3 |  sort | uniq -c | sort -r -n
 
 
 See also
 https://wiki.eclipse.org/Equinox/p2/HiddenOptions
-for some interesting "hidden variables". To quote: 
+for some interesting "hidden variables". To quote:
 
 eclipse.p2.max.threads to control the number of active thread. The default is 4.
 eclipse.p2.force.threading to enable or disable the multi threaded download. The default is true.
 eclipse.p2.mirrors to disable the usage of mirrors when downloading artifacts. The default is true.
 
 
- 

@@ -1,5 +1,5 @@
 <project
-    default="createcomposite" 
+    default="createcomposite"
     basedir=".">
     <target description="Add a   child location to common repository. Repo is created, if it does not already exist."
         name="createcomposite">

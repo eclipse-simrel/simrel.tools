@@ -5,12 +5,12 @@
 # Part of a routine yearly process to remove inactive committers from
 # callisto-dev.
 #
-# In general, besides these "commit records" some people want to be left on, 
-# as "backups" for their projects. 
+# In general, besides these "commit records" some people want to be left on,
+# as "backups" for their projects.
 # And, a few cases of "people recently added" so they would not have had time
-# yet to commit. 
+# yet to commit.
 #
-# For 2014 effort, in November/December of 2014, see 
+# For 2014 effort, in November/December of 2014, see
 #    https://bugs.eclipse.org/bugs/show_bug.cgi?id=450186
 #
 #

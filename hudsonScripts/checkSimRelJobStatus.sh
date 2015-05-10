@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 #
 # Simple utility to run as cronjob to run help promote SimRel builds, when
-# one is ready. 
+# one is ready.
 #
 #
 # Start with minimal path for consistency across machines.
-# This 'mimics' what cron jobs do anyway, as they do not inherit 
+# This 'mimics' what cron jobs do anyway, as they do not inherit
 # users environment.
-# Care is needed not have anything in ${HOME}/bin that would effect the build 
-# unintentionally, but is required to make use of "source xxx.shsource" on 
+# Care is needed not have anything in ${HOME}/bin that would effect the build
+# unintentionally, but is required to make use of "source xxx.shsource" on
 # local, non-production machines.
-# Likely only a "release engineer" would be interested, such as to override 
+# Likely only a "release engineer" would be interested, such as to override
 # standard, production values.
 export PATH=/usr/local/bin:/usr/bin:/bin:${HOME}/bin
 # unset common variables (some defined for e4Build) which we don't want (or, set ourselves)
@@ -26,17 +26,17 @@ unset JRE_HOME
 # we create.
 oldumask=`umask`
 umask 0002
-# Remember, don't echo except when testing, or mail will be sent each time it runs. 
+# Remember, don't echo except when testing, or mail will be sent each time it runs.
 #echo "umask explicitly set to 0002, old value was $oldumask"
 
 source aggr_properties.shsource
 
 # default of 10 minutes (unless overridden in ~bin/aggr_properties.shsource)
 #TODO: the logic, so far, of "default WaitOffsetTime is incorrect. Once 'TIME_DIFF',
-# below, is computed, it does not change (until next build, or promotion), so for 
-# "wait" to work right, we also would need additional checks against "now" 
-# and last build time completion. Carefully choosen cron times should suffice for 
-# practical purposes. 
+# below, is computed, it does not change (until next build, or promotion), so for
+# "wait" to work right, we also would need additional checks against "now"
+# and last build time completion. Carefully choosen cron times should suffice for
+# practical purposes.
 defaultWaitOffsetTime=${defaultWaitOffsetTime:-0}
 
 convertSecs() {
@@ -60,26 +60,26 @@ convertSecs() {
 }
 
 function usage() {
-printf "\n\tScript to check if ready to trigger 'lockForPromotion' job" >&2 
-printf "\n\tUsage: %s -s <stream> [-w <waitOffsetTime>]" "$(basename $0)" >&2 
-printf "\n\t\t%s" "where <stream> is 'main' or 'maintenance'" >&2 
+printf "\n\tScript to check if ready to trigger 'lockForPromotion' job" >&2
+printf "\n\tUsage: %s -s <stream> [-w <waitOffsetTime>]" "$(basename $0)" >&2
+printf "\n\t\t%s" "where <stream> is 'main' or 'maintenance'" >&2
 printf "\n\t\t%s" "(and main currently means mars and maintenance means luna)" >&2
 printf "\n\t\t%s" "and where <waitOffsetTime> is amount of seconds that must" >&2
 printf "\n\t\t%s" "that must have elapsed from previous build, before we trigger promotion process." >&2
 printf "\n\t\t%s" "Default waitOffsetTime is ${defaultWaitOffsetTime} seconds." >&2
 printf "\n\t\t%s" "This offset time allows us to not necessarily promote every build, " >&2
 printf "\n\t\t%s" "but to not wait too long before promoting one." >&2
-printf "\n" >&2 
+printf "\n" >&2
 }
 
-if [[ $# == 0 ]]  
-then 
+if [[ $# == 0 ]]
+then
   printf "\n\tNo arguments given.\n"
   usage
   exit 1
 fi
-if [[ $# > 4 ]]  
-then 
+if [[ $# > 4 ]]
+then
   printf "\n\tToo many arguments given.\n"
   usage
   exit 1
@@ -111,20 +111,20 @@ do
       fi
       ;;
     \?)
-      # I've seen examples wehre just ?, or [?] is used, which means "match any one character", 
-      # whereas literal '?' is returned if getops finds unrecognized argument.     
+      # I've seen examples wehre just ?, or [?] is used, which means "match any one character",
+      # whereas literal '?' is returned if getops finds unrecognized argument.
       # I've not seen documented, but if no arguments supplied, seems getopts returns
-      # '?' and sets $OPTARG to '-'. 
+      # '?' and sets $OPTARG to '-'.
       # so ... decided to handle "no arguments" case before calling getopts.
       printf "\n\tUnknown option: -%s\n" $OPTARG
       usage
       exit 1
       ;;
     *)
-      # This fall-through not really needed in this case, esp. with '?' clause. 
+      # This fall-through not really needed in this case, esp. with '?' clause.
       # Usually need one or the other.
-      # getopts appears to return '?' if no options or an unrecognized option. 
-      # Decide to use it for program check, in case allowable options are added,  
+      # getopts appears to return '?' if no options or an unrecognized option.
+      # Decide to use it for program check, in case allowable options are added,
       # but no matching case statemetns.
       printf "\n\t%s" "ERROR: unhandled option found: $OPTION. Check script case statements. " >&2
       printf "\n" >&2
@@ -134,8 +134,8 @@ do
   esac
 done
 
-# while we currently don't use/expect additional arguments, it's best to 
-# shift away arguments handled by above getopts, so other code (in future) could 
+# while we currently don't use/expect additional arguments, it's best to
+# shift away arguments handled by above getopts, so other code (in future) could
 # handle additional trailing arguments not intended for getopts.
 shift $(($OPTIND - 1))
 
@@ -143,7 +143,7 @@ if [[ "${stream}" == "main" ]]
 then
   RELEASE=mars
 elif [[ "${stream}" == "maintenance" ]]
-then 
+then
   RELEASE=luna
 else
   printf "\n\t%s" "ERROR: stream was neither main nor maintenance, value was ${stream}."
@@ -181,13 +181,13 @@ if [[ $TIME_DIFF -gt $waitOffsetTime ]]
 then
   echo "TIME_DIFF, $( convertSecs ${TIME_DIFF} ), implies a successful build since last promote, so will check to trigger one."
   # first check if one is already building, so we do not just put another in queue
-  # Interestingly, if one is in que a) seems hard to detect that, and b) even if 
-  # we try to put another there, is is 'rejected' so that do no seem to "stack up". 
+  # Interestingly, if one is in que a) seems hard to detect that, and b) even if
+  # we try to put another there, is is 'rejected' so that do no seem to "stack up".
   URL="${HUDSON_HOST}/job/simrel.${RELEASE}.lockForPromotion/api/xml"
   DATA="-d depth=1 --data-urlencode xpath=/*/build/building/text() -d wrapper=job"
   RESULT=$( curl -s -X POST $URL $DATA )
   #echo "DEBUG RESULT: $RESULT"
-  if [[ ! $RESULT =~ .*true.* ]] 
+  if [[ ! $RESULT =~ .*true.* ]]
   then
     echo "A promotion job Was not found to be running so we will trigger one."
     URL="${HUDSON_HOST}/job/simrel.${RELEASE}.lockForPromotion/build"

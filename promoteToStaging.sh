@@ -6,11 +6,11 @@
 
 # Start with minimal path for consistency across machines
 # plus, cron jobs do not inherit an environment
-# care is needed not have anything in ${HOME}/bin that would effect the build 
-# unintentionally, but is required to make use of "source buildeclipse.shsource" on 
-# local machines.  
-# Likely only a "release engineer" would be interested, such as to override "SIGNING" (setting it 
-# to false) for a test I-build on a remote machine. 
+# care is needed not have anything in ${HOME}/bin that would effect the build
+# unintentionally, but is required to make use of "source buildeclipse.shsource" on
+# local machines.
+# Likely only a "release engineer" would be interested, such as to override "SIGNING" (setting it
+# to false) for a test I-build on a remote machine.
 export PATH=/usr/local/bin:/usr/bin:/bin:${HOME}/bin
 # unset common variables (some defined for e4Build) which we don't want (or, set ourselves)
 unset JAVA_HOME
@@ -25,26 +25,26 @@ unset JRE_HOME
 # we create.
 oldumask=`umask`
 umask 0002
-# Remember, don't echo except when testing, or mail will be sent each time it runs. 
+# Remember, don't echo except when testing, or mail will be sent each time it runs.
 #echo "umask explicitly set to 0002, old value was $oldumask"
 
 
 function usage() {
-printf "\n\tScript to promote aggregation to staging area" >&2 
-printf "\n\tUsage: %s -s <stream> " "$(basename $0)" >&2 
-printf "\n\t\t%s" "where <stream> is 'main' or 'maintenance'" >&2 
-printf "\n\t\t%s" "(and main currently means mars and maintenance means luna)" >&2 
-printf "\n" >&2 
+printf "\n\tScript to promote aggregation to staging area" >&2
+printf "\n\tUsage: %s -s <stream> " "$(basename $0)" >&2
+printf "\n\t\t%s" "where <stream> is 'main' or 'maintenance'" >&2
+printf "\n\t\t%s" "(and main currently means mars and maintenance means luna)" >&2
+printf "\n" >&2
 }
 
-if [[ $# == 0 ]]  
-then 
+if [[ $# == 0 ]]
+then
     printf "\n\tNo arguments given.\n"
     usage
     exit 1
 fi
-if [[ $# > 21 ]]  
-then 
+if [[ $# > 21 ]]
+then
     printf "\n\tToo many arguments given.\n"
     usage
     exit 1
@@ -66,19 +66,19 @@ do
             stream=$OPTARG
             ;;
         \?)
-            # I've seen examples wehre just ?, or [?] is used, which means "match any one character", 
-            # whereas literal '?' is returned if getops finds unrecognized argument.     
+            # I've seen examples wehre just ?, or [?] is used, which means "match any one character",
+            # whereas literal '?' is returned if getops finds unrecognized argument.
             # I've not seen documented, but if no arguments supplied, seems getopts returns
-            # '?' and sets $OPTARG to '-'. 
+            # '?' and sets $OPTARG to '-'.
             # so ... decided to handle "no arguments" case before calling getopts.
             printf "\n\tUnknown option: -%s\n" $OPTARG
             usage
             ;;
         *)
-            # This fall-through not really needed in this case, esp. with '?' clause. 
+            # This fall-through not really needed in this case, esp. with '?' clause.
             # Usually need one or the other.
-            # getopts appears to return '?' if no options or an unrecognized option. 
-            # Decide to use it for program check, in case allowable options are added,  
+            # getopts appears to return '?' if no options or an unrecognized option.
+            # Decide to use it for program check, in case allowable options are added,
             # but no matching case statemetns.
             printf "\n\t%s" "ERROR: unhandled option found: $OPTION. Check script case statements. " >&2
             printf "\n" >&2
@@ -88,14 +88,14 @@ do
     esac
 done
 
-# while we currently don't use/expect additional arguments, it's best to 
-# shift away arguments handled by above getopts, so other code (in future) could 
+# while we currently don't use/expect additional arguments, it's best to
+# shift away arguments handled by above getopts, so other code (in future) could
 # handle additional trailing arguments not intended for getopts.
 shift $(($OPTIND - 1))
 
 
 function removeLock
-{   
+{
     # remove lock file from hundson build's "pauseAll.sh" script once we are all done.
     # remember, we need to _always_ remove the lock file, so do not "exit" from script with calling removeLock
     rm -vf "${BUILD_HOME}"/lockfile
@@ -103,7 +103,7 @@ function removeLock
 }
 
 function checkForErrorExit
-{   
+{
     # arg 1 must be return code, $?
     # arg 2 (remaining line) can be message to print before exiting do to non-zer exit code
     exitCode=$1
@@ -115,7 +115,7 @@ function checkForErrorExit
         echo "   ERROR. exit code: ${exitCode}"  ${message}
         echo
         touch "${BUILD_HOME}"/promoteFailed
-        removeLock 
+        removeLock
         exit "${exitCode}"
     fi
 }
@@ -149,7 +149,7 @@ fi
 
 # remember to leave no slashes on first filename in source command,
 # so that users path is used to find it (first, if it exists)
-# variables that user might want/need to override, should be defined, 
+# variables that user might want/need to override, should be defined,
 # in our own aggr_properties.shsource using the X=${X:-"xyz"} syntax.
 source aggr_properties.shsource 2>/dev/null
 source ${BUILD_HOME}/org.eclipse.simrel.tools/aggr_properties.shsource
@@ -164,8 +164,8 @@ fi
 if [[ ! -e "${BUILD_HOME}"/lockfile ]]
 then
    # if lock file does not exist, then do not try and promote, just exit.
-   # For now, we'll write message, but eventually, after cronjob proven, we'll 
-   # do this silently. 
+   # For now, we'll write message, but eventually, after cronjob proven, we'll
+   # do this silently.
    # echo "No lock file found, so exiting promote"
    exit
 fi
@@ -185,7 +185,7 @@ echo "stagingSegment: $stagingSegment"
 echo "fromDirectory: $fromDirectory"
 echo "toDirectory: $toDirectory"
 
-# make sure 'toDirectory' has been defined and is no zero length, or 
+# make sure 'toDirectory' has been defined and is no zero length, or
 # else following will eval to "rm -fr /*" ... potentially catastrophic
 if [ -z "${toDirectory}" ]
 then
@@ -195,12 +195,12 @@ else
     echo "    Count of old features, bundle jars, and packed jars prior to promotion";
     "${BUILD_TOOLS_DIR}"/printStats.sh
     checkForErrorExit $? "printStats did not return normally"
-    echo 
+    echo
 
-    echo 
+    echo
     echo "    Removing previous staging directory files at"
-    echo "    "${toDirectory} 
-    echo 
+    echo "    "${toDirectory}
+    echo
 
     if [ -d ${toDirectory} ]
     then
@@ -208,17 +208,17 @@ else
         checkForErrorExit $? "could not remove " ${toDirectory}
     fi
 
-    echo 
+    echo
     echo "    Copying new plugins and features "
     echo "        from  ${fromDirectory}"
     echo "          to  ${toDirectory}"
-    echo 
+    echo
 
     # plugins and features
     rsync -rvp ${fromDirectory}/final/* ${toDirectory}/
     checkForErrorExit $? "could not copy files as expected"
 
-    # technically, would not need this, if no 'aggregate' directory. 
+    # technically, would not need this, if no 'aggregate' directory.
     # TODO: add logic later to avoid extra copy?
     # composite artifact and content files
     rsync -vp ${fromDirectory}/final/*.jar ${toDirectory}

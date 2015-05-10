@@ -4,7 +4,7 @@ stagingsegment=$1
 
 if [[ -z "${stagingsegment}" ]]
 then
-    echo 
+    echo
     echo "   ERROR: The 'stagingsegment' variable must be specified for this script."
     echo
     exit 1
@@ -22,10 +22,10 @@ devworkspace="${BUILD_HOME}"/addRepoPropertiesWorkspace
 
 devJRE=${JAVA_8_HOME}/jre/bin/java
 
-ibmDevArgs="-Xms128M -Xmx256M -Dosgi.ws=gtk -Dosgi.os=linux -Dosgi.arch=x86" 
+ibmDevArgs="-Xms128M -Xmx256M -Dosgi.ws=gtk -Dosgi.os=linux -Dosgi.arch=x86"
 
 
-# remember, the '&' should be unescaped here ... the p2 api (or underlying xml) will escape it. 
+# remember, the '&' should be unescaped here ... the p2 api (or underlying xml) will escape it.
 devArgs="$ibmDevArgs -Dp2MirrorsURL=http://www.eclipse.org/downloads/download.php?format=xml&file=/releases/${stagingsegment}/ -DartifactRepoDirectory=${REPO_ROOT}/releases/${stagingsegment}/ -Dp2StatsURI=http://download.eclipse.org/stats/releases/${stagingsegment} -Dp2ArtifactRepositoryName=release/${stagingsegment}"
 
 echo "dev:          " $0

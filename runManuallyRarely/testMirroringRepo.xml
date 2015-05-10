@@ -18,7 +18,7 @@
       <slicingOptions platformFilter="true" />
     </p2.mirror>
 
-    <!-- mirror from build results, comparing against previous builds that are in the composite repo 
+    <!-- mirror from build results, comparing against previous builds that are in the composite repo
     <p2.mirror>
       <source location="file:${assemblyTempDir}/${buildLabel}" />
       <destination location="file:${builder}/composite/${buildLabel}" />

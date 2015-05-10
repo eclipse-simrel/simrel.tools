@@ -233,7 +233,7 @@
             <command>stagingsegment=maintenance release=luna ./pauseAll.sh</command>
           </hudson.tasks.Shell>
           <hudson.tasks.Shell>
-            <command>echo &quot;Triggering EPP Luna build...&quot; 
+            <command>echo &quot;Triggering EPP Luna build...&quot;
 curl https://hudson.eclipse.org/packaging/job/luna.epp-tycho-build/buildWithParameters?token=Yah6CohtYwO6b?6P</command>
           </hudson.tasks.Shell>
         </originalValue>

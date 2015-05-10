@@ -47,8 +47,8 @@ checkForErrorExit $? "Error during initial checkout of master"
 git fetch
 checkForErrorExit $? "Error during fetch"
 
-# TODO: something was going wrong here, last time I tried to use. 
-# not sure if "silly mistake", or ... what. Perhaps I had startTag wrong, 
+# TODO: something was going wrong here, last time I tried to use.
+# not sure if "silly mistake", or ... what. Perhaps I had startTag wrong,
 # BUT, should compare with with "makeBranch" scripts?
 git checkout -b $branchName $startTag
 checkForErrorExit $? "Could not create local branch ($branchName) from tag ($startTag)"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # TODO: this doesn't work well, because even limiting to "10 characers", there
-# is some names followed by blanks, others not. 
+# is some names followed by blanks, others not.
 
 cat callisto-dev-ed.txt committerListGit.txt > combined.txt
 sort combined.txt > sortedCombined.txt

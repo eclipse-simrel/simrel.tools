@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-# utility script to "lock" workspace and builds 
-# while "shell work" is going on. 
-# for example, can execute this from hudson (with hudson 
-# lock) before promoting to staging directory, to make 
+# utility script to "lock" workspace and builds
+# while "shell work" is going on.
+# for example, can execute this from hudson (with hudson
+# lock) before promoting to staging directory, to make
 # sure another build doesn't start while promoting, thereby
 # erasing the build we are promoting.
 
-# to end lock, the lockfile must be removed, which can be 
+# to end lock, the lockfile must be removed, which can be
 # done manually, or as part of the script work
-# There is a one-hour time-out built in, which should be plenty 
+# There is a one-hour time-out built in, which should be plenty
 
 if [[ -z "${release}" ]]
 then
-    echo 
+    echo
     echo "   ERRRO: The 'release' environment much be specified for this script. For example,"
     echo "   release=mars ./$( basename $0 )"
     echo
@@ -62,11 +62,11 @@ fi
 "${BUILD_TOOLS_DIR}"/printStats.sh
 exitCode=$?
 if [ "${exitCode}" -ne "0" ]
-then 
+then
     echo "printStats returned an errorCode: " ${exitCode} " Exiting."
     rm "$LOCKFILE"
     exit 1
-fi  
+fi
 
 PAUSE_SECONDS=5
 MAX_TIME=3600
@@ -89,7 +89,7 @@ then
     # actually, we can go ahead and remove failed file now, its served its purpose
     rm $FAILEDFILE
     echo "Found FAILEDFILE. Since promotion failed, exiting now."
-    rm $LOCKFILE 
+    rm $LOCKFILE
     exit 4
 fi
 
@@ -98,11 +98,11 @@ fi
 "${BUILD_TOOLS_DIR}"/printStats.sh
 exitCode=$?
 if [ "${exitCode}" -ne "0" ]
-then 
+then
     echo "printStats returned an errorCode: " ${exitCode} " Exiting."
     rm "$LOCKFILE"
     exit 2
-fi  
+fi
 
 
 if [[ -f "$LOCKFILE"  ]]

@@ -276,7 +276,7 @@
           value="Reset Failed" />
       </antcall>
       <echo message="git fetch @{origin}" />
-      
+
       <exec
         executable="git"
         failonerror="true"
@@ -471,7 +471,7 @@
         note: rememeber that JAVA_6 should not be used for jar processor, see
         for example, bug 244603 and bug 279596.
     -->
-    
+
     <!-- -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin -Declipse.p2.mirrors=false" -->
     <property
       name="BUILDER_VM_ARGS"
@@ -528,7 +528,7 @@
       <sleep seconds="2"/>
       <echo message="Waiting 2 seconds..." />
       <sleep seconds="2"/>
-    
+
 
     <ant
       antfile="${buildWorkarea}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"

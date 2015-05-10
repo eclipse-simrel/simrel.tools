@@ -1,10 +1,10 @@
-This file is meant to provide a place to record what versions of the platform (SDK) are 
-in use, and what version of the b3 aggregator is installed ... just in case that information 
-is ever required (such as to "revert to previous version" or similar. 
+This file is meant to provide a place to record what versions of the platform (SDK) are
+in use, and what version of the b3 aggregator is installed ... just in case that information
+is ever required (such as to "revert to previous version" or similar.
 
-8/11/2014 (both streams) 
+8/11/2014 (both streams)
 
-This update was done in response to bug 
+This update was done in response to bug
 SDK Luna, 4.4
-b3 aggregator: 
+b3 aggregator:
    org.eclipse.b3.aggregator.engine.feature.feature.group 0.3.0.v20140811-0723

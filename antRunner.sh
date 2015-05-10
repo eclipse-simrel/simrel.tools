@@ -2,7 +2,7 @@
 
 if [[ -z "${release}" ]]
 then
-    echo 
+    echo
     echo "   ERRRO: The 'release' environment much be specified for this script. For example,"
     echo "   release=mars ./$( basename $0 )"
     echo
@@ -15,7 +15,7 @@ fi
 
 source aggr_properties.shsource
 
-# specify devworkspace 
+# specify devworkspace
 # and JRE to use to runEclipse
 
 
@@ -23,14 +23,14 @@ devworkspace="${BUILD_HOME}"/antRunnerWorkspace
 
 BUILDFILE=$1
 
-if [ -e $BUILDFILE ] 
+if [ -e $BUILDFILE ]
 then
     BUILDFILESTR=" -file $BUILDFILE"
-fi 
+fi
 
 export devJRE=${JAVA_8_HOME}/jre/bin/java
 
-ibmDevArgs="-Xms128M -Xmx256M -Dosgi.ws=gtk -Dosgi.os=linux -Dosgi.arch=x86" 
+ibmDevArgs="-Xms128M -Xmx256M -Dosgi.ws=gtk -Dosgi.os=linux -Dosgi.arch=x86"
 
 devArgs=$ibmDevArgs
 

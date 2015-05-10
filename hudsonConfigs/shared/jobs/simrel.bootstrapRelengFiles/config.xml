@@ -161,18 +161,18 @@
             <parameterDefinitions>
               <hudson.model.StringParameterDefinition>
                 <name>bootstrapScript</name>
-                <description>Script to execute to bootstrap. 
+                <description>Script to execute to bootstrap.
 
 Either getRelengTools.sh or getRelengTests.sh</description>
                 <defaultValue>getRelengTools.sh</defaultValue>
               </hudson.model.StringParameterDefinition>
               <hudson.model.StringParameterDefinition>
                 <name>release</name>
-                <description>The release to bootstrap. 
+                <description>The release to bootstrap.
 
-Either 
+Either
 mars
-or 
+or
 luna</description>
                 <defaultValue>mars</defaultValue>
               </hudson.model.StringParameterDefinition>

@@ -173,9 +173,9 @@ Neither should have to be ran very often ... only if the tools or tests change. 
               </hudson.model.StringParameterDefinition>
               <hudson.model.StringParameterDefinition>
                 <name>release</name>
-                <description>The release to install for. Either Either 
+                <description>The release to install for. Either Either
 mars
-or 
+or
 luna</description>
                 <defaultValue>mars</defaultValue>
               </hudson.model.StringParameterDefinition>

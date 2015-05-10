@@ -7,7 +7,7 @@
             <repository
                 location="file://${REPO_ROOT}/releases/${release}/"
                 name="Eclipse Mars Repository"/>
-            <add> 
+            <add>
                 <repository location='201106220900'/>
             </add>
             <remove>

@@ -251,7 +251,7 @@
             <command>stagingsegment=staging release=mars ./pauseAll.sh</command>
           </hudson.tasks.Shell>
           <hudson.tasks.Shell>
-            <command>echo &quot;Triggering EPP Mars build...&quot; 
+            <command>echo &quot;Triggering EPP Mars build...&quot;
 curl https://hudson.eclipse.org/packaging/job/mars.epp-tycho-build/buildWithParameters?token=Yah6CohtYwO6b?6P</command>
           </hudson.tasks.Shell>
         </originalValue>
