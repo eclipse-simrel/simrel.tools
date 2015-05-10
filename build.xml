@@ -475,7 +475,7 @@
     <!-- -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin -Declipse.p2.mirrors=false" -->
     <property
       name="BUILDER_VM_ARGS"
-      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp"  />
+      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp" />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <echo message="BUILDER_VM_ARGS: -vmargs ${BUILDER_VM_ARGS}" />
 
@@ -523,18 +523,23 @@
          so we pause a few seconds for NSF to catch up.
     -->
     <echo message="Waiting 2 seconds..." />
-    <sleep seconds="2"/>
-      <echo message="Waiting 2 seconds..." />
-      <sleep seconds="2"/>
-      <echo message="Waiting 2 seconds..." />
-      <sleep seconds="2"/>
+    <sleep seconds="2" />
+    <echo message="Waiting 2 seconds..." />
+    <sleep seconds="2" />
+    <echo message="Waiting 2 seconds..." />
+    <sleep seconds="2" />
 
+    <antcall target="runTests" />
 
+  </target>
+
+    <!-- runTests can be ran as manual job, but then should use custom workspace, 
+         to run against previous build, and acquire the lock, for that job -->
+  <target name="runTests">
     <ant
       antfile="${BUILD_HOME}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
-      target="cleanBuild"
+      target="cleanBuildTests"
       dir="${BUILD_HOME}" />
-
   </target>
 
   <target name="checkStatus">
@@ -594,7 +599,7 @@
       <!-- -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin -Declipse.p2.mirrors=false" -->
     <property
       name="BUILDER_VM_ARGS"
-      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp"  />
+      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp" />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <echo message="BUILDER_VM_ARGS: -vmargs ${BUILDER_VM_ARGS}" />
 
@@ -676,7 +681,7 @@
 <!--    -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin -Declipse.p2.mirrors=false" -->
     <property
       name="BUILDER_VM_ARGS"
-      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp"  />
+      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp" />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <echo message="BUILDER_VM_ARGS: -vmargs ${BUILDER_VM_ARGS}" />
 
@@ -980,7 +985,7 @@
 
   <target
     name="getBUILD_HOME"
-    depends="getJobName, getHudsonBuildWorkarea"
+    depends="getJobName, getHudsonBUILD_HOME"
     unless="BUILD_HOME">
     <property
       name="BUILD_HOME"
@@ -989,12 +994,22 @@
   </target>
 
   <target
-    name="getHudsonBuildWorkarea"
+    name="getHudsonBUILD_HOME"
+    depends="getWorkspace"
     unless="BUILD_HOME">
     <property
       name="BUILD_HOME"
       value="${env.WORKSPACE}" />
     <echo message="Setting BUILD_HOME from Hudson Builder WORKSPACE: ${BUILD_HOME}" />
+  </target>
+
+  <target
+    name="getWorkspace"
+    unless="BUILD_HOME">
+    <property
+      name="BUILD_HOME"
+      value="${WORKSPACE}" />
+    <echo message="Setting BUILD_HOME from direct property of Hudson Builder WORKSPACE: ${BUILD_HOME}" />
   </target>
 
   <target
