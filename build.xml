@@ -1088,17 +1088,16 @@
   </target>
 
   <target name="createXZformat">
-    <exec executable="/bin/bash"      
-        dir="${basedir}"
-        failonerror="true">
-        <arg
-          line="convertxz.sh ${AGGREGATOR_RESULTS}/final" />
+    <exec
+      executable="/bin/bash"
+      dir="${basedir}"
+      failonerror="true">
+      <arg line="convertxz.sh ${AGGREGATOR_RESULTS}/final" />
     </exec>
   </target>
 
   <target
-    name="
-      createBuildinfo "
+    name="createBuildinfo"
     depends="checkAvailableDirs, gitRevParseModel, gitRevParseTools, gitRevParseTests">
 
     <property
