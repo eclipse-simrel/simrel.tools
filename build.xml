@@ -1087,7 +1087,7 @@
       property="testsAvailable" />
   </target>
 
-  <target name="createXZformat">
+  <target name="createXZformats">
     <exec
       executable="/bin/bash"
       dir="${basedir}"
