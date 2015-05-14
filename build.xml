@@ -517,7 +517,7 @@
     </antcall>
 
     <antcall target="createBuildinfo" />
-
+    <antcall target="createXZformats" />
     <!--
          The tests depend on the symbolic link of "latests" being created,
          so we pause a few seconds for NSF to catch up.
@@ -535,8 +535,9 @@
 
     <!-- runTests can be ran as manual job, but then should use custom workspace, 
          to run against previous build, and acquire the lock, for that job -->
-  <target name="runTests"
-      depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools,installTests">
+  <target
+    name="runTests"
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools,installTests">
     <ant
       antfile="${BUILD_HOME}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
       target="cleanBuildTests"
@@ -1085,8 +1086,19 @@
       file="${BUILD_TESTS_DIR}"
       property="testsAvailable" />
   </target>
+
+  <target name="createXZformat">
+    <exec executable="/bin/bash"      
+        dir="${basedir}"
+        failonerror="true">
+        <arg
+          line="convertxz.sh ${AGGREGATOR_RESULTS}/final" />
+    </exec>
+  </target>
+
   <target
-    name="createBuildinfo"
+    name="
+      createBuildinfo "
     depends="checkAvailableDirs, gitRevParseModel, gitRevParseTools, gitRevParseTests">
 
     <property
