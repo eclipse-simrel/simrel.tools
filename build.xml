@@ -460,7 +460,7 @@
     -->
     <property
       name="AGG_APP_ARGS"
-      value="${AGGREGATOR_APP_ARGS_CLEAN_BUILD} --eclipseLogLevel=DEBUG --logLevel=DEBUG" />
+      value="${AGGREGATOR_APP_ARGS_CLEAN_BUILD} --eclipseLogLevel DEBUG --logLevel DEBUG" />
 
       <!-- Important: on any non-production machines it is important to _not_ use
         eclipse.p2.mirrors=false, so this value should be supplied by calling script's
