@@ -460,7 +460,7 @@
     -->
     <property
       name="AGG_APP_ARGS"
-      value="${AGGREGATOR_APP_ARGS_CLEAN_BUILD}" />
+      value="${AGGREGATOR_APP_ARGS_CLEAN_BUILD} --eclipseLogLevel=DEBUG --logLevel=DEBUG" />
 
       <!-- Important: on any non-production machines it is important to _not_ use
         eclipse.p2.mirrors=false, so this value should be supplied by calling script's
@@ -515,8 +515,15 @@
         name="message"
         value="Aggregation Failed" />
     </antcall>
+      
+      <echo message="Waiting 2 seconds..." />
+      <sleep seconds="2" />
+      <echo message="Waiting 2 seconds..." />
+      <sleep seconds="2" />
+      <echo message="Waiting 2 seconds..." />
+      <sleep seconds="2" />
 
-    <antcall target="createBuildinfo" />
+      <antcall target="createBuildinfo" />
     <antcall target="createXZformats" />
     <!--
          The tests depend on the symbolic link of "latests" being created,
