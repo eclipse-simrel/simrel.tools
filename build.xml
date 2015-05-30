@@ -294,13 +294,21 @@
           value="fetch Failed" />
       </antcall>
 
-      <echo message="git checkout -B @{branch} --track @{origin}/@{branch}" />
+       <!-- not sure why, but when I used
+       - -track origin2/MarRC1-branch
+       it resulted in an error (below). Since I don't think we really need to track, I removed.
+       13:19:40       [echo] git checkout -B MarsRC1-branch - -track origin2/MarsRC1-branch
+       13:19:40       [exec] fatal: Cannot update paths and switch to branch 'MarsRC1-branch' at the same time.
+       13:19:40       [exec] Did you intend to checkout 'origin2/MarsRC1-branch' which can not be resolved as commit?
+       -->
+        
+      <echo message="git checkout -B @{branch}" />
       <exec
         executable="git"
         failonerror="true"
         resultproperty="RCcheckout"
         dir="@{dir}">
-        <arg line="checkout -B @{branch} --track @{origin}/@{branch}" />
+        <arg line="checkout -B @{branch}" />
       </exec>
       <antcall target="checkStatus">
         <param
