@@ -56,8 +56,8 @@
       buckminster builder site -version 1.0.0.v20090415-1651 -->
     <property
       name="VM_ARGS"
-      value="-Xmx256m -Declipse.p2.mirrors=false" />
-
+      value="-Xmx256m" />
+<!-- -Declipse.p2.mirrors=false -->
 
     <mkdir dir="${ECLIPSE_HOME}" />
 
@@ -480,10 +480,10 @@
         for example, bug 244603 and bug 279596.
     -->
 
-    <!-- -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin -Declipse.p2.mirrors=false" -->
+    <!-- -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin " -->
     <property
       name="BUILDER_VM_ARGS"
-      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp -Declipse.p2.mirrors=false" />
+      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp " />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <echo message="BUILDER_VM_ARGS: -vmargs ${BUILDER_VM_ARGS}" />
 
@@ -613,10 +613,10 @@
       note: rememeber that JAVA_6 should not be used for jar processor, see
       for example, bug 244603 and bug 279596.
     -->
-      <!-- -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin -Declipse.p2.mirrors=false" -->
+      <!-- -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin " -->
     <property
       name="BUILDER_VM_ARGS"
-      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp -Declipse.p2.mirrors=false" />
+      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp " />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <echo message="BUILDER_VM_ARGS: -vmargs ${BUILDER_VM_ARGS}" />
 
@@ -695,10 +695,10 @@
       note: rememeber that JAVA_6 should not be used for jar processor, see
       for example, bug 244603 and bug 279596.
     -->
-<!--    -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin -Declipse.p2.mirrors=false" -->
+<!--    -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin " -->
     <property
       name="BUILDER_VM_ARGS"
-      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp -Declipse.p2.mirrors=false" />
+      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp " />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <echo message="BUILDER_VM_ARGS: -vmargs ${BUILDER_VM_ARGS}" />
 
