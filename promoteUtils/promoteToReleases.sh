@@ -11,7 +11,7 @@ function usage
   printf "\n" >&2
 }
 
-if [[ $# != 4 ]]
+if [[ $# != 4 || $# != 5 ]]
 then
   printf "\n\t%s\n" "ERROR: Incorrect number of arguments given."
   usage
@@ -32,7 +32,7 @@ do
       usage
       exit 1
       ;;
-    d)
+    n)
       DRYRUN="--dry-run"
       ;;
     s)
@@ -88,12 +88,12 @@ function checkForErrorExit
 case "$stream" in
   main)
     export release=neon
-    export stagingsegment=staging
+    export stagingDirectory="/home/data/httpd/download.eclipse.org/releases/staging"
     export releasesegment=current
     ;;
   maintenance)
     export release=mars
-    export stagingsegment=maintenance
+    export stagingDirectory="/home/data/httpd/download.eclipse.org/releases/maintenance"
     export releasesegment=maintenance
     ;;
   *)
