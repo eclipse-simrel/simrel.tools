@@ -149,7 +149,7 @@ else
     #rsync ${DRYRUN}  -vp "${BUILD_TOOLS_DIR}/templateFiles/release/${releasesegment}/index.html" ${toDirectory}
     #checkForErrorExit $? "could not copy files as expected"
 
-    if [[ "$DRYRUN}" != "--dry-run" ]]
+    if [[ "${DRYRUN}" != "--dry-run" ]]
     then
       "${BUILD_TOOLS_DIR}"/addRepoProperties-release.sh ${release} ${datetimestamp}
       checkForErrorExit $? "repo properties could not be updated as expected"
