@@ -11,7 +11,7 @@ function usage
   printf "\n" >&2
 }
 
-if [[ $# != 4 || $# != 5 ]]
+if [[ $# != 4 && $# != 5 ]]
 then
   printf "\n\t%s\n" "ERROR: Incorrect number of arguments given."
   usage
