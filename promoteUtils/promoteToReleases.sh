@@ -24,7 +24,7 @@ DRYRUN=""
 # the initial ':' keeps getopts in quiet mode ... meaning it doesn't print "illegal argument" type messages.
 # to get it in completely silent mode, assign $OPTERR=0
 # the other ':' is the ususal "OPTARG"
-while getopts ':hs:d:' OPTION
+while getopts ':hns:d:' OPTION
 do
   options_found=1
   case $OPTION in
