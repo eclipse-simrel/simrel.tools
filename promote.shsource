@@ -2,9 +2,9 @@
 
 # common variables used in scripts
 
-# It is required to specify a top level directory, 
+# It is required to specify a top level directory,
 # that will contain all else involved with the promote
-export BUILD_HOME=${BUILD_HOME:-/shared/simrel/tools
+export BUILD_HOME=${BUILD_HOME:-/shared/simrel/tools}
 echo "BUILD_HOME: $BUILD_HOME"
 
 # Java should be configured per machine,
