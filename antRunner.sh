@@ -7,7 +7,7 @@ then
     echo "   release=mars ./$( basename $0 )"
     echo
     exit 1
-else
+else 
     echo
     echo "release: ${release}"
     echo

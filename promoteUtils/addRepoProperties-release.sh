@@ -19,7 +19,7 @@ else
     echo "release: ${release}"
     echo
 fi
-
+ 
 source promote.shsource
 
 APP_NAME=org.eclipse.wtp.releng.tools.addRepoProperties

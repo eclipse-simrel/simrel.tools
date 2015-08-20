@@ -8,7 +8,7 @@ then
     echo "   ERROR: The 'stagingsegment' variable must be specified for this script."
     echo
     exit 1
-else
+else 
     echo
     echo "stagingsegment: ${stagingsegment}"
     echo

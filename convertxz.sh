@@ -9,3 +9,4 @@ source createXZ.shsource
 # don't think this "export function" is needed here?
 export -f createXZ
 createXZ "${1}"
+ 

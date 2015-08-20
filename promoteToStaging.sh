@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # script to copy update jars from their working area to the staging area
-
+ 
 # Simple utility to run as cronjob to run Eclipse Platform builds
 # Normally resides in $BUILD_HOME
 
