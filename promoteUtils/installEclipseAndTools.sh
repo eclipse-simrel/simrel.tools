@@ -18,4 +18,4 @@ ${ECLIPSE_HOME}/eclipse/eclipse -nosplash -debug -data workspace-intallEclipseAn
   -application org.eclipse.equinox.p2.director \
   -repository  "${REPO}" \
   -installIU \
-  org.eclipse.wtp.releng.tools.feature.feature.group
+  org.eclipse.wtp.releng.tools.feature.feature.group vm $JAVA_CMD

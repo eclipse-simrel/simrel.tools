@@ -28,7 +28,7 @@ then
     BUILDFILESTR=" -file $BUILDFILE"
 fi
 
-export devJRE=${JAVA_HOME}/jre/bin/java
+export JAVA_CMD=${JAVA_HOME}/jre/bin/java
 
 ibmDevArgs="-Xms128M -Xmx256M -Dosgi.ws=gtk -Dosgi.os=linux -Dosgi.arch=x86"
 
@@ -38,12 +38,12 @@ echo dev:          $0
 echo
 echo devworkspace: $devworkspace
 echo
-echo devJRE:       $devJRE
-$devJRE -version
+echo JAVA_CMD:       $JAVA_CMD
+$JAVA_CMD -version
 echo
 
 
 
-${ECLIPSE_EXE}  -nosplash -debug -consolelog -console -data $devworkspace -application org.eclipse.ant.core.antRunner $BUILDFILESTR -vm $devJRE -vmargs $devArgs
+${ECLIPSE_EXE}  -nosplash -debug -consolelog -console -data $devworkspace -application org.eclipse.ant.core.antRunner $BUILDFILESTR -vm $JAVA_CMD -vmargs $devArgs
 
 
