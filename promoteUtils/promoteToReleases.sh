@@ -151,10 +151,10 @@ else
 
     if [[ "${DRYRUN}" != "--dry-run" ]]
     then
-      "${BUILD_TOOLS_DIR}"/addRepoProperties-release.sh ${release} ${datetimestamp}
+      "${BUILD_TOOLS_DIR}/promoteUtils/addRepoProperties-release.sh" ${release} ${datetimestamp}
       checkForErrorExit $? "repo properties could not be updated as expected"
       pushd ${tosubDir}
-      "${BUILD_TOOLS}/convert.sh"
+      "${BUILD_TOOLS_DIR}/convert.sh" "${toSubDir}"
       popd
     else
       echo "Doing DRYRUN, otherwise addRepoProperties and createxz called here."
