@@ -4,11 +4,10 @@
 function usage
 {
   printf "\n\tScript to promote aggregation to staging area" >&2
-  printf "\n\tUsage: %s -s <stream> -d <datetimestamp>" "$(basename $0)" >&2
+  printf "\n\tUsage: %s [-n] -s <stream> -d <datetimestamp>" "$(basename $0)" >&2
   printf "\n\t\t%s" "where <stream> is 'main' or 'maintenance'" >&2
   printf "\n\t\t%s" "   (and main currently means mars and maintenance means luna)" >&2
   printf "\n\t\t%s" "and where <datetimestamp> is the date and time for the directory name of the composite child repository, such as '201208240900'" >&2
-  printf "\n\t\t%s" "-n, if specified means \"no\". That is, the script just does a dry-run." >&2
   printf "\n" >&2
 }
 
@@ -33,7 +32,7 @@ do
       usage
       exit 1
       ;;
-    n)
+    d)
       DRYRUN="--dry-run"
       ;;
     s)
