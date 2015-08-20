@@ -20,13 +20,13 @@ else
     echo
 fi
 
-source aggr_properties.shsource
+source promote.shsource
 
 APP_NAME=org.eclipse.wtp.releng.tools.addRepoProperties
 
-devworkspace="${BUILD_HOME}"/addRepoPropertiesWorkspace
+devworkspace="${BUILD_HOME}/addRepoPropertiesWorkspace"
 
-devJRE=${JAVA_8_HOME}/jre/bin/java
+devJRE=${JAVA_HOME}/jre/bin/java
 
 ibmDevArgs="-Xms128M -Xmx256M -Dosgi.ws=gtk -Dosgi.os=linux -Dosgi.arch=x86"
 

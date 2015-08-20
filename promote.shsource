@@ -33,15 +33,13 @@ export JAVA_EXEC_DIR=${JAVA_HOME}/jre/bin
 export JAVA_CMD=${JAVA_EXEC_DIR}/java
 
 # platform installs.
-ECLIPSE_INSTALL=${BUILD_HOME}/prereqs
+ECLIPSE_INSTALL=${BUILD_HOME}
 
 # properties say what to consider eclipse home
 ECLIPSE_HOME_44=${ECLIPSE_INSTALL}/eclipse44
 
 ECLIPSE_HOME=${ECLIPSE_HOME_44}
 
-
-#stagingDirectory=${REPO_ROOT}/releases/${stagingsegment}
 releaseDirectory=${REPO_ROOT}/releases/${release}
 testRepoDirectory=${BUILD_HOME}/aggregation/final/
 
