@@ -7,7 +7,6 @@ export BUILD_HOME=${BUILD_HOME:-/shared/simrel/${release}}
 # TODO: make sure build home does not end with
 # literal {release}
 echo "BUILD_HOME: $BUILD_HOME"
-fi
 
 # Java should be configured per machine,
 # so this variable point to valid installs.
