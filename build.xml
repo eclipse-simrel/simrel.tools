@@ -301,7 +301,7 @@
        13:19:40       [exec] fatal: Cannot update paths and switch to branch 'MarsRC1-branch' at the same time.
        13:19:40       [exec] Did you intend to checkout 'origin2/MarsRC1-branch' which can not be resolved as commit?
        -->
-        
+
       <echo message="git checkout -B @{branch}" />
       <exec
         executable="git"
@@ -318,6 +318,28 @@
           name="message"
           value="Checkout Failed" />
       </antcall>
+
+
+
+      <echo message="git checkout -B @{branch}" />
+      <exec
+        executable="git"
+        failonerror="true"
+        resultproperty="RCcheckout"
+        dir="@{dir}">
+        <arg line="checkout -B @{branch}" />
+      </exec>
+      <antcall target="checkStatus">
+        <param
+          name="status"
+          value="${RCcheckout}" />
+        <param
+          name="message"
+          value="Checkout Failed" />
+      </antcall>
+
+
+
     </sequential>
   </macrodef>
 
@@ -523,15 +545,15 @@
         name="message"
         value="Aggregation Failed" />
     </antcall>
-      
-      <echo message="Waiting 2 seconds..." />
-      <sleep seconds="2" />
-      <echo message="Waiting 2 seconds..." />
-      <sleep seconds="2" />
-      <echo message="Waiting 2 seconds..." />
-      <sleep seconds="2" />
 
-      <antcall target="createBuildinfo" />
+    <echo message="Waiting 2 seconds..." />
+    <sleep seconds="2" />
+    <echo message="Waiting 2 seconds..." />
+    <sleep seconds="2" />
+    <echo message="Waiting 2 seconds..." />
+    <sleep seconds="2" />
+
+    <antcall target="createBuildinfo" />
     <antcall target="createXZformats" />
     <!--
          The tests depend on the symbolic link of "latests" being created,

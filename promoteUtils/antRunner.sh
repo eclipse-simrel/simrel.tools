@@ -13,7 +13,7 @@ else
     echo
 fi
 
-source aggr_properties.shsource
+source promote.shsource
 
 # specify devworkspace
 # and JRE to use to runEclipse
