@@ -151,6 +151,10 @@ else
 
     "${BUILD_TOOLS_DIR}"/addRepoProperties-release.sh ${release} ${datetimestamp}
     checkForErrorExit $? "repo properties could not be updated as expected"
+  
+     pushd ${tosubDir}
+    "${BUILD_TOOLS}/convert.sh"
+    popd
 
     # copy standard p2.index page
     # We do it last, to use as an indicator file that we are done.
