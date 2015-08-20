@@ -153,9 +153,7 @@ else
     then
       "${BUILD_TOOLS_DIR}/promoteUtils/addRepoProperties-release.sh" ${release} ${datetimestamp}
       checkForErrorExit $? "repo properties could not be updated as expected"
-      pushd ${tosubDir}
-      "${BUILD_TOOLS_DIR}/convert.sh" "${toSubDir}"
-      popd
+      "${BUILD_TOOLS_DIR}/popdconvertxz.sh" "${toSubDir}"
     else
       echo "Doing DRYRUN, otherwise addRepoProperties and createxz called here."
     fi
