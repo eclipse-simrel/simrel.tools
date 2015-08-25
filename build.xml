@@ -242,7 +242,11 @@
     <attribute name="branch" />
     <attribute name="origin" />
     <sequential>
-      <echo message="= = = execute git in @{dir}" />
+      <echo message="Doing git-pull task: " />  
+        <echo message="   dir: @{dir}" />  
+        <echo message="   branch: @{branch}" />  
+        <echo message="   origin: @{origin}" />  
+      <echo message="   = = = execute git clean in @{dir}" />
       <echo message="git clean -d -ff -x" />
       <exec
         executable="git"
@@ -259,7 +263,7 @@
           name="message"
           value="Cleaning Failed" />
       </antcall>
-      <echo message="git reset --hard" />
+      <echo message="   === doing git reset --hard" />
       <exec
         executable="git"
         failonerror="true"
@@ -275,8 +279,7 @@
           name="message"
           value="Reset Failed" />
       </antcall>
-      <echo message="git fetch @{origin}" />
-
+      <echo message="   === git fetch @{origin}" />
       <exec
         executable="git"
         failonerror="true"
@@ -302,7 +305,7 @@
        13:19:40       [exec] Did you intend to checkout 'origin2/MarsRC1-branch' which can not be resolved as commit?
        -->
 
-      <echo message="git checkout -B @{branch}" />
+      <echo message="   === git checkout -B @{branch}" />
       <exec
         executable="git"
         failonerror="true"
@@ -321,7 +324,7 @@
 
 
 
-      <echo message="git checkout -B @{branch}" />
+      <echo message="   === git checkout -B @{branch}" />
       <exec
         executable="git"
         failonerror="true"
