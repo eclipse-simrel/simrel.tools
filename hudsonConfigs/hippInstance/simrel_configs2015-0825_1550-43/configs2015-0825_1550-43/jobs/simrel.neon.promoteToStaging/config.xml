@@ -1,0 +1,220 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>This job takes &quot;last successful&quot; clean build, and promotes it to &quot;staging&quot;. &lt;br/&gt;
+As such it &quot;shares workspace&quot; with CLEAN_BUILD and thus this job, and CLEAN_BUILD must acquire &apos;mainSimRelLock&apos; (to make sure &quot;last successful&quot; doesn&apos;t change, while this job is running. 
+</description>
+  <project-properties class="java.util.concurrent.ConcurrentHashMap">
+    <entry>
+      <string>hudson-plugins-disk_usage-DiskUsageProperty</string>
+      <base-property>
+        <originalValue class="hudson.plugins.disk_usage.DiskUsageProperty"/>
+        <propertyOverridden>false</propertyOverridden>
+      </base-property>
+    </entry>
+    <entry>
+      <string>hudson-queueSorter-PrioritySorterJobProperty</string>
+      <base-property>
+        <originalValue class="hudson.queueSorter.PrioritySorterJobProperty">
+          <priority>110</priority>
+        </originalValue>
+        <propertyOverridden>false</propertyOverridden>
+      </base-property>
+    </entry>
+    <entry>
+      <string>logRotator</string>
+      <log-rotator-property>
+        <originalValue class="hudson.tasks.LogRotator">
+          <daysToKeep>10</daysToKeep>
+          <numToKeep>10</numToKeep>
+          <artifactDaysToKeep>10</artifactDaysToKeep>
+          <artifactNumToKeep>10</artifactNumToKeep>
+        </originalValue>
+        <propertyOverridden>false</propertyOverridden>
+      </log-rotator-property>
+    </entry>
+    <entry>
+      <string>hudson-plugins-emailext-ExtendedEmailPublisher</string>
+      <external-property>
+        <originalValue class="hudson.plugins.emailext.ExtendedEmailPublisher">
+          <recipientList>david_williams@us.ibm.com</recipientList>
+          <configuredTriggers>
+            <hudson.plugins.emailext.plugins.trigger.FailureTrigger>
+              <email>
+                <recipientList></recipientList>
+                <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+                <body>$PROJECT_DEFAULT_CONTENT</body>
+                <attachmentsPattern></attachmentsPattern>
+                <attachBuildLog>false</attachBuildLog>
+                <compressBuildLog>false</compressBuildLog>
+                <sendToDevelopers>false</sendToDevelopers>
+                <includeCulprits>false</includeCulprits>
+                <sendToRecipientList>true</sendToRecipientList>
+              </email>
+            </hudson.plugins.emailext.plugins.trigger.FailureTrigger>
+            <hudson.plugins.emailext.plugins.trigger.StillFailingTrigger>
+              <email>
+                <recipientList></recipientList>
+                <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+                <body>$PROJECT_DEFAULT_CONTENT</body>
+                <attachmentsPattern></attachmentsPattern>
+                <attachBuildLog>false</attachBuildLog>
+                <compressBuildLog>false</compressBuildLog>
+                <sendToDevelopers>false</sendToDevelopers>
+                <includeCulprits>false</includeCulprits>
+                <sendToRecipientList>true</sendToRecipientList>
+              </email>
+            </hudson.plugins.emailext.plugins.trigger.StillFailingTrigger>
+            <hudson.plugins.emailext.plugins.trigger.SuccessTrigger>
+              <email>
+                <recipientList></recipientList>
+                <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+                <body>$PROJECT_DEFAULT_CONTENT</body>
+                <attachmentsPattern></attachmentsPattern>
+                <attachBuildLog>false</attachBuildLog>
+                <compressBuildLog>false</compressBuildLog>
+                <sendToDevelopers>false</sendToDevelopers>
+                <includeCulprits>false</includeCulprits>
+                <sendToRecipientList>true</sendToRecipientList>
+              </email>
+            </hudson.plugins.emailext.plugins.trigger.SuccessTrigger>
+            <hudson.plugins.emailext.plugins.trigger.FixedTrigger>
+              <email>
+                <recipientList></recipientList>
+                <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+                <body>$PROJECT_DEFAULT_CONTENT</body>
+                <attachmentsPattern></attachmentsPattern>
+                <attachBuildLog>false</attachBuildLog>
+                <compressBuildLog>false</compressBuildLog>
+                <sendToDevelopers>false</sendToDevelopers>
+                <includeCulprits>false</includeCulprits>
+                <sendToRecipientList>true</sendToRecipientList>
+              </email>
+            </hudson.plugins.emailext.plugins.trigger.FixedTrigger>
+          </configuredTriggers>
+          <contentType>default</contentType>
+          <defaultSubject>$DEFAULT_SUBJECT</defaultSubject>
+          <defaultContent>$DEFAULT_CONTENT</defaultContent>
+          <attachmentsPattern></attachmentsPattern>
+          <attachBuildLog>false</attachBuildLog>
+          <compressBuildLog>false</compressBuildLog>
+        </originalValue>
+        <propertyOverridden>false</propertyOverridden>
+        <modified>true</modified>
+      </external-property>
+    </entry>
+    <entry>
+      <string>builders</string>
+      <describable-list-property>
+        <originalValue class="hudson.util.DescribableList">
+          <hudson.tasks.Shell>
+            <command>#!/usr/bin/env bash
+
+# TODO: print stats
+
+STAGING_SEG=staging
+whoami
+
+# clean old staging first
+printf &quot;\n\tINFO: %s\t\n&quot; &quot;Cleaning old staging ($STAGING_SEG) repository ...&quot;
+rm -fr /home/data/httpd/download.eclipse.org/releases/$STAGING_SEG/*
+RC=$?
+if [[ $RC != 0 ]]
+then 
+  printf &quot;\n\tERROR: %s\t\n&quot; &quot;Cleaning (removing) previous staging repo failed. RC: $RC&quot;
+  exit $RC
+fi
+printf &quot;\n\tINFO: %s\t\n&quot; &quot;Cleaning old staging repository ended ok.&quot;
+
+# assuming directories (and symbolic link, lastSuccessfulBuild) is predictable and accessible
+printf &quot;\n\tINFO: %s\t\n&quot; &quot;Copying from last successful clean build, to downloads staging server ...&quot;
+rsync -r --chmod=Dg+s,ug+w,Fo-w,+X --copy-links /home/hudson/genie.simrel/.hudson/jobs/simrel.neon.runaggregator.CLEAN_BUILD/lastSuccessful/archive/aggregation/final/* /home/data/httpd/download.eclipse.org/releases/$STAGING_SEG/
+RC=$?
+if [[ $RC != 0 ]]
+then 
+  printf &quot;\n\tERROR: %s\t\n&quot; &quot;Error occurred during copy from Hudson archive to downloads staging. RC: $RC&quot;
+  exit $RC
+fi
+printf &quot;\n\tINFO: %s\t\n&quot; &quot;Copying from last successful clean build logs, to downloads server staging/buildInfo/hudsonrecords ...&quot;
+# purposely do not recurse
+mkdir -p /home/data/httpd/download.eclipse.org/releases/$STAGING_SEG/buildInfo/hudsonrecords
+
+# tried chmod, in rsync command, in past, to correct access problems, but, 
+# should not be needed
+# --chmod=Dg+s,ug+w,Fo-w,+X 
+rsync  --copy-links /home/hudson/genie.simrel/.hudson/jobs/simrel.neon.runaggregator.CLEAN_BUILD/lastSuccessful/* /home/data/httpd/download.eclipse.org/releases/$STAGING_SEG/buildInfo/hudsonrecords/
+RC=$?
+if [[ $RC != 0 ]]
+then 
+  printf &quot;\n\tERROR: %s\t\n&quot; &quot;Error occurred during copy from Hudson archive Hudson records to downloads staging/buildInfo/hudsonrecords. RC: $RC&quot;
+  exit $RC
+fi
+printf &quot;\n\tINFO: %s\t\n&quot; &quot;Copying from last successful clean build, to downloads staging server ended ok.&quot;
+
+#TODO: print stats on new staging
+
+printf &quot;\n\tINFO: %s\t\n&quot; &quot;Notifying EPP Build there is a new staging repo ...&quot;
+curl https://hudson.eclipse.org/packaging/job/neon.epp-tycho-build/buildWithParameters?token=Yah6CohtYwO6b?6P
+RC=$?
+if [[ $RC != 0 ]]
+then 
+  printf &quot;\n\tERROR: %s\t\n&quot; &quot;Notifying EPP Build returned an error. RC: $RC&quot;
+  exit $RC
+fi
+printf &quot;\n\tINFO: %s\t\n&quot; &quot;Notifying EPP Build there is a new staging repo ended ok.&quot;
+
+exit 0
+</command>
+          </hudson.tasks.Shell>
+        </originalValue>
+        <propertyOverridden>false</propertyOverridden>
+      </describable-list-property>
+    </entry>
+    <entry>
+      <string>jdk</string>
+      <string-property>
+        <originalValue class="string">jdk1.8.0_x64-latest</originalValue>
+        <propertyOverridden>false</propertyOverridden>
+      </string-property>
+    </entry>
+    <entry>
+      <string>scm</string>
+      <scm-property>
+        <originalValue class="hudson.scm.NullSCM"/>
+        <propertyOverridden>false</propertyOverridden>
+      </scm-property>
+    </entry>
+  </project-properties>
+  <keepDependencies>false</keepDependencies>
+  <createdBy>david_williams@us.ibm.com</createdBy>
+  <creationTime>1436908243659</creationTime>
+  <properties>
+    <hudson.security.AuthorizationMatrixProperty>
+      <permission>hudson.model.Run.Update:mknauer@eclipsesource.com</permission>
+      <permission>hudson.model.Run.Update:david_williams@us.ibm.com</permission>
+      <permission>hudson.model.Item.Configure:mknauer@eclipsesource.com</permission>
+      <permission>hudson.model.Item.Configure:david_williams@us.ibm.com</permission>
+      <permission>hudson.model.Item.Workspace:mknauer@eclipsesource.com</permission>
+      <permission>hudson.model.Item.Workspace:david_williams@us.ibm.com</permission>
+      <permission>hudson.model.Item.Build:mknauer@eclipsesource.com</permission>
+      <permission>hudson.model.Item.Build:david_williams@us.ibm.com</permission>
+      <permission>hudson.model.Item.Read:mknauer@eclipsesource.com</permission>
+      <permission>hudson.model.Item.Read:david_williams@us.ibm.com</permission>
+      <permission>hudson.model.Run.Delete:mknauer@eclipsesource.com</permission>
+      <permission>hudson.model.Run.Delete:david_williams@us.ibm.com</permission>
+      <permission>hudson.model.Item.Delete:david_williams@us.ibm.com</permission>
+    </hudson.security.AuthorizationMatrixProperty>
+  </properties>
+  <cascadingChildrenNames class="java.util.concurrent.CopyOnWriteArraySet"/>
+  <cascading-job-properties class="java.util.concurrent.CopyOnWriteArraySet">
+    <string>hudson-plugins-disk_usage-DiskUsageProperty</string>
+    <string>hudson-queueSorter-PrioritySorterJobProperty</string>
+  </cascading-job-properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <concurrentBuild>false</concurrentBuild>
+  <cleanWorkspaceRequired>false</cleanWorkspaceRequired>
+</project>

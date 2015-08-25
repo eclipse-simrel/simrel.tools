@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <project-properties class="java.util.concurrent.ConcurrentHashMap">
+    <entry>
+      <string>hudson-plugins-disk_usage-DiskUsageProperty</string>
+      <base-property>
+        <originalValue class="hudson.plugins.disk_usage.DiskUsageProperty"/>
+        <propertyOverridden>false</propertyOverridden>
+      </base-property>
+    </entry>
+    <entry>
+      <string>logRotator</string>
+      <log-rotator-property>
+        <originalValue class="hudson.tasks.LogRotator">
+          <daysToKeep>-1</daysToKeep>
+          <numToKeep>10</numToKeep>
+          <artifactDaysToKeep>-1</artifactDaysToKeep>
+          <artifactNumToKeep>-1</artifactNumToKeep>
+        </originalValue>
+        <propertyOverridden>false</propertyOverridden>
+      </log-rotator-property>
+    </entry>
+    <entry>
+      <string>hudson-queueSorter-PrioritySorterJobProperty</string>
+      <base-property>
+        <originalValue class="hudson.queueSorter.PrioritySorterJobProperty">
+          <priority>100</priority>
+        </originalValue>
+        <propertyOverridden>false</propertyOverridden>
+      </base-property>
+    </entry>
+    <entry>
+      <string>cleanWorkspaceRequired</string>
+      <boolean-property>
+        <originalValue class="boolean">true</originalValue>
+        <propertyOverridden>false</propertyOverridden>
+      </boolean-property>
+    </entry>
+    <entry>
+      <string>builders</string>
+      <describable-list-property>
+        <originalValue class="hudson.util.DescribableList">
+          <hudson.tasks.Shell>
+            <command>#!/usr/bin/env bash
+now=$( date --utc +%s )
+TIME_STAMP=$(date --utc -d @$now +%Y-%m%d_%H%M-%S)
+echo -e &quot;\n\tRunning under ID of $(whoami)\n&quot;
+echo -e &quot;\n\t= = = Environment variables = = = \n&quot; &gt; env.txt
+env &gt;&gt; env.txt
+echo -e &quot;\n\t= = = End Environment variables = = = \n&quot; &gt;&gt; env.txt
+
+
+ROOT_JOB_PATH=${HUDSON_HOME}/./jobs/
+
+now=$( date --utc +%s )
+TIME_STAMP=$(date --utc -d @$now +%Y-%m%d_%H%M-%S)
+CONFIG_OUT_DIR=configs${TIME_STAMP}
+mkdir -p ${CONFIG_OUT_DIR}
+
+
+find ${ROOT_JOB_PATH} -maxdepth 2 -name config.xml 
+find ${ROOT_JOB_PATH} -maxdepth 2 -name config.xml -exec rsync --verbose --recursive --times --safe-links --relative &apos;{}&apos; ${CONFIG_OUT_DIR}  \;
+
+
+CONFIG_ARCHIVE_FILE=simrel_configs${TIME_STAMP}.zip
+zip -r ${CONFIG_ARCHIVE_FILE} ${CONFIG_OUT_DIR}
+
+#CONFIG_STORE_DIR=/shared/simrel/configs/
+#mkdir -p ${CONFIG_STORE_DIR}
+#cp ${CONFIG_ARCHIVE_FILE} ${CONFIG_STORE_DIR}
+
+#echo &quot;Configs saved to ${CONFIG_STORE_DIR}/${CONFIG_ARCHIVE_FILE}&quot;
+
+
+</command>
+          </hudson.tasks.Shell>
+        </originalValue>
+        <propertyOverridden>false</propertyOverridden>
+      </describable-list-property>
+    </entry>
+    <entry>
+      <string>jdk</string>
+      <string-property>
+        <originalValue class="string">jdk1.8.0_x64-latest</originalValue>
+        <propertyOverridden>false</propertyOverridden>
+      </string-property>
+    </entry>
+    <entry>
+      <string>hudson-tasks-ArtifactArchiver</string>
+      <external-property>
+        <originalValue class="hudson.tasks.ArtifactArchiver">
+          <artifacts>*.zip</artifacts>
+          <compressionType>GZIP</compressionType>
+          <latestOnly>false</latestOnly>
+          <autoValidateFileMask>false</autoValidateFileMask>
+        </originalValue>
+        <propertyOverridden>false</propertyOverridden>
+        <modified>true</modified>
+      </external-property>
+    </entry>
+    <entry>
+      <string>scm</string>
+      <scm-property>
+        <originalValue class="hudson.scm.NullSCM"/>
+        <propertyOverridden>false</propertyOverridden>
+      </scm-property>
+    </entry>
+  </project-properties>
+  <keepDependencies>false</keepDependencies>
+  <createdBy>david_williams@us.ibm.com</createdBy>
+  <creationTime>1440347420803</creationTime>
+  <properties>
+    <hudson.security.AuthorizationMatrixProperty>
+      <permission>hudson.model.Run.Update:david_williams@us.ibm.com</permission>
+      <permission>hudson.model.Item.Configure:david_williams@us.ibm.com</permission>
+      <permission>hudson.model.Item.Workspace:david_williams@us.ibm.com</permission>
+      <permission>hudson.model.Item.Build:david_williams@us.ibm.com</permission>
+      <permission>hudson.model.Item.ExtendedRead:david_williams@us.ibm.com</permission>
+      <permission>hudson.model.Item.Read:david_williams@us.ibm.com</permission>
+      <permission>hudson.model.Run.Delete:david_williams@us.ibm.com</permission>
+      <permission>hudson.model.Item.Delete:david_williams@us.ibm.com</permission>
+    </hudson.security.AuthorizationMatrixProperty>
+  </properties>
+  <cascadingChildrenNames class="java.util.concurrent.CopyOnWriteArraySet"/>
+  <cascading-job-properties class="java.util.concurrent.CopyOnWriteArraySet">
+    <string>hudson-queueSorter-PrioritySorterJobProperty</string>
+    <string>hudson-plugins-disk_usage-DiskUsageProperty</string>
+  </cascading-job-properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers class="vector"/>
+  <concurrentBuild>false</concurrentBuild>
+  <cleanWorkspaceRequired>false</cleanWorkspaceRequired>
+  <builders/>
+  <publishers/>
+  <buildWrappers/>
+</project>
