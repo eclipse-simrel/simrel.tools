@@ -282,13 +282,13 @@
           name="message"
           value="Reset Failed" />
       </antcall>
-      <echo message="   === git fetch @{origin}" />
+      <echo message="   === git fetch --all --prune" />
       <exec
         executable="git"
         failonerror="true"
         resultproperty="RCfetch"
         dir="@{dir}">
-        <arg line="fetch @{origin}" />
+        <arg line="fetch --all --prune" />
       </exec>
 
       <antcall target="checkStatus">
@@ -314,7 +314,7 @@
         failonerror="true"
         resultproperty="RCcheckout"
         dir="@{dir}">
-        <arg line="checkout -B @{branch} --track"/>
+        <arg line="checkout -f -B @{branch}"/>
       </exec>
       <antcall target="checkStatus">
         <param
