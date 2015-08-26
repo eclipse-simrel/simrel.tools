@@ -385,8 +385,8 @@
         <not>
           <equals
             casesensitive="true"
-            args1="@{commit}"
-            args2="${GERRIT_BRANCH}"
+            arg1="@{commit}"
+            arg2="${GERRIT_BRANCH}"
             forcestring="true" />
         </not>
       </condition>
