@@ -380,7 +380,7 @@
     <attribute name="commit" />
     <attribute name="refspec" />
     <sequential>
-      <echo message="execute git fetch origin @{refsepc}:@{commit} in @{dir}" />
+      <echo message="execute git fetch origin @{refspec}:@{commit} in @{dir}" />
       <condition property="branchesNotEqual">
         <not>
           <equals
