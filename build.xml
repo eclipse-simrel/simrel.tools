@@ -404,7 +404,7 @@
         failonerror="true"
         resultproperty="RCfetchRefspec"
         dir="@{dir}">
-        <arg line="fetch --force origin +@{refspec}:origin/@{branch}" />
+        <arg line="fetch --force --update-head-ok origin +@{refspec}" />
       </exec>
       <antcall target="checkStatus">
         <param
@@ -414,6 +414,7 @@
           name="message"
           value="Checkout/Fetch of refspec FAILED" />
       </antcall>
+        <!--
         <exec
           executable="git"
           failonerror="true"
@@ -428,7 +429,8 @@
           <param
             name="message"
             value="Checkout/Fetch/Pull of refspec FAILED" />
-        </antcall>        
+        </antcall>
+        -->        
     </sequential>
   </macrodef>
 
