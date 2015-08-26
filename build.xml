@@ -380,7 +380,7 @@
     <attribute name="commit" />
     <attribute name="refspec" />
     <sequential>
-      <echo message="execute git fetch --force origin @{refspec}:@{commit} in @{dir}" />
+      <echo message="execute git fetch --force git://git.eclipse.org/gitroot/simrel/org.eclipse.simrel.build  @{refspec}:@{commit} in @{dir}" />
       <condition property="branchesNotEqual">
         <not>
           <equals
@@ -398,7 +398,7 @@
         failonerror="true"
         resultproperty="RCfetchRefspec"
         dir="@{dir}">
-        <arg line="fetch --force origin @{refspec}:@{commit}" />
+        <arg line="fetch --force git://git.eclipse.org/gitroot/simrel/org.eclipse.simrel.build @{refspec}:@{commit}" />
       </exec>
       <antcall target="checkStatus">
         <param
