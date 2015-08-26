@@ -393,6 +393,11 @@
       <fail
         if="branchesNotEqual"
         message="FAILED: Sanity check of variables found commitOrBranch, @{commit}, is not equal to Gerrit branch, ${GERRIT_BRANCH}, as expected" />
+      <echo message="Git Version:" />
+      <exec
+        executable="git">
+        <arg line="--version" />
+      </exec>
       <exec
         executable="git"
         failonerror="true"
