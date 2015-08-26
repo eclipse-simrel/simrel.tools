@@ -398,7 +398,7 @@
         failonerror="true"
         resultproperty="RCfetchRefspec"
         dir="@{dir}">
-        <arg line="fetch origin @{refspec}:@{commit}" />
+        <arg line="fetch --force origin @{refspec}:@{commit}" />
       </exec>
       <antcall target="checkStatus">
         <param
