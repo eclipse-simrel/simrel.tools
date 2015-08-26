@@ -404,7 +404,7 @@
         failonerror="true"
         resultproperty="RCfetchRefspec"
         dir="@{dir}">
-        <arg line="fetch --force origin +@{refspec}:@{commit}" />
+        <arg line="fetch --force origin +@{refspec}:origin/@{commit}" />
       </exec>
       <antcall target="checkStatus">
         <param
