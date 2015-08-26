@@ -378,22 +378,22 @@
   </macrodef>
   <macrodef name="git-checkout-refspec">
     <attribute name="dir" />
-    <attribute name="commit" />
+    <attribute name="branch" />
     <attribute name="refspec" />
     <sequential>
-      <echo message="execute git fetch --force origin  +@{refspec}:@{commit} in @{dir}" />
+      <echo message="execute git fetch --force origin  +@{refspec}:@{branch} in @{dir}" />
       <condition property="branchesNotEqual">
         <not>
           <equals
             casesensitive="true"
-            arg1="@{commit}"
+            arg1="@{branch}"
             arg2="${GERRIT_BRANCH}"
             forcestring="true" />
         </not>
       </condition>
       <fail
         if="branchesNotEqual"
-        message="FAILED: Sanity check of variables found commitOrBranch, @{commit}, is not equal to Gerrit branch, ${GERRIT_BRANCH}, as expected" />
+        message="FAILED: Sanity check of variables found branch, @{branch}, is not equal to Gerrit branch, ${GERRIT_BRANCH}, as expected" />
       <echo message="Git Version:" />
       <exec
         executable="git">
@@ -404,7 +404,7 @@
         failonerror="true"
         resultproperty="RCfetchRefspec"
         dir="@{dir}">
-        <arg line="fetch --force origin +@{refspec}:origin/@{commit}" />
+        <arg line="fetch --force origin +@{refspec}:origin/@{branch}" />
       </exec>
       <antcall target="checkStatus">
         <param
@@ -419,7 +419,7 @@
           failonerror="true"
           resultproperty="RCfetchRefspecPull"
           dir="@{dir}">
-          <arg line="pull" />
+          <arg line="pull origin @{branch}" />
         </exec>
         <antcall target="checkStatus">
           <param
@@ -492,7 +492,7 @@
 
     <git-checkout-refspec
       dir="${BUILD_MODEL_DIR}"
-      commit="${commitOrBranch}"
+      branch="${commitOrBranch}"
       refspec="${GERRIT_REFSPEC}" />
     <echo
       message="on HUDSON from Gerrit: checkedout ${commitOrBranch} with ${GERRIT_REFSPEC} for ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
