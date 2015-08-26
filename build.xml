@@ -458,7 +458,7 @@
   <target
     name="getModelFromGerrit"
     depends="init, cloneRepo, pullRepo"
-    if="${GERRIT_REFSPEC}"
+    if="GERRIT_REFSPEC"
     unless="modelRetrived">
       <!--
            While Hudson normall does clone and 'pull', we "check" here to make sure.
