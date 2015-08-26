@@ -95,9 +95,12 @@
     </exec>
   </target>
 
+  <!-- TODO: set 'installEclipseTests' in cloneTestsRepo (must already?) but more 
+       so, in "pullTestsRepo" to a rev-parse on HEAD before and after pull, and 
+       if the value changes, set installEclipseTests -->
   <target
     name="installTests"
-    depends="init, savePreviousTest"
+    depends="init, savePreviousTest, cloneTestsRepo,pullTestsRepo"
     if="installEclipseTests">
     <property
       name="APP_NAME"
@@ -156,7 +159,7 @@
   </target>
   <target
     name="installRelengTools"
-    depends="init"
+    depends="init, cloneToolsRepo, pullToolsRepo"
     if="installEclipseAndTools">
     <property
       name="APP_NAME"
@@ -242,10 +245,10 @@
     <attribute name="branch" />
     <attribute name="origin" />
     <sequential>
-      <echo message="Doing git-pull task: " />  
-        <echo message="   dir: @{dir}" />  
-        <echo message="   branch: @{branch}" />  
-        <echo message="   origin: @{origin}" />  
+      <echo message="Doing git-pull task: " />
+      <echo message="   dir: @{dir}" />
+      <echo message="   branch: @{branch}" />
+      <echo message="   origin: @{origin}" />
       <echo message="   = = = execute git clean in @{dir}" />
       <echo message="git clean -d -ff -x" />
       <exec
@@ -372,6 +375,41 @@
       </antcall>
     </sequential>
   </macrodef>
+  <macrodef name="git-checkout-refspec">
+    <attribute name="dir" />
+    <attribute name="commit" />
+    <attribute name="refspec" />
+    <sequential>
+      <echo message="execute git fetch origin @{refsepc}:@{commit} in @{dir}" />
+      <condition property="branchesNotEqual">
+        <not>
+          <equals
+            casesensitive="true"
+            args1="@{commit}"
+            args2="${env.GERRIT_BRANCH}"
+            forcestring="true" />
+        </not>
+      </condition>
+      <fail
+        if="branchesNotEqual"
+        message="FAILED: Sanity check of variables found commitOrBranch, @{commit}, is not equal to Gerrit branch, ${env.GERRIT_BRANCH}, as expected" />
+      <exec
+        executable="git"
+        failonerror="true"
+        resultproperty="RCfetchRefspec"
+        dir="@{dir}">
+        <arg line="fetch origin @{refsepc}:@{commit}" />
+      </exec>
+      <antcall target="checkStatus">
+        <param
+          name="status"
+          value="${RCfetchRefspec}" />
+        <param
+          name="message"
+          value="Checkout/Fetch of refspec FAILED" />
+      </antcall>
+    </sequential>
+  </macrodef>
 
   <!--
      We never really need/use 'clone' when on Hudson.
@@ -383,7 +421,7 @@
   -->
   <target
     name="getModelFromGit"
-    depends="init, cloneRepo, cloneToolsRepo, cloneTestsRepo, pullRepo, pullToolsRepo, pullTestsRepo"
+    depends="init, cloneRepo, pullRepo"
     unless="modelRetrived">
     <!--
          While Hudson normall does clone and 'pull', we "check" here to make sure.
@@ -393,18 +431,69 @@
          a previous job. This is so that the various jobs we have, 'validate',
          'build', and 'build_clean' can all work on the same revision.
     -->
+
     <git-checkout
       dir="${BUILD_MODEL_DIR}"
       commit="${commitOrBranch}" />
     <echo message="on HUDSON: checkedout ${commitOrBranch} of ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
+    
+      <!-- TODO: Move these "checkouts to the areas that deal with tools and tests 
     <git-checkout
       dir="${BUILD_TOOLS_DIR}"
       commit="${toolsCommitOrBranch}" />
     <echo message="on HUDSON: checkedout ${toolsCommitOrBranch} of ${BUILD_TOOLS} into ${BUILD_TOOLS_DIR}" />
+    
+    
+    <git-checkout
+        dir="${BUILD_TESTS_DIR}"
+        commit="${testsCommitOrBranch}" />
+      <echo message="on HUDSON: checkedout ${testsCommitOrBranch} of ${BUILD_TESTS} into ${BUILD_TESTS_DIR}" />
+    -->
     <property
       name="modelRetrived"
       value="true" />
   </target>
+
+    <!-- Similar to getModelFromGit, but need to ?merge? refspec into local branch -->
+  <target
+    name="getModelFromGerrit"
+    depends="init, cloneRepo, pullRepo"
+    if="${env.GERRIT_REFSPEC}"
+    unless="modelRetrived">
+      <!--
+           While Hudson normall does clone and 'pull', we "check" here to make sure.
+           In particular, in some cases, a build might be triggered by a change in "tools"
+           repo, so even then we want to make sure to get 'latest' of "build" repo.
+           In both cases, we *then* want to get a specific revision, if passed to us by
+           a previous job. This is so that the various jobs we have, 'validate',
+           'build', and 'build_clean' can all work on the same revision.
+      -->
+
+    <git-checkout-refspec
+      dir="${BUILD_MODEL_DIR}"
+      commit="${commitOrBranch}"
+      refspec="${env.GERRIT_REFSPEC}" />
+    <echo
+      message="on HUDSON from Gerrit: checkedout ${commitOrBranch} with ${env.GERRIT_REFSPEC} for ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
+      
+        <!-- TODO: Move these "checkouts to the areas that deal with tools and tests 
+      <git-checkout
+        dir="${BUILD_TOOLS_DIR}"
+        commit="${toolsCommitOrBranch}" />
+      <echo message="on HUDSON: checkedout ${toolsCommitOrBranch} of ${BUILD_TOOLS} into ${BUILD_TOOLS_DIR}" />
+      
+      
+      <git-checkout
+          dir="${BUILD_TESTS_DIR}"
+          commit="${testsCommitOrBranch}" />
+        <echo message="on HUDSON: checkedout ${testsCommitOrBranch} of ${BUILD_TESTS} into ${BUILD_TESTS_DIR}" />
+      -->
+    <property
+      name="modelRetrived"
+      value="true" />
+  </target>
+
+
 
   <target
     name="cloneRepo"
@@ -834,6 +923,13 @@
       <available file="${BUILD_TESTS_DIR}/.git" />
     </condition>
 
+      <!-- three sources for "commit or Branch" for the main 'commit'. -->
+      <condition
+        property="commitOrBranch"
+        value="${env.GERRIT_BRANCH}"
+        else="${BRANCH_BUILD}">
+        <isset property="${env.GERRIT_BRANCH}" />
+      </condition>
     <condition
       property="commitOrBranch"
       value="${commit}"
