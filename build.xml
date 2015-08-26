@@ -386,13 +386,13 @@
           <equals
             casesensitive="true"
             args1="@{commit}"
-            args2="${env.GERRIT_BRANCH}"
+            args2="${GERRIT_BRANCH}"
             forcestring="true" />
         </not>
       </condition>
       <fail
         if="branchesNotEqual"
-        message="FAILED: Sanity check of variables found commitOrBranch, @{commit}, is not equal to Gerrit branch, ${env.GERRIT_BRANCH}, as expected" />
+        message="FAILED: Sanity check of variables found commitOrBranch, @{commit}, is not equal to Gerrit branch, ${GERRIT_BRANCH}, as expected" />
       <exec
         executable="git"
         failonerror="true"
@@ -458,7 +458,7 @@
   <target
     name="getModelFromGerrit"
     depends="init, cloneRepo, pullRepo"
-    if="${env.GERRIT_REFSPEC}"
+    if="${GERRIT_REFSPEC}"
     unless="modelRetrived">
       <!--
            While Hudson normall does clone and 'pull', we "check" here to make sure.
@@ -472,9 +472,9 @@
     <git-checkout-refspec
       dir="${BUILD_MODEL_DIR}"
       commit="${commitOrBranch}"
-      refspec="${env.GERRIT_REFSPEC}" />
+      refspec="${GERRIT_REFSPEC}" />
     <echo
-      message="on HUDSON from Gerrit: checkedout ${commitOrBranch} with ${env.GERRIT_REFSPEC} for ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
+      message="on HUDSON from Gerrit: checkedout ${commitOrBranch} with ${GERRIT_REFSPEC} for ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
       
         <!-- TODO: Move these "checkouts to the areas that deal with tools and tests 
       <git-checkout
@@ -926,9 +926,9 @@
       <!-- three sources for "commit or Branch" for the main 'commit'. -->
       <condition
         property="commitOrBranch"
-        value="${env.GERRIT_BRANCH}"
+        value="${GERRIT_BRANCH}"
         else="${BRANCH_BUILD}">
-        <isset property="${env.GERRIT_BRANCH}" />
+        <isset property="${GERRIT_BRANCH}" />
       </condition>
     <condition
       property="commitOrBranch"
