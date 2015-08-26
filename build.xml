@@ -421,7 +421,7 @@
   -->
   <target
     name="getModelFromGit"
-    depends="init, cloneRepo, pullRepo"
+    depends="init, cloneRepo, pullRepo, getModelFromGerrit"
     unless="modelRetrived">
     <!--
          While Hudson normall does clone and 'pull', we "check" here to make sure.
