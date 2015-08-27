@@ -414,13 +414,13 @@
           name="message"
           value="Checkout/Fetch of refspec FAILED" />
       </antcall>
-        <!--
+        
         <exec
           executable="git"
           failonerror="true"
           resultproperty="RCfetchRefspecPull"
           dir="@{dir}">
-          <arg line="pull origin @{branch}" />
+          <arg line="merge FETCH_HEAD" />
         </exec>
         <antcall target="checkStatus">
           <param
@@ -430,7 +430,7 @@
             name="message"
             value="Checkout/Fetch/Pull of refspec FAILED" />
         </antcall>
-        -->        
+               
     </sequential>
   </macrodef>
 
