@@ -4,7 +4,7 @@
   default="default">
 
   <property environment="env" />
-        <!--
+        <!-- test
         This property file name is itself a property, so it can be overridden
         on one machine versus another. We do it this way, instead of just specifying
         -propertyFile on command line, so that the property values can be "nested"
