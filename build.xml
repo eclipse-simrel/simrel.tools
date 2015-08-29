@@ -529,6 +529,9 @@
       repository="git://git.eclipse.org/gitroot/simrel/${BUILD_MODEL}.git"
       dir="${BUILD_HOME}"
       branch="${BRANCH_BUILD}" />
+      
+    <property name="localRepoExists" value="true"/>
+
   </target>
 
   <target
@@ -540,6 +543,8 @@
       repository="git://git.eclipse.org/gitroot/simrel/${BUILD_TOOLS}.git"
       dir="${BUILD_HOME}"
       branch="${BRANCH_TOOLS}" />
+    <property name="localToolsRepoExists" value="true"/>
+  
   </target>
 
   <target
@@ -551,6 +556,8 @@
       repository="git://git.eclipse.org/gitroot/simrel/${RELENG_TESTS_REPO}.git"
       dir="${BUILD_HOME}"
       branch="${BRANCH_TESTS}" />
+    <property name="localTestRepoExists" value="true"/>
+  
   </target>
 
   <target
