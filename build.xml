@@ -470,7 +470,7 @@
     <git-checkout
         dir="${BUILD_TESTS_DIR}"
         commit="${testsCommitOrBranch}" />
-      <echo message="on HUDSON: checkedout ${testsCommitOrBranch} of ${BUILD_TESTS} into ${BUILD_TESTS_DIR}" />
+      <echo message="on HUDSON: checkedout ${testsCommitOrBranch} of ${RELENG_TESTS_REPO} into ${BUILD_TESTS_DIR}" />
     -->
     <property
       name="modelRetrived"
@@ -509,7 +509,7 @@
       <git-checkout
           dir="${BUILD_TESTS_DIR}"
           commit="${testsCommitOrBranch}" />
-        <echo message="on HUDSON: checkedout ${testsCommitOrBranch} of ${BUILD_TESTS} into ${BUILD_TESTS_DIR}" />
+        <echo message="on HUDSON: checkedout ${testsCommitOrBranch} of ${RELENG_TESTS_REPO} into ${BUILD_TESTS_DIR}" />
       -->
     <property
       name="modelRetrived"
@@ -546,9 +546,9 @@
     name="cloneTestsRepo"
     depends="init"
     unless="localTestsRepoExists">
-    <echo message="git clone task for ${BUILD_TESTS} to execute in ${BUILD_HOME} using branch ${BRANCH_TESTS}" />
+    <echo message="git clone task for ${RELENG_TESTS_REPO} to execute in ${BUILD_HOME} using branch ${BRANCH_TESTS}" />
     <git-clone
-      repository="git://git.eclipse.org/gitroot/simrel/${BUILD_TESTS}.git"
+      repository="git://git.eclipse.org/gitroot/simrel/${RELENG_TESTS_REPO}.git"
       dir="${BUILD_HOME}"
       branch="${BRANCH_TESTS}" />
   </target>
