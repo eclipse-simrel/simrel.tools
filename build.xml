@@ -556,7 +556,7 @@
       repository="git://git.eclipse.org/gitroot/simrel/${RELENG_TESTS_REPO}.git"
       dir="${BUILD_HOME}"
       branch="${BRANCH_TESTS}" />
-    <property name="localTestRepoExists" value="true"/>
+    <property name="localTestsRepoExists" value="true"/>
   
   </target>
 
