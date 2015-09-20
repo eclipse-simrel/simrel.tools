@@ -6,8 +6,9 @@ function usage
   printf "\n\tScript to promote aggregation to staging area" >&2
   printf "\n\tUsage: %s [-n] -s <stream> -d <datetimestamp>" "$(basename $0)" >&2
   printf "\n\t\t%s" "where <stream> is 'main' or 'maintenance'" >&2
-  printf "\n\t\t%s" "   (and main currently means mars and maintenance means luna)" >&2
+  printf "\n\t\t%s" "   (and main currently means neon and maintenance means mars)" >&2
   printf "\n\t\t%s" "and where <datetimestamp> is the date and time for the directory name of the composite child repository, such as '201208240900'" >&2
+  printf "\n\t\t%s" "and optional -n means 'dry-run'"
   printf "\n" >&2
 }
 
@@ -89,12 +90,10 @@ case "$stream" in
   main)
     export release=neon
     export stagingDirectory="/home/data/httpd/download.eclipse.org/releases/staging"
-    export releasesegment=current
     ;;
   maintenance)
     export release=mars
     export stagingDirectory="/home/data/httpd/download.eclipse.org/releases/maintenance"
-    export releasesegment=maintenance
     ;;
   *)
     usage
@@ -142,31 +141,26 @@ else
     echo ""
 
     # plugins and features
-    rsync ${DRYRUN}  -rvp ${fromDirectory}/* ${toSubDir}/
+    rsync ${DRYRUN}  -rp ${fromDirectory}/* ${toSubDir}/
     checkForErrorExit $? "could not copy files as expected"
 
-    # static index page
-    #rsync ${DRYRUN}  -vp "${BUILD_TOOLS_DIR}/templateFiles/release/${releasesegment}/index.html" ${toDirectory}
-    #checkForErrorExit $? "could not copy files as expected"
 
     if [[ "${DRYRUN}" != "--dry-run" ]]
     then
       "${BUILD_TOOLS_DIR}/promoteUtils/addRepoProperties-release.sh" ${release} ${datetimestamp}
       checkForErrorExit $? "repo properties could not be updated as expected"
+      if [[ -e "${toSubDir}/p2.index" ]]
+      then
+        # remove p2.index, if exists, since convertxz will recreate, and
+        # convertxz (may) not recreate xz files, after modifications made in
+        # previous step, if p2.index already exists and appears correct.
+        rm "${toSubDir}/p2.index"
+      fi
       "${BUILD_TOOLS_DIR}/convertxz.sh" "${toSubDir}"
     else
       echo "Doing DRYRUN, otherwise addRepoProperties and createxz called here."
     fi
 
-
-
-    # copy standard p2.index page
-    # We do it last, to use as an indicator file that we are done.
-    # TODO: as is, if no composited artifacts, this would have been
-    # copied earlier, so will need work to ever use as "we are done"
-    # indicator file.
-    rsync ${DRYRUN}  -vp ${fromDirectory}/p2.index ${toSubDir}
-    checkForErrorExit $? "could not copy files as expected"
   fi
 fi
 
