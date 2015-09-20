@@ -155,10 +155,14 @@ else
         # convertxz (may) not recreate xz files, after modifications made in
         # previous step, if p2.index already exists and appears correct.
         rm "${toSubDir}/p2.index"
+        checkForErrorExit $? "could not remove p2.index file as needed"
+        echo "INFO: Removed existing p2.index file so that xz files will be recreated."
+      else
+        echo "INFO: Did not find an existing p2.index to remove." 
       fi
       "${BUILD_TOOLS_DIR}/convertxz.sh" "${toSubDir}"
     else
-      echo "Doing DRYRUN, otherwise addRepoProperties and createxz called here."
+      echo "INFO: Doing DRYRUN, otherwise addRepoProperties and createxz called here."
     fi
 
   fi
