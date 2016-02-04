@@ -8,16 +8,18 @@ function usage
   printf "\n\t\t%s" "where <stream> is 'main' or 'maintenance'" >&2
   printf "\n\t\t%s" "   (and main currently means neon and maintenance means mars)" >&2
   printf "\n\t\t%s" "and where <datetimestamp> is the date and time for the directory name of the composite child repository, such as '201208240900'" >&2
-  printf "\n\t\t%s" "and optional -n means 'dry-run'"
+  printf "\n\t\t%s" "and the optional \"-n\" means \"no copying\" or 'dry-run'"
   printf "\n" >&2
 }
 
-if [[ $# != 4 && $# != 5 ]]
-then
-  printf "\n\t%s\n" "ERROR: Incorrect number of arguments given."
-  usage
-  exit 1
-fi
+# Do not need to "check number of arguments" if using getopts. 
+# As it is (was) it gets in the way of -h
+#if [[ $# != 4 && $# != 5 ]]
+#then
+#  printf "\n\t%s\n" "ERROR: Incorrect number of arguments given."
+#  usage
+#  exit 1
+#fi
 
 datetimestamp=
 stream=
@@ -155,14 +157,10 @@ else
         # convertxz (may) not recreate xz files, after modifications made in
         # previous step, if p2.index already exists and appears correct.
         rm "${toSubDir}/p2.index"
-        checkForErrorExit $? "could not remove p2.index file as needed"
-        echo "INFO: Removed existing p2.index file so that xz files will be recreated."
-      else
-        echo "INFO: Did not find an existing p2.index to remove." 
       fi
       "${BUILD_TOOLS_DIR}/convertxz.sh" "${toSubDir}"
     else
-      echo "INFO: Doing DRYRUN, otherwise addRepoProperties and createxz called here."
+      echo "Doing DRYRUN, otherwise addRepoProperties and createxz called here."
     fi
 
   fi
