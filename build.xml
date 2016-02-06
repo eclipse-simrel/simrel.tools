@@ -95,70 +95,6 @@
     </exec>
   </target>
 
-  <!-- TODO: set 'installEclipseTests' in cloneTestsRepo (must already?) but more 
-       so, in "pullTestsRepo" to a rev-parse on HEAD before and after pull, and 
-       if the value changes, set installEclipseTests -->
-  <!-- the old way ... installTestsFromRepo now -->
-  <target
-    name="installTests"
-    depends="init, savePreviousTest, cloneTestsRepo,pullTestsRepo"
-    if="installEclipseTests">
-    <property
-      name="APP_NAME"
-      value="org.eclipse.equinox.p2.director" />
-
-        <!-- usually do not need the version, just to "get the latest" from
-      buckminster builder site -version 1.0.0.v20090415-1651 -->
-    <property
-      name="VM_ARGS"
-      value="-Xmx256m" />
-
-    <mkdir dir="${ECLIPSE_HOME_TEST}" />
-
-    <untar
-      compression="gzip"
-      overwrite="true"
-      src="${FULL_TEST_FILENAME}"
-      dest="${ECLIPSE_HOME_TEST}" />
-
-        <!-- weird this chmod is required? probably ant bug -->
-    <chmod
-      file="${ECLIPSE_HOME_TEST}/eclipse/eclipse"
-      perm="ugo+x"
-      verbose="true" />
-
-        <!-- get raw files from git ... this is now done by Hudson
-
-    <echo message="  removing previous HOLD_BRANCH.zip if it exists, in ${BUILD_HOME}" />
-
-    <delete
-      file="${BUILD_HOME}/HOLD_BRANCH.zip"
-      failonerror="false" />
-
-    <echo message="   getting ${CGITURL}/${RELENG_TESTS_REPO}.git/snapshot/${BRANCH_TESTS}.zip to ${BUILD_HOME}" />
-
-    <get
-      src="${CGITURL}/${RELENG_TESTS_REPO}.git/snapshot/${BRANCH_TESTS}.zip"
-      dest="${BUILD_HOME}/HOLD_BRANCH.zip"
-      verbose="true" />
-
-    <unzip
-      src="${BUILD_HOME}/HOLD_BRANCH.zip"
-      dest="${BUILD_HOME}/${TMPDIR_TESTS}" />
--->
-    <copy todir="${ECLIPSE_HOME_TEST}/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}">
-      <fileset
-        dir="${BUILD_HOME}/${RELENG_TESTS_DIR}/${RELENG_TESTS_PATH}/"
-        includes="**/*" />
-    </copy>
-
-        <!-- cleanup temp working files
-    <delete file="${BUILD_HOME}/HOLD_BRANCH.zip" />
-    <delete dir="${BUILD_HOME}/${TMPDIR_TESTS}" />
-    -->
-
-  </target>
-    
     <target
       name="installTestsFromRepo"
       depends="init, cloneToolsRepo, pullToolsRepo"
@@ -581,19 +517,6 @@
   </target>
 
   <target
-    name="cloneTestsRepo"
-    depends="init"
-    unless="localTestsRepoExists">
-    <echo message="git clone task for ${RELENG_TESTS_REPO} to execute in ${BUILD_HOME} using branch ${BRANCH_TESTS}" />
-    <git-clone
-      repository="git://git.eclipse.org/gitroot/simrel/${RELENG_TESTS_REPO}.git"
-      dir="${BUILD_HOME}"
-      branch="${BRANCH_TESTS}" />
-    <property name="localTestsRepoExists" value="true"/>
-  
-  </target>
-
-  <target
     name="pullRepo"
     depends="init"
     if="localRepoExists">
@@ -614,17 +537,6 @@
       dir="${BUILD_TOOLS_DIR}"
       branch="${BRANCH_TOOLS}"
       origin="${TOOLS_ORIGIN}" />
-  </target>
-
-  <target
-    name="pullTestsRepo"
-    depends="init"
-    if="localTestsRepoExists">
-    <echo message="git pull task to execute in ${BUILD_TESTS_DIR}" />
-    <git-pull
-      dir="${BUILD_TESTS_DIR}"
-      branch="${BRANCH_TESTS}"
-      origin="${TESTS_ORIGIN}" />
   </target>
 
   <!--
