@@ -934,13 +934,6 @@
     </condition>
 
     <condition
-      property="testsCommitOrBranch"
-      value="${testsCommit}"
-      else="${BRANCH_TESTS}">
-      <isset property="testsCommit" />
-    </condition>
-
-    <condition
       property="logURL"
       value="${LOG_URL}"
       else="${hostForURL}">

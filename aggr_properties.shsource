@@ -101,6 +101,4 @@ BRANCH_BUILD=${BRANCH_BUILD:-master}
 TMPDIR_BUILD=sbbuild
 BRANCH_TOOLS=master
 TMPDIR_TOOLS=sbtools
-export BRANCH_TESTS=master
-TMPDIR_TESTS=sbtests
 CGITURL=http://git.eclipse.org/c/simrel
