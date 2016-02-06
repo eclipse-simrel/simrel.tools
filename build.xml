@@ -844,7 +844,7 @@
       <path id="runTests.paths">
         <fileset
           dir="${BUILD_HOME}"
-          includes="prereqs/eclipse45/eclipse/plugins/${RELENG_TESTS_BUNDLE_ID}_*/runTests.xml" />
+          includes="eclipse44/eclipse/plugins/${RELENG_TESTS_BUNDLE_ID}_*/runTests.xml" />
       </path>
       <property
         name="runTestsXML"
