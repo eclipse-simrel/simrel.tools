@@ -23,7 +23,7 @@
 
   <target
     name="installAggregatorAndTools"
-    depends="init, savePrevious,installAggregator,installRelengTools"
+    depends="init, savePrevious,installAggregator,installRelengTools,installTestsFromRepo"
     if="installEclipseAndTools">
 
     <echo message="Installed fresh Eclipse, Aggregator, and Tools" />
