@@ -186,6 +186,7 @@
         <arg
           line="-data ${eclipseWorkspace} -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME} ${OTHER_ARGS_TESTS} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS}" />
       </exec>
+        
     </target>
 
     
@@ -728,9 +729,10 @@
          to run against previous build, and acquire the lock, for that job -->
   <target
     name="runTests"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools,installTestsFromRepo">
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools,installTestsFromRepo,initRunTestsXML">
+     
     <ant
-      antfile="${BUILD_HOME}/testInstance/eclipse/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
+      antfile="${runTestsXML}"
       target="cleanBuildTests"
       dir="${BUILD_HOME}" />
   </target>
@@ -768,7 +770,7 @@
   -->
   <target
     name="runAggregatorBuildOnly"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromRepo">
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromRepo,initRunTestsXML">
     <!--
       If not otherwise set in properties file, use these values. Note
       the build.eclipse.org production machine must override these values for property
@@ -836,7 +838,7 @@
     <antcall target="createBuildinfo" />
 
     <ant
-      antfile="${BUILD_HOME}/testInstance/eclipse/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
+      antfile="${runTestsXML}"
       target="cachedBuildTests"
       dir="${BUILD_HOME}" />
 
@@ -850,7 +852,7 @@
   -->
   <target
     name="runAggregatorValidateOnly"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromRepo">
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromRepo,initRunTestsXML">
     <!--
       If not otherwise set in properties file, use these values. Note
       the build.eclipse.org production machine must override these values for property
@@ -919,12 +921,25 @@
     <antcall target="createBuildinfo" />
 
     <ant
-      antfile="${BUILD_HOME}/testInstance/eclipse/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
+      antfile="${runTestsXML}"
       target="validateOnlyTests"
       dir="${BUILD_HOME}" />
 
   </target>
 
+  <target name="initRunTestsXML"
+      unless="runTestsXML">
+      <path id="runTests.paths">
+        <fileset
+          dir="${WORKSPACE}"
+          includes="${BUILD_HOME}/testInstance/eclipse/plugins/${RELENG_TESTS_BUNDLE_ID}_*/runTests.xml" />
+      </path>
+      <property
+        name="runTestsXML"
+        refid="runTests.paths" /> 
+      <echo message="runTestsXML file: ${runTestsXML}" />
+  </target>
+  
   <target
     name="init"
     depends="getBuildTimestamp, getJobName, getBUILD_HOME"
