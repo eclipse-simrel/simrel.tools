@@ -171,7 +171,7 @@
           value="https://hudson.eclipse.org/simrel/job/simrel.releng.reporeports.buildProduct/lastSuccessfulBuild/artifact/output/p2repo/"/>
 
       <property
-        name="OTHER_ARGS_TOOLS"
+        name="OTHER_ARGS_TESTS"
         value="-metadataRepository ${repoReportURL} -artifactRepository ${repoReportURL} -installIU org.eclipse.simrel.tests.feature.feature.group" />
 
       <property
@@ -184,7 +184,7 @@
         dir="${basedir}"
         failonerror="true">
         <arg
-          line="-data ${eclipseWorkspace} -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME} ${OTHER_ARGS_TOOLS} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS}" />
+          line="-data ${eclipseWorkspace} -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME} ${OTHER_ARGS_TESTS} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS}" />
       </exec>
     </target>
 
