@@ -1311,9 +1311,6 @@
         key="toolsCommit"
         value="${toolsRepoCommit}" />
       <entry
-        key="testsCommit"
-        value="${testsRepoCommit}" />
-      <entry
         key="triggerJobName"
         value="${env.JOB_NAME}" />
       <entry
@@ -1329,7 +1326,6 @@
         <!-- echo the three key ones to end of log, just to have redundant record. -->
     <echo message="commit: ${buildModelCommit}" />
     <echo message="toolsCommit: ${toolsRepoCommit}" />
-    <echo message="testsCommit: ${testsRepoCommit}" />
     <echo message="triggerJobName: ${env.JOB_NAME}" />
     <echo message="triggerJobNumber: ${env.BUILD_NUMBER}" />
     <echo message="triggerBuildTimestamp: ${buildTimestamp}" />
