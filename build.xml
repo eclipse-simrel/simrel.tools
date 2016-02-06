@@ -730,7 +730,7 @@
     name="runTests"
     depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools,installTestsFromRepo">
     <ant
-      antfile="${BUILD_HOME}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
+      antfile="${BUILD_HOME}/testInstance/eclipse/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
       target="cleanBuildTests"
       dir="${BUILD_HOME}" />
   </target>
@@ -836,7 +836,7 @@
     <antcall target="createBuildinfo" />
 
     <ant
-      antfile="${BUILD_HOME}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
+      antfile="${BUILD_HOME}/testInstance/eclipse/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
       target="cachedBuildTests"
       dir="${BUILD_HOME}" />
 
@@ -919,7 +919,7 @@
     <antcall target="createBuildinfo" />
 
     <ant
-      antfile="${BUILD_HOME}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
+      antfile="${BUILD_HOME}/testInstance/eclipse/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
       target="validateOnlyTests"
       dir="${BUILD_HOME}" />
 
@@ -1073,7 +1073,7 @@
     </condition>
 
     <available
-      file="${ECLIPSE_HOME_TEST}/eclipse/dropins/${RELENG_TESTS_DIR}"
+      file="${ECLIPSE_HOME_TEST}/eclipse/${RELENG_TESTS_DIR}"
       type="dir"
       property="eclipseTestsExists" />
 
