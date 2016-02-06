@@ -98,6 +98,7 @@
   <!-- TODO: set 'installEclipseTests' in cloneTestsRepo (must already?) but more 
        so, in "pullTestsRepo" to a rev-parse on HEAD before and after pull, and 
        if the value changes, set installEclipseTests -->
+  <!-- the old way ... installTestsFromRepo now -->
   <target
     name="installTests"
     depends="init, savePreviousTest, cloneTestsRepo,pullTestsRepo"
@@ -157,6 +158,37 @@
     -->
 
   </target>
+    
+    <target
+      name="installTestsFromRepo"
+      depends="init, cloneToolsRepo, pullToolsRepo"
+      if="installEclipseAndTools">
+      <property
+        name="APP_NAME"
+        value="org.eclipse.equinox.p2.director" />
+      <property 
+          name="repoReportURL" 
+          value="https://hudson.eclipse.org/simrel/job/simrel.releng.reporeports.buildProduct/lastSuccessfulBuild/artifact/output/p2repo/"/>
+
+      <property
+        name="OTHER_ARGS_TOOLS"
+        value="-metadataRepository ${repoReportURL} -artifactRepository ${repoReportURL} -installIU org.eclipse.simrel.tests.feature.feature.group" />
+
+      <property
+        name="VM_ARGS"
+        value="-Xmx256m" />
+
+          <!-- install latest -->
+      <exec
+        executable="${eclipseExecutable}"
+        dir="${basedir}"
+        failonerror="true">
+        <arg
+          line="-data ${eclipseWorkspace} -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME} ${OTHER_ARGS_TOOLS} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS}" />
+      </exec>
+    </target>
+
+    
   <target
     name="installRelengTools"
     depends="init, cloneToolsRepo, pullToolsRepo"
@@ -600,7 +632,7 @@
   -->
   <target
     name="runAggregatorCleanBuild"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools,installTests">
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools,installTestsFromRepo">
       <!--
         If not otherwise set in properties file, use these values. Note
         the build.eclipse.org production machine must override these values for property
@@ -696,7 +728,7 @@
          to run against previous build, and acquire the lock, for that job -->
   <target
     name="runTests"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools,installTests">
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools,installTestsFromRepo">
     <ant
       antfile="${BUILD_HOME}/testInstance/eclipse/dropins/${RELENG_TESTS_BUNDLE_ID}/runTests.xml"
       target="cleanBuildTests"
@@ -736,7 +768,7 @@
   -->
   <target
     name="runAggregatorBuildOnly"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools, installTests">
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromRepo">
     <!--
       If not otherwise set in properties file, use these values. Note
       the build.eclipse.org production machine must override these values for property
@@ -818,7 +850,7 @@
   -->
   <target
     name="runAggregatorValidateOnly"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools, installTests">
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromRepo">
     <!--
       If not otherwise set in properties file, use these values. Note
       the build.eclipse.org production machine must override these values for property
