@@ -9,3 +9,4 @@ Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.xml.transform
+Eclipse-BundleShape: dir
