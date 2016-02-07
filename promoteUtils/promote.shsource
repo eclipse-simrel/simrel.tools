@@ -10,8 +10,6 @@ echo "BUILD_HOME: $BUILD_HOME"
 # Java should be configured per machine,
 # so this variable point to valid installs.
 
-export JAVA_6_HOME=/shared/common/jdk1.6.0-latest
-export JAVA_7_HOME=/shared/common/jdk1.7.0-latest
 export JAVA_8_HOME=/shared/common/jdk1.8.0_x64-latest
 
 REPO_ROOT=/home/data/httpd/download.eclipse.org

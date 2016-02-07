@@ -35,7 +35,7 @@
     depends="init, savePrevious"
     if="installEclipseAndTools">
     <property
-      name="APP_NAME"
+      name="APP_NAME_P2DIRECTOR_AGG"
       value="org.eclipse.equinox.p2.director" />
     <property
       name="OTHER_ARGS_AGG"
@@ -55,8 +55,8 @@
         <!-- usually do not need the version, just to "get the latest" from
       buckminster builder site -version 1.0.0.v20090415-1651 -->
     <property
-      name="VM_ARGS"
-      value="-Xmx256m" />
+      name="VM_ARGS_AGG"
+      value="-Djava.io.tmpdir=${BUILD_HOME}/tmp" />
 <!-- -Declipse.p2.mirrors=false -->
 
     <mkdir dir="${ECLIPSE_HOME}" />
@@ -91,7 +91,7 @@
       dir="${basedir}"
       failonerror="true">
       <arg
-        line="-data ${eclipseWorkspace} -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME} ${OTHER_ARGS_AGG} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS}" />
+        line="-data ${eclipseWorkspace}_INSTALL_AGG -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_AGG} ${OTHER_ARGS_AGG} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS_AGG}" />
     </exec>
   </target>
 
@@ -100,7 +100,7 @@
       depends="init, cloneToolsRepo, pullToolsRepo"
       if="installEclipseAndTools">
       <property
-        name="APP_NAME"
+        name="APP_NAME_P2DIRECTOR_TESTS"
         value="org.eclipse.equinox.p2.director" />
       <property 
           name="repoReportURL" 
@@ -111,8 +111,8 @@
         value="-metadataRepository ${repoReportURL} -artifactRepository ${repoReportURL} -installIU org.eclipse.simrel.tests.feature.feature.group" />
 
       <property
-        name="VM_ARGS"
-        value="-Xmx256m" />
+        name="VM_ARGS_TESTS"
+        value="-Djava.io.tmpdir=${BUILD_HOME}/tmp" />
 
           <!-- install latest -->
       <exec
@@ -120,7 +120,7 @@
         dir="${basedir}"
         failonerror="true">
         <arg
-          line="-data ${eclipseWorkspace} -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME} ${OTHER_ARGS_TESTS} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS}" />
+          line="-data ${eclipseWorkspace}_installTests -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_TESTS} ${OTHER_ARGS_TESTS} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS_TESTS}" />
       </exec>
         
     </target>
@@ -131,15 +131,15 @@
     depends="init, cloneToolsRepo, pullToolsRepo"
     if="installEclipseAndTools">
     <property
-      name="APP_NAME"
+      name="APP_NAME_P2DIRECTOR_RELENG"
       value="org.eclipse.equinox.p2.director" />
     <property
-      name="OTHER_ARGS_TOOLS"
+      name="OTHER_ARGS_RELENG"
       value="-metadataRepository http://download.eclipse.org/webtools/releng/repository/ -artifactRepository http://download.eclipse.org/webtools/releng/repository/ -installIU org.eclipse.wtp.releng.tools.feature.feature.group" />
 
     <property
-      name="VM_ARGS"
-      value="-Xmx256m" />
+      name="VM_ARGS_RELENG"
+      value="-Djava.io.tmpdir=${BUILD_HOME}/tmp" />
 
         <!-- install latest -->
     <exec
@@ -147,7 +147,7 @@
       dir="${basedir}"
       failonerror="true">
       <arg
-        line="-data ${eclipseWorkspace} -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME} ${OTHER_ARGS_TOOLS} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS}" />
+        line="-data ${eclipseWorkspace}_installRelengTools -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_RELENG} ${OTHER_ARGS_RELENG} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS_RELENG}" />
     </exec>
   </target>
 
@@ -569,7 +569,6 @@
         for example, bug 244603 and bug 279596.
     -->
 
-    <!-- -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin " -->
     <property
       name="BUILDER_VM_ARGS"
       value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp " />
@@ -599,7 +598,7 @@
       <arg value="${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
       <arg value="-vm" />
-      <arg value="${JAVA_8_HOME}/jre/bin" />
+      <arg value="${JAVA_EXEC_DIR}" />
       <arg value="-vmargs" />
       <arg line="${BUILDER_VM_ARGS}" />
     </exec>
@@ -703,7 +702,7 @@
       note: rememeber that JAVA_6 should not be used for jar processor, see
       for example, bug 244603 and bug 279596.
     -->
-      <!-- -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin " -->
+
     <property
       name="BUILDER_VM_ARGS"
       value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp " />
@@ -724,7 +723,7 @@
       -->
       <arg value="-nosplash" />
       <arg value="-data" />
-      <arg value="${eclipseWorkspace}" />
+      <arg value="${eclipseWorkspace}_RUN_AGGR" />
       <arg value="--launcher.suppressErrors" />
       <arg value="-application" />
       <arg value="org.eclipse.b3.cli.headless" />
@@ -733,7 +732,7 @@
       <arg value="${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
       <arg value="-vm" />
-      <arg value="${JAVA_8_HOME}/jre/bin" />
+      <arg value="${JAVA_EXEC_DIR}" />
       <arg value="-vmargs" />
       <arg line="${BUILDER_VM_ARGS}" />
     </exec>
@@ -785,7 +784,7 @@
       note: rememeber that JAVA_6 should not be used for jar processor, see
       for example, bug 244603 and bug 279596.
     -->
-<!--    -Dorg.eclipse.update.jarprocessor.pack200=${JAVA_6_HOME}/jre/bin " -->
+
     <property
       name="BUILDER_VM_ARGS"
       value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp " />
@@ -815,7 +814,7 @@
       <arg value="${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
       <arg value="-vm" />
-      <arg value="${JAVA_6_HOME}/jre/bin" />
+      <arg value="${JAVA_EXEC_DIR}" />
       <arg value="-vmargs" />
       <arg line="${BUILDER_VM_ARGS}" />
     </exec>
@@ -1028,6 +1027,7 @@
     <echo message="Eclipse WORKSPACE: ${eclipseWorkspace}" />
     <echo message="PATH: ${env.PATH}" />
     <echo message="JAVA_HOME: ${JAVA_HOME}" />
+    <echo message="JAVA_EXEC_DIR: ${JAVA_EXEC_DIR}" />
     <echo message="hostForURL: ${hostForURL}" />
     <echo message="JOB_NAME: ${env.JOB_NAME}" />
     <echo message="BUILD_NUMBER: ${env.BUILD_NUMBER}" />
