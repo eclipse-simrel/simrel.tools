@@ -24,16 +24,21 @@
   <target
     name="installAggregatorAndTools"
     depends="init, savePrevious,installAggregator,installRelengTools,installTestsFromRepo"
-    if="installEclipseAndTools">
+    if="installEclipseAndTools"
+    unless="eclipseAndToolsInstalled">
 
     <echo message="Installed fresh Eclipse, Aggregator, and Tools" />
+    <property
+      name="eclipseAndToolsInstalled"
+      value="true" />
 
   </target>
 
   <target
     name="installAggregator"
     depends="init, savePrevious"
-    if="installEclipseAndTools">
+    if="installEclipseAndTools"
+    unless="aggregatorInstalled">
     <property
       name="APP_NAME_P2DIRECTOR_AGG"
       value="org.eclipse.equinox.p2.director" />
@@ -93,43 +98,52 @@
       <arg
         line="-data ${eclipseWorkspace}_INSTALL_AGG -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_AGG} ${OTHER_ARGS_AGG} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS_AGG}" />
     </exec>
+    <property
+      name="aggregatorInstalled"
+      value="true" />
+
   </target>
 
-    <target
-      name="installTestsFromRepo"
-      depends="init, cloneToolsRepo, pullToolsRepo"
-      if="installEclipseAndTools">
-      <property
-        name="APP_NAME_P2DIRECTOR_TESTS"
-        value="org.eclipse.equinox.p2.director" />
-      <property 
-          name="repoReportURL" 
-          value="https://hudson.eclipse.org/simrel/job/simrel.releng.reporeports.buildProduct/lastSuccessfulBuild/artifact/output/p2repo/"/>
+  <target
+    name="installTestsFromRepo"
+    depends="init, cloneToolsRepo, pullToolsRepo"
+    if="installEclipseAndTools"
+    unless="testsInstalled">
+    <property
+      name="APP_NAME_P2DIRECTOR_TESTS"
+      value="org.eclipse.equinox.p2.director" />
+    <property
+      name="repoReportURL"
+      value="https://hudson.eclipse.org/simrel/job/simrel.releng.reporeports.buildProduct/lastSuccessfulBuild/artifact/output/p2repo/" />
 
-      <property
-        name="OTHER_ARGS_TESTS"
-        value="-metadataRepository ${repoReportURL} -artifactRepository ${repoReportURL} -installIU org.eclipse.simrel.tests.feature.feature.group" />
+    <property
+      name="OTHER_ARGS_TESTS"
+      value="-metadataRepository ${repoReportURL} -artifactRepository ${repoReportURL} -installIU org.eclipse.simrel.tests.feature.feature.group" />
 
-      <property
-        name="VM_ARGS_TESTS"
-        value="-Djava.io.tmpdir=${BUILD_HOME}/tmp" />
+    <property
+      name="VM_ARGS_TESTS"
+      value="-Djava.io.tmpdir=${BUILD_HOME}/tmp" />
 
           <!-- install latest -->
-      <exec
-        executable="${eclipseExecutable}"
-        dir="${basedir}"
-        failonerror="true">
-        <arg
-          line="-data ${eclipseWorkspace}_installTests -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_TESTS} ${OTHER_ARGS_TESTS} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS_TESTS}" />
-      </exec>
-        
-    </target>
+    <exec
+      executable="${eclipseExecutable}"
+      dir="${basedir}"
+      failonerror="true">
+      <arg
+        line="-data ${eclipseWorkspace}_installTests -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_TESTS} ${OTHER_ARGS_TESTS} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS_TESTS}" />
+    </exec>
+    <property
+      name="testsInstalled"
+      value="true" />
 
-    
+  </target>
+
+
   <target
     name="installRelengTools"
     depends="init, cloneToolsRepo, pullToolsRepo"
-    if="installEclipseAndTools">
+    if="installEclipseAndTools"
+    unless="relengToolsInstalled">
     <property
       name="APP_NAME_P2DIRECTOR_RELENG"
       value="org.eclipse.equinox.p2.director" />
@@ -149,6 +163,10 @@
       <arg
         line="-data ${eclipseWorkspace}_installRelengTools -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_RELENG} ${OTHER_ARGS_RELENG} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS_RELENG}" />
     </exec>
+    <property
+      name="relengToolsInstalled"
+      value="true" />
+
   </target>
 
   <macrodef name="git-rev-parse">
@@ -283,7 +301,7 @@
         failonerror="true"
         resultproperty="RCcheckout"
         dir="@{dir}">
-        <arg line="checkout -f -B @{branch}"/>
+        <arg line="checkout -f -B @{branch}" />
       </exec>
       <antcall target="checkStatus">
         <param
@@ -364,8 +382,7 @@
         if="branchesNotEqual"
         message="FAILED: Sanity check of variables found branch, @{branch}, is not equal to Gerrit branch, ${GERRIT_BRANCH}, as expected" />
       <echo message="Git Version:" />
-      <exec
-        executable="git">
+      <exec executable="git">
         <arg line="--version" />
       </exec>
       <exec
@@ -383,23 +400,23 @@
           name="message"
           value="Checkout/Fetch of refspec FAILED" />
       </antcall>
-        
-        <exec
-          executable="git"
-          failonerror="true"
-          resultproperty="RCfetchRefspecPull"
-          dir="@{dir}">
-          <arg line="merge FETCH_HEAD" />
-        </exec>
-        <antcall target="checkStatus">
-          <param
-            name="status"
-            value="${RCfetchRefspecPull}" />
-          <param
-            name="message"
-            value="Checkout/Fetch/Pull of refspec FAILED" />
-        </antcall>
-               
+
+      <exec
+        executable="git"
+        failonerror="true"
+        resultproperty="RCfetchRefspecPull"
+        dir="@{dir}">
+        <arg line="merge FETCH_HEAD" />
+      </exec>
+      <antcall target="checkStatus">
+        <param
+          name="status"
+          value="${RCfetchRefspecPull}" />
+        <param
+          name="message"
+          value="Checkout/Fetch/Pull of refspec FAILED" />
+      </antcall>
+
     </sequential>
   </macrodef>
 
@@ -465,8 +482,7 @@
       dir="${BUILD_MODEL_DIR}"
       branch="${commitOrBranch}"
       refspec="${GERRIT_REFSPEC}" />
-    <echo
-      message="on HUDSON from Gerrit: checkedout ${commitOrBranch} with ${GERRIT_REFSPEC} for ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
+    <echo message="on HUDSON from Gerrit: checkedout ${commitOrBranch} with ${GERRIT_REFSPEC} for ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
       
         <!-- TODO: Move these "checkouts to the areas that deal with tools and tests 
       <git-checkout
@@ -498,8 +514,10 @@
       repository="git://git.eclipse.org/gitroot/simrel/${BUILD_MODEL}.git"
       dir="${BUILD_HOME}"
       branch="${BRANCH_BUILD}" />
-      
-    <property name="localRepoExists" value="true"/>
+
+    <property
+      name="localRepoExists"
+      value="true" />
 
   </target>
 
@@ -512,31 +530,43 @@
       repository="git://git.eclipse.org/gitroot/simrel/${BUILD_TOOLS}.git"
       dir="${BUILD_HOME}"
       branch="${BRANCH_TOOLS}" />
-    <property name="localToolsRepoExists" value="true"/>
-  
+    <property
+      name="localToolsRepoExists"
+      value="true" />
+
   </target>
 
   <target
     name="pullRepo"
     depends="init"
-    if="localRepoExists">
+    if="localRepoExists"
+    unless="buildRepoPulled">
     <echo message="git pull task to execute in ${BUILD_MODEL_DIR}" />
     <!-- in macro "pull", we actually do a fetch, then check out -->
     <git-pull
       dir="${BUILD_MODEL_DIR}"
       branch="${BRANCH_BUILD}"
       origin="${BUILD_ORIGIN}" />
+    <property
+      name="buildRepoPulled"
+      value="true" />
+
   </target>
 
   <target
     name="pullToolsRepo"
     depends="init"
-    if="localToolsRepoExists">
+    if="localToolsRepoExists"
+    unless="toolsRepoPulled">
     <echo message="git pull task to execute in ${BUILD_TOOLS_DIR}" />
     <git-pull
       dir="${BUILD_TOOLS_DIR}"
       branch="${BRANCH_TOOLS}"
       origin="${TOOLS_ORIGIN}" />
+    <property
+      name="toolsRepoPulled"
+      value="true" />
+
   </target>
 
   <!--
@@ -580,8 +610,10 @@
       dir="${basedir}"
       failonerror="false"
       resultproperty="buildStatus">
+      <!--  TODO: should add a 'verbose' option for this?
       <arg value="-debug" />
       <arg value="file://${BUILD_HOME}/${BUILD_TOOLS}/p2options/.options" />
+      -->
       <!--
         Adding -consolelog makes for too much, unneeded output, since the aggregator
         produces its verbose own output, slightly cleaner.
@@ -641,7 +673,7 @@
   <target
     name="runTests"
     depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools,installTestsFromRepo,initRunTestsXML">
-     
+
     <ant
       antfile="${runTestsXML}"
       target="cleanBuildTests"
@@ -838,19 +870,20 @@
 
   </target>
 
-  <target name="initRunTestsXML"
-      unless="runTestsXML">
-      <path id="runTests.paths">
-        <fileset
-          dir="${BUILD_HOME}"
-          includes="eclipse44/eclipse/plugins/${RELENG_TESTS_BUNDLE_ID}_*/runTests.xml" />
-      </path>
-      <property
-        name="runTestsXML"
-        refid="runTests.paths" /> 
-      <echo message="runTestsXML file: ${runTestsXML}" />
+  <target
+    name="initRunTestsXML"
+    unless="runTestsXML">
+    <path id="runTests.paths">
+      <fileset
+        dir="${BUILD_HOME}"
+        includes="eclipse44/eclipse/plugins/${RELENG_TESTS_BUNDLE_ID}_*/runTests.xml" />
+    </path>
+    <property
+      name="runTestsXML"
+      refid="runTests.paths" />
+    <echo message="runTestsXML file: ${runTestsXML}" />
   </target>
-  
+
   <target
     name="init"
     depends="getBuildTimestamp, getJobName, getBUILD_HOME"
@@ -912,12 +945,12 @@
     </condition>
 
       <!-- three sources for "commit or Branch" for the main 'commit'. -->
-      <condition
-        property="commitOrBranch"
-        value="${GERRIT_BRANCH}"
-        else="${BRANCH_BUILD}">
-        <isset property="${GERRIT_BRANCH}" />
-      </condition>
+    <condition
+      property="commitOrBranch"
+      value="${GERRIT_BRANCH}"
+      else="${BRANCH_BUILD}">
+      <isset property="${GERRIT_BRANCH}" />
+    </condition>
     <condition
       property="commitOrBranch"
       value="${commit}"
@@ -1172,7 +1205,8 @@
     <!-- TODO: should make the "exclude" part automatic based on presence/abscense of "useTrusted" property -->
   <target
     name="rewriteRepositoryURL"
-    if="rewriteRepositoryURLValue">
+    if="rewriteRepositoryURLValue"
+    unless="rewroteURLs">
     <replace
       dir="${BUILD_MODEL_DIR}"
       token="${commonRepositoryDownloadURLValue}"
@@ -1191,6 +1225,9 @@
       <echo message=" Excluding: ep.b3aggrcon"/>
       <echo message=" Excluding: ep.b3aggrcon, equinox.b3aggrcon"/>
     -->
+    <property
+      name="rewroteURLs"
+      value="true" />
 
   </target>
   <target name="checkAvailableDirs">
