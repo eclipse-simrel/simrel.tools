@@ -875,7 +875,7 @@
     unless="runTestsXML">
     <path id="runTests.paths">
       <fileset
-        dir="${BUILD_HOME}"
+        dir="${BUILD_TOOLS_DIR}"
         includes="runTests.xml" />
     </path>
     <property
