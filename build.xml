@@ -114,11 +114,11 @@
       value="org.eclipse.equinox.p2.director" />
     <property
       name="repoReportURL"
-      value="https://hudson.eclipse.org/simrel/job/simrel.releng.reporeports.buildProduct/lastSuccessfulBuild/artifact/output/p2repo/" />
+      value="https://hudson.eclipse.org/cbi/job/cbi.p2repo.analyzers.build/7/artifact/output/p2repo/" />
 
     <property
       name="OTHER_ARGS_TESTS"
-      value="-metadataRepository ${repoReportURL} -artifactRepository ${repoReportURL} -installIU org.eclipse.simrel.tests.feature.feature.group" />
+      value="-metadataRepository ${repoReportURL} -artifactRepository ${repoReportURL} -installIU org.eclipse.cbi.p2repo.analyzers.feature.feature.group" />
 
     <property
       name="VM_ARGS_TESTS"
