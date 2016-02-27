@@ -79,7 +79,7 @@
   <target name="runReports">
     <property
       name="REPORT_APP_NAME"
-      value="org.eclipse.simrel.tests.repoReport" />
+      value="org.eclipse.cbi.p2repo.analyzers.repoReport" />
     <property
       name="VM_TEST_ARGS"
       value="-Djava.io.tmpdir=${BUILD_HOME}/tmp -DreportOutputDir=${reportOutputDir} -DreportRepoDir=${testRepoDirectory} -DreferenceRepo=${referenceRepoDir}" />
