@@ -444,19 +444,19 @@
     <git-checkout
       dir="${BUILD_MODEL_DIR}"
       commit="${commitOrBranch}" />
-    <echo message="on HUDSON: checkedout ${commitOrBranch} of ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
+    <echo message="on HUDSON: checked out ${commitOrBranch} of ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
     
       <!-- TODO: Move these "checkouts to the areas that deal with tools and tests 
     <git-checkout
       dir="${BUILD_TOOLS_DIR}"
       commit="${toolsCommitOrBranch}" />
-    <echo message="on HUDSON: checkedout ${toolsCommitOrBranch} of ${BUILD_TOOLS} into ${BUILD_TOOLS_DIR}" />
+    <echo message="on HUDSON: checked out ${toolsCommitOrBranch} of ${BUILD_TOOLS} into ${BUILD_TOOLS_DIR}" />
     
     
     <git-checkout
         dir="${BUILD_TESTS_DIR}"
         commit="${testsCommitOrBranch}" />
-      <echo message="on HUDSON: checkedout ${testsCommitOrBranch} of ${RELENG_TESTS_REPO} into ${BUILD_TESTS_DIR}" />
+      <echo message="on HUDSON: checked out ${testsCommitOrBranch} of ${RELENG_TESTS_REPO} into ${BUILD_TESTS_DIR}" />
     -->
     <property
       name="modelRetrived"
@@ -482,19 +482,19 @@
       dir="${BUILD_MODEL_DIR}"
       branch="${commitOrBranch}"
       refspec="${GERRIT_REFSPEC}" />
-    <echo message="on HUDSON from Gerrit: checkedout ${commitOrBranch} with ${GERRIT_REFSPEC} for ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
+    <echo message="on HUDSON from Gerrit: checked out ${commitOrBranch} with ${GERRIT_REFSPEC} for ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
       
         <!-- TODO: Move these "checkouts to the areas that deal with tools and tests 
       <git-checkout
         dir="${BUILD_TOOLS_DIR}"
         commit="${toolsCommitOrBranch}" />
-      <echo message="on HUDSON: checkedout ${toolsCommitOrBranch} of ${BUILD_TOOLS} into ${BUILD_TOOLS_DIR}" />
+      <echo message="on HUDSON: checked out ${toolsCommitOrBranch} of ${BUILD_TOOLS} into ${BUILD_TOOLS_DIR}" />
       
       
       <git-checkout
           dir="${BUILD_TESTS_DIR}"
           commit="${testsCommitOrBranch}" />
-        <echo message="on HUDSON: checkedout ${testsCommitOrBranch} of ${RELENG_TESTS_REPO} into ${BUILD_TESTS_DIR}" />
+        <echo message="on HUDSON: checked out ${testsCommitOrBranch} of ${RELENG_TESTS_REPO} into ${BUILD_TESTS_DIR}" />
       -->
     <property
       name="modelRetrived"
