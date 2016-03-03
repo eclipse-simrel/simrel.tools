@@ -947,9 +947,8 @@
       <!-- three sources for "commit or Branch" for the main 'commit'. -->
     <condition
       property="commitOrBranch"
-      value="${GERRIT_BRANCH}"
-      else="${BRANCH_BUILD}">
-      <isset property="${GERRIT_BRANCH}" />
+      value="${GERRIT_BRANCH}">
+      <isset property="GERRIT_BRANCH" />
     </condition>
     <condition
       property="commitOrBranch"
