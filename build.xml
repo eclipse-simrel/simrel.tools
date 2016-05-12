@@ -182,19 +182,22 @@
         executable="git"
         failonerror="true"
         dir="@{repodir}">
-        <arg line="config --list" />
+        <arg value="config" />
+        <arg value="--list" />
       </exec>
       <exec
         executable="git"
         failonerror="true"
         dir="@{repodir}">
-        <arg line="config @{valuepair}" />
+        <arg value="config" />
+        <arg value="@{valuepair}" />
       </exec>
       <exec
         executable="git"
         failonerror="true"
         dir="@{repodir}">
-        <arg line="config --list" />
+        <arg value="config" />
+        <arg value="--list" />
       </exec>
     </sequential>
   </macrodef>
