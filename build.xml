@@ -174,7 +174,7 @@
     <attribute name="configValue" />
     <sequential>
       <echo message="execute git in @{repodir}" />
-      <echo message="git config @{valuepair}" />
+      <echo message="git config @{configKey} @{configValue}" />
         <!--
         We list "before and after" just to learn more about the system.
         We will not always need to do that.
