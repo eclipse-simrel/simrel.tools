@@ -547,7 +547,7 @@
        -->
     <git-config
       repodir="${BUILD_MODEL_DIR}"
-      configValue="core.autocrlf input" />
+      valuePair="core.autocrlf input" />
   </target>
 
   <target
