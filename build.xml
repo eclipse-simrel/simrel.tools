@@ -170,10 +170,10 @@
 
   <macrodef name="git-config">
     <attribute name="repodir" />
-    <attribute name="valuePair" />
+    <attribute name="valuepair" />
     <sequential>
       <echo message="execute git in @{repodir}" />
-      <echo message="git config @{valuePair}" />
+      <echo message="git config @{valuepair}" />
         <!--
         We list "before and after" just to learn more about the system.
         We will not always need to do that.
@@ -188,7 +188,7 @@
         executable="git"
         failonerror="true"
         dir="@{repodir}">
-        <arg line="config @{valuePair}" />
+        <arg line="config @{valuepair}" />
       </exec>
       <exec
         executable="git"
@@ -547,7 +547,7 @@
        -->
     <git-config
       repodir="${BUILD_MODEL_DIR}"
-      valuePair="core.autocrlf input" />
+      valuepair="core.autocrlf input" />
   </target>
 
   <target
