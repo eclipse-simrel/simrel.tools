@@ -546,7 +546,7 @@
       <!-- in macro "config" we list, then set then list again the configuration.
        -->
     <git-config
-      dir="${BUILD_MODEL_DIR}"
+      repodir="${BUILD_MODEL_DIR}"
       configValue="core.autocrlf input" />
   </target>
 
