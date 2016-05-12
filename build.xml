@@ -166,8 +166,38 @@
     <property
       name="relengToolsInstalled"
       value="true" />
-
   </target>
+
+  <macrodef name="git-config">
+    <attribute name="repodir" />
+    <attribute name="valuePair" />
+    <sequential>
+      <echo message="execute git in @{repodir}" />
+      <echo message="git config @{valuePair}" />
+        <!--
+        We list "before and after" just to learn more about the system.
+        We will not always need to do that.
+        -->
+      <exec
+        executable="git"
+        failonerror="true"
+        dir="@{repodir}">
+        <arg line="config --list" />
+      </exec>
+      <exec
+        executable="git"
+        failonerror="true"
+        dir="@{repodir}">
+        <arg line="config @{valuePair}" />
+      </exec>
+      <exec
+        executable="git"
+        failonerror="true"
+        dir="@{repodir}">
+        <arg line="config --list" />
+      </exec>
+    </sequential>
+  </macrodef>
 
   <macrodef name="git-rev-parse">
     <attribute name="repodir" />
@@ -196,6 +226,7 @@
       <echo message="In macro @{returnProperty} is ${@{returnProperty}}" />
     </sequential>
   </macrodef>
+
   <macrodef name="git-clone">
     <attribute name="repository" />
     <attribute name="dir" />
@@ -311,29 +342,6 @@
           name="message"
           value="Checkout Failed" />
       </antcall>
-
-
-<!-- accidentally had this twice?
-
-      <echo message="   === git checkout -B @{branch}" />
-      <exec
-        executable="git"
-        failonerror="true"
-        resultproperty="RCcheckout"
-        dir="@{dir}">
-        <arg line="checkout -B @{branch}" />
-      </exec>
-      <antcall target="checkStatus">
-        <param
-          name="status"
-          value="${RCcheckout}" />
-        <param
-          name="message"
-          value="Checkout Failed" />
-      </antcall>
--->
-
-
     </sequential>
   </macrodef>
 
@@ -363,6 +371,7 @@
       </antcall>
     </sequential>
   </macrodef>
+
   <macrodef name="git-checkout-refspec">
     <attribute name="dir" />
     <attribute name="branch" />
@@ -400,7 +409,6 @@
           name="message"
           value="Checkout/Fetch of refspec FAILED" />
       </antcall>
-
       <exec
         executable="git"
         failonerror="true"
@@ -416,7 +424,6 @@
           name="message"
           value="Checkout/Fetch/Pull of refspec FAILED" />
       </antcall>
-
     </sequential>
   </macrodef>
 
@@ -430,7 +437,7 @@
   -->
   <target
     name="getModelFromGit"
-    depends="init, cloneRepo, pullRepo, getModelFromGerrit"
+    depends="init, cloneRepo, configRepo, pullRepo, getModelFromGerrit"
     unless="modelRetrived">
     <!--
          While Hudson normall does clone and 'pull', we "check" here to make sure.
@@ -445,19 +452,7 @@
       dir="${BUILD_MODEL_DIR}"
       commit="${commitOrBranch}" />
     <echo message="on HUDSON: checked out ${commitOrBranch} of ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
-    
-      <!-- TODO: Move these "checkouts to the areas that deal with tools and tests 
-    <git-checkout
-      dir="${BUILD_TOOLS_DIR}"
-      commit="${toolsCommitOrBranch}" />
-    <echo message="on HUDSON: checked out ${toolsCommitOrBranch} of ${BUILD_TOOLS} into ${BUILD_TOOLS_DIR}" />
-    
-    
-    <git-checkout
-        dir="${BUILD_TESTS_DIR}"
-        commit="${testsCommitOrBranch}" />
-      <echo message="on HUDSON: checked out ${testsCommitOrBranch} of ${RELENG_TESTS_REPO} into ${BUILD_TESTS_DIR}" />
-    -->
+
     <property
       name="modelRetrived"
       value="true" />
@@ -466,42 +461,27 @@
     <!-- Similar to getModelFromGit, but need to ?merge? refspec into local branch -->
   <target
     name="getModelFromGerrit"
-    depends="init, cloneRepo, pullRepo"
+    depends="init, cloneRepo, configRepo, pullRepo"
     if="GERRIT_REFSPEC"
     unless="modelRetrived">
       <!--
-           While Hudson normall does clone and 'pull', we "check" here to make sure.
+           While Hudson normally does clone and 'pull', we "check" here to make sure.
            In particular, in some cases, a build might be triggered by a change in "tools"
            repo, so even then we want to make sure to get 'latest' of "build" repo.
            In both cases, we *then* want to get a specific revision, if passed to us by
            a previous job. This is so that the various jobs we have, 'validate',
            'build', and 'build_clean' can all work on the same revision.
       -->
-
     <git-checkout-refspec
       dir="${BUILD_MODEL_DIR}"
       branch="${commitOrBranch}"
       refspec="${GERRIT_REFSPEC}" />
     <echo message="on HUDSON from Gerrit: checked out ${commitOrBranch} with ${GERRIT_REFSPEC} for ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
-      
-        <!-- TODO: Move these "checkouts to the areas that deal with tools and tests 
-      <git-checkout
-        dir="${BUILD_TOOLS_DIR}"
-        commit="${toolsCommitOrBranch}" />
-      <echo message="on HUDSON: checked out ${toolsCommitOrBranch} of ${BUILD_TOOLS} into ${BUILD_TOOLS_DIR}" />
-      
-      
-      <git-checkout
-          dir="${BUILD_TESTS_DIR}"
-          commit="${testsCommitOrBranch}" />
-        <echo message="on HUDSON: checked out ${testsCommitOrBranch} of ${RELENG_TESTS_REPO} into ${BUILD_TESTS_DIR}" />
-      -->
+
     <property
       name="modelRetrived"
       value="true" />
   </target>
-
-
 
   <target
     name="cloneRepo"
@@ -551,6 +531,23 @@
       name="buildRepoPulled"
       value="true" />
 
+  </target>
+
+  <!--
+    We set repo config repeatedly (every build) since we do not know "who" cloned the repository first,
+    "us", or "Hudson". And if Hudson (or Gerrit) does it then we do not know how they set or
+     determine the correct config values.
+  -->
+  <target
+    name="configRepo"
+    depends="init"
+    if="localRepoExists">
+    <echo message="git config task to execute in ${BUILD_MODEL_DIR}" />
+      <!-- in macro "config" we list, then set then list again the configuration.
+       -->
+    <git-config
+      dir="${BUILD_MODEL_DIR}"
+      configValue="core.autocrlf input" />
   </target>
 
   <target
@@ -668,7 +665,7 @@
 
   </target>
 
-    <!-- runTests can be ran as manual job, but then should use custom workspace, 
+    <!-- runTests can be ran as manual job, but then should use custom workspace,
          to run against previous build, and acquire the lock, for that job -->
   <target
     name="runTests"
@@ -1314,7 +1311,6 @@
       returnproperty="testsRepoCommit" />
     <echo message="In target, testsRepoCommit: ${testsRepoCommit}" />
   </target>
-
 
     <!--
          No longer used ... we will rely on cleaning all of Hudson workspace manually,
