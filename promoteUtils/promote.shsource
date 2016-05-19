@@ -23,7 +23,8 @@ FULL_FILENAME=/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.
 # as they just compute variables based on above,
 # or provide relatively machine-independent values.
 
-BUILD_TOOLS=org.eclipse.simrel.tools
+# BUILD tools must match what where git repo is cloned to. 
+BUILD_TOOLS=tools
 BUILD_TOOLS_DIR=${BUILD_HOME}/${BUILD_TOOLS}
 
 export JAVA_HOME=${JAVA_8_HOME}
