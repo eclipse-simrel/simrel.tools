@@ -43,7 +43,6 @@ ECLIPSE_HOME_44=${ECLIPSE_INSTALL}/eclipse44
 ECLIPSE_HOME=${ECLIPSE_HOME:-${ECLIPSE_HOME_44}}
 
 releaseDirectory=${REPO_ROOT}/releases/${release}
-testRepoDirectory=${BUILD_HOME}/aggregation/final/
 
 export ECLIPSE_EXE=${ECLIPSE_HOME}/eclipse/eclipse
 
