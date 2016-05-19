@@ -5,8 +5,7 @@ function usage
 {
   printf "\n\tScript to promote aggregation to staging area" >&2
   printf "\n\tUsage: %s [-n] -s <stream> -d <datetimestamp>" "$(basename $0)" >&2
-  printf "\n\t\t%s" "where <stream> is 'main' or 'maintenance'" >&2
-  printf "\n\t\t%s" "   (and main currently means neon and maintenance means mars)" >&2
+  printf "\n\t\t%s" "where <stream> is train name, such as 'neon' or 'oxygen'" >&2
   printf "\n\t\t%s" "and where <datetimestamp> is the date and time for the directory name of the composite child repository, such as '201208240900'" >&2
   printf "\n\t\t%s" "and the optional \"-n\" means \"no copying\" or 'dry-run'"
   printf "\n" >&2
@@ -89,13 +88,11 @@ function checkForErrorExit
 }
 
 case "$stream" in
-  main)
+  neon)
     export release=neon
-    export stagingDirectory="/home/data/httpd/download.eclipse.org/releases/staging"
     ;;
-  maintenance)
-    export release=mars
-    export stagingDirectory="/home/data/httpd/download.eclipse.org/releases/maintenance"
+  oxygen)
+    export release=oxygen
     ;;
   *)
     usage
@@ -103,16 +100,14 @@ case "$stream" in
     ;;
 esac
 
-
-
 # finds file on users path, before current directory
 # hence, non-production users can set their own values for test machines
 # must be called (included) after the above variables set, since
-# above variables are used to compute some other values
-# such as stagingsegment is used to define stagingDirectory
+# above variables are used to compute some other values.
 
 source promote.shsource
 
+export stagingDirectory="${REPO_ROOT}/staging/${release}"
 
 export fromDirectory=${stagingDirectory}
 export toDirectory=${releaseDirectory}
