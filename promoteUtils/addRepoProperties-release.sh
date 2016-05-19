@@ -24,7 +24,7 @@ source promote.shsource
 
 APP_NAME=org.eclipse.wtp.releng.tools.addRepoProperties
 
-devworkspace="${BUILD_HOME}/addRepoPropertiesWorkspace"
+devworkspace="${BUILD_HOME}/workspace-addRepoProperties"
 
 echo "dev:          " $0
 echo

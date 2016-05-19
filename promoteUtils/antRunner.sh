@@ -19,7 +19,7 @@ source promote.shsource
 # and JRE to use to runEclipse
 
 
-devworkspace="${BUILD_HOME}"/antRunnerWorkspace
+devworkspace="${BUILD_HOME}"/workspace-antrunner
 
 BUILDFILE=$1
 

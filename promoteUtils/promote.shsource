@@ -4,7 +4,7 @@
 
 # It is required to specify a top level directory,
 # that will contain all else involved with the promote
-export BUILD_HOME=${BUILD_HOME:-${WORKSPACE}/tools}
+export BUILD_HOME=${BUILD_HOME:-${WORKSPACE}}
 echo "BUILD_HOME: $BUILD_HOME"
 
 # Java should be configured per machine,
