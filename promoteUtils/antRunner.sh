@@ -30,20 +30,18 @@ fi
 
 export JAVA_CMD=${JAVA_HOME}/jre/bin/java
 
-ibmDevArgs="-Xms128M -Xmx256M -Dosgi.ws=gtk -Dosgi.os=linux -Dosgi.arch=x86"
-
-devArgs=$ibmDevArgs
 
 echo dev:          $0
-echo
+echo devArgs:      $devArgs
 echo devworkspace: $devworkspace
 echo
 echo JAVA_CMD:       $JAVA_CMD
+echo
 $JAVA_CMD -version
 echo
 
 
 
-${ECLIPSE_EXE}  -nosplash -debug -consolelog -console -data $devworkspace -application org.eclipse.ant.core.antRunner $BUILDFILESTR -vm $JAVA_CMD -vmargs $devArgs
+${ECLIPSE_EXE} --launcher.suppressErrors -nosplash -debug -consolelog -console -data $devworkspace -application org.eclipse.ant.core.antRunner $BUILDFILESTR -vm $JAVA_CMD -vmargs $devArgs
 
 

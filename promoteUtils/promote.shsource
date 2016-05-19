@@ -10,12 +10,12 @@ echo "BUILD_HOME: $BUILD_HOME"
 # Java should be configured per machine,
 # so this variable point to valid installs.
 
-export JAVA_8_HOME=/shared/common/jdk1.8.0_x64-latest
+export JAVA_8_HOME=${JAVA_8_HOME:-/shared/common/jdk1.8.0_x64-latest}
 
-REPO_ROOT=/home/data/httpd/download.eclipse.org
+REPO_ROOT=${REPO_ROOT:-/home/data/httpd/download.eclipse.org}
 
 # each machine needs valid path to an appropriate, local Eclipse SDK, for fresh re-installs (see "full_filename" below)
-FULL_FILENAME=/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.4.2-201502041700/eclipse-SDK-4.4.2-linux-gtk-x86_64.tar.gz
+FULL_FILENAME=${FULL_FILENAME:-/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.4.2-201502041700/eclipse-SDK-4.4.2-linux-gtk-x86_64.tar.gz}
 
 # ##################################
 # typically the remaining variables not have to be
@@ -24,29 +24,26 @@ FULL_FILENAME=/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.
 # or provide relatively machine-independent values.
 
 # BUILD tools must match what where git repo is cloned to. 
-BUILD_TOOLS=tools
+BUILD_TOOLS=${BUILD_TOOLS:-tools}
 BUILD_TOOLS_DIR=${BUILD_HOME}/${BUILD_TOOLS}
 
 export JAVA_HOME=${JAVA_8_HOME}
 export JAVA_EXEC_DIR=${JAVA_HOME}/jre/bin
 export JAVA_CMD=${JAVA_EXEC_DIR}/java
 
-ibmDevArgs="-Xms128M -Xmx256M -Dosgi.ws=gtk -Dosgi.os=linux -Dosgi.arch=x86_64"
 # remember, the '&' should be uescaped here ... the p2 api (or underlying xml) will escape it.
-devArgs="$ibmDevArgs -Dp2MirrorsURL=http://www.eclipse.org/downloads/download.php?format=xml&file=/releases/${release}/${datetimestamp} -DartifactRepoDirectory=${REPO_ROOT}/releases/${release}/${datetimestamp} -Dp2StatsURI=http://download.eclipse.org/stats/releases/${release} -Dp2ArtifactRepositoryName=${release}/${datetimestamp}"
+devArgs="-Djava.io.tmpdir=${BUILD_HOME}/tmp -Dp2MirrorsURL=http://www.eclipse.org/downloads/download.php?format=xml&file=/releases/${release}/${datetimestamp} -DartifactRepoDirectory=${REPO_ROOT}/releases/${release}/${datetimestamp} -Dp2StatsURI=http://download.eclipse.org/stats/releases/${release} -Dp2ArtifactRepositoryName=${release}/${datetimestamp}"
 
 # platform installs.
-ECLIPSE_INSTALL=${BUILD_HOME}
+ECLIPSE_INSTALL=${ECLIPSE_INSTALL:-${BUILD_HOME}}
 
 # properties say what to consider eclipse home
 ECLIPSE_HOME_44=${ECLIPSE_INSTALL}/eclipse44
 
-ECLIPSE_HOME=${ECLIPSE_HOME_44}
+ECLIPSE_HOME=${ECLIPSE_HOME:-${ECLIPSE_HOME_44}}
 
 releaseDirectory=${REPO_ROOT}/releases/${release}
 testRepoDirectory=${BUILD_HOME}/aggregation/final/
 
 export ECLIPSE_EXE=${ECLIPSE_HOME}/eclipse/eclipse
-
-BUILDER_VM_ARGS="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp
 

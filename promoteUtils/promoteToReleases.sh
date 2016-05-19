@@ -107,8 +107,8 @@ export BUILD_HOME=${BUILD_HOME:-${WORKSPACE}}
 # must be called (included) after the above variables set, since
 # above variables are used to compute some other values.
 
-source promote.shsource
-source ${BUILD_TOOLS_DIR}/promoteUtils/promote.shsource
+source promote.shsource 2>/dev/null
+source ${BUILD_HOME}/tools/promoteUtils/promote.shsource
 
 export stagingDirectory="${REPO_ROOT}/staging/${release}"
 
