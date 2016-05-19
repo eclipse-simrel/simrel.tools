@@ -100,12 +100,15 @@ case "$stream" in
     ;;
 esac
 
+export BUILD_HOME=${BUILD_HOME:-${WORKSPACE}/tools}
+
 # finds file on users path, before current directory
 # hence, non-production users can set their own values for test machines
 # must be called (included) after the above variables set, since
 # above variables are used to compute some other values.
 
 source promote.shsource
+source ${BUILD_HOME}/tools/promoteUtils/promote.shsource
 
 export stagingDirectory="${REPO_ROOT}/staging/${release}"
 
