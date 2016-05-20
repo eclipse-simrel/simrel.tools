@@ -1,31 +1,21 @@
-TODO: minimize use of shell access
 
-to move "promoteToReleases.sh" to Hudson 
-
-As long as on bash, make sure utility and 'include' files have 
-correct paths for Hudson (e.g. add ${WORKSPACE}). 
-
-change to ant? maven? 
-
-Simplify, but improve "bullet proofing". 
-
-If "symbolic" names are kept as paramters, change 'main' to mainline, and 
-'mainenance' to 'update' or updateRelease
-
-The symbolic names are used in 'logic', and also eventually point to the actual names, used as one segment in URLs, such as 'neon' or 'mars'. The goal was not to leave it "free form", since more open to misspellings and similar. So, might move back to direct name, e.g. neon, but still need a list or way to bullet proof it. 
-
-= = = = = =
-
-There is some "by hand" prep done, where 
-
-old, not-in-use repositories are removed. 
+1. There is some "by hand" prep done, where 
+old, not-in-use repositories are removed.
+ 
   We do not remove them when promoted, since that would change directory time stamp, 
   and cause the mirroring system to think nothing was mirrored yet. 
   
-We hand create the composite repo jars. The ant or API methods only create the "official names" -- we want some named so that they are not used, yet, but then we rename them when made visible. (Since nothing, at that point, deleted, or added, the parent directory does not change time stamps). 
+2. We hand create the composite repo jars. 
+The ant or API methods only create the "official names" -- 
+we want some named so that they are not used, yet, but 
+then we rename them when made visible. (Since nothing, 
+at that point, is deleted or added the parent directory 
+does not change time stamps). 
 
-= = = = = = 
 
-There is a "last step" when the repository is "made visible". A script is ran that copies the preliminary name to the official names. 
+3. There is a "last step" "makeVisiible.sh" when the repository is "made visible". A script is ran that copies the preliminary name to the official names. 
 
+4. Should an an automatic repo check which would just "list IUs" 
+just to make sure it meets "atomic" criteria.
 
+ 

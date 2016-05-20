@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# This utility is meant to be a build-step in a hudson job. See the configuration of
+# https://hudson.eclipse.org/simrel/view/Releng%20jobs/job/promoteToReleases/
+
+# It first clones the org.eclipse.simrel.build git repo into a 
+# subdirectory of $WORKSPACE, named tools, in case we ever need 
+# a special clean-up method where some things are cleaned but not others.
+# Plus, it helps emphasize we are using the git repo for its utilities, not 
+# a literal build. 
+
+# This utility is purely part of the confirguration, not part of what is executed. 
+# Though, it could be changed to "wget" this one file, and then execute it.
+
+echo -e "\n\t[DEBUG] Who am I: $(whoami)\n"
+
+if [[ -z ${WORKSPACE} ]]
+then
+  echo -e "\n\t[ERROR] WORKSPACE is not defined. Not running on Hudson?\n"
+  exit 1
+fi
+
+
+# just to be sure all sh files are executable
+find ${WORKSPACE}/tools -name "*.sh" -exec chmod -c +x '{}' \;
+
+# = = = =  The main work to do = = = =
+RAW_DATE_START="$(date +%s )"
+# To make operate as a true cron-like job, we can not use a 
+# parameterized build. Must change this configuration file each time.
+${WORKSPACE}/tools/promoteUtils/makeVisible.sh RC1
+RAW_DATE_END="$(date +%s )"
+echo -e "\n\t[INFO] Elapsed seconds to makeVisible: $(($RAW_DATE_END - $RAW_DATE_START))"
+
