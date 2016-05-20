@@ -127,9 +127,10 @@ else
   # make sure 'datetimestamp' has been defined and is no zero length
   if [ -z "${datetimestamp}" ]
   then
-    echo;
+    echo
     echo "   Fatal Error: the variable datetimestamp must be defined to run this script."
-    echo;
+    echo
+    exit 1
   else
 
     toSubDir=${toDirectory}/${datetimestamp}
@@ -145,7 +146,11 @@ else
     checkForErrorExit $? "could not copy files as expected"
 
     ${BUILD_TOOLS_DIR}/promoteUtils/installEclipseAndTools.sh
-
+    RC=$?
+    if [[ $RC != 0 ]]
+    then
+      echo -e "[ERROR] installEclipseAndTools.sh returned non zero return code: $RC"
+    fi
 
     if [[ "${DRYRUN}" != "--dry-run" ]]
     then

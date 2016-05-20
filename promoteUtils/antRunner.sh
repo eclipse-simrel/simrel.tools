@@ -13,7 +13,8 @@ else
     echo
 fi
 
-source promote.shsource
+source promote.shsource 2>/dev/null
+source ${BUILD_HOME}/tools/promoteUtils/promote.shsource
 
 # specify devworkspace
 # and JRE to use to runEclipse
