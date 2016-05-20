@@ -144,6 +144,8 @@ else
     rsync ${DRYRUN}  -rp ${fromDirectory}/* ${toSubDir}/
     checkForErrorExit $? "could not copy files as expected"
 
+    ${BUILD_TOOLS_DIR}/promoteUtils/installEclipseAndTools.sh
+
 
     if [[ "${DRYRUN}" != "--dry-run" ]]
     then
