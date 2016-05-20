@@ -25,7 +25,7 @@ FULL_FILENAME=${FULL_FILENAME:-/home/data/httpd/archive.eclipse.org/eclipse/down
 
 # BUILD tools must match what where git repo is cloned to. 
 BUILD_TOOLS=${BUILD_TOOLS:-tools}
-BUILD_TOOLS_DIR=${BUILD_HOME}/${BUILD_TOOLS}
+export BUILD_TOOLS_DIR=${BUILD_HOME}/${BUILD_TOOLS}
 
 export JAVA_HOME=${JAVA_8_HOME}
 export JAVA_EXEC_DIR=${JAVA_HOME}/jre/bin

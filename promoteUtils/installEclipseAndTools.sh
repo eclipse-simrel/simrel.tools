@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source promote.shsource
+source promote.shsource 2>/dev/null
 source ${BUILD_HOME}/tools/promoteUtils/promote.shsource
 
 INSTALL_ECLIPSE="true"
