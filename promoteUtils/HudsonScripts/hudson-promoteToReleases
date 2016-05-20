@@ -14,16 +14,16 @@
 
 echo -e "\n\t[DEBUG] Who am I: $(whoami)\n"
 
-if [[ -z ${WORKSPACE} ]]
+if [[ -z "${WORKSPACE}" ]]
 then
   echo -e "\n\t[ERROR] WORKSPACE is not defined. Not running on Hudson?\n"
 fi
 
 # If tools already exists, assume we have already cloned, and only 
 # need to pull. We ALWAYS work from master.
-if [[ -e ${WORKSPACE}/tools ]] 
+if [[ -e "${WORKSPACE}/tools" ]] 
 then
-  pushd ${WORKSPACE}/tools
+  pushd "${WORKSPACE}/tools"
   RAW_DATE_START="$(date +%s )"
   git pull
   RAW_DATE_END="$(date +%s )"
@@ -42,7 +42,7 @@ else
 fi
 
 # just to be sure all sh files are executable
-find ${WORKSPACE}/tools -name "*.sh" -exec chmod -c +x '{}' \;
+find "${WORKSPACE}/tools" -name "*.sh" -exec chmod -c +x '{}' \;
 
 echo "dryrun value from Hudson: $dryrun"
 if [[ "${dryrun}" == "true" ]] 
