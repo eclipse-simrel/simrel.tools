@@ -5,8 +5,8 @@
 #
 # find . -maxdepth 3  -name content.jar  -execdir convertxz.sh '{}' \;
 
-source createXZ.shsource
+source ${BUILD_TOOLS_DIR}/promoteUtils/createXZ.shsource
 # don't think this "export function" is needed here?
-export -f createXZ
+#export -f createXZ
 createXZ "${1}"
  

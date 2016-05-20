@@ -163,7 +163,7 @@ else
         # previous step, if p2.index already exists and appears correct.
         rm "${toSubDir}/p2.index"
       fi
-      "${BUILD_TOOLS_DIR}/convertxz.sh" "${toSubDir}"
+      "${BUILD_TOOLS_DIR}/promoteUtils/convertxz.sh" "${toSubDir}"
     else
       echo "Doing DRYRUN, otherwise addRepoProperties and createxz called here."
     fi
