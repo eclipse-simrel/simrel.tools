@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 #*******************************************************************************
 # Copyright (c) 2016 IBM Corporation and others.
 # All rights reserved. This program and the accompanying materials
@@ -9,11 +8,18 @@
 # Contributors:
 #     IBM Corporation - initial API and implementation
 #*******************************************************************************
-
+#!/usr/bin/env bash
 
 # Small utility to more automatically do the renames the morning of "making visible",
-# after artifacts have mirrored. In theory, could be done by a cron or at job.
-#
+# after artifacts have mirrored.
+
+# NOTE: the EPP version of this file and the SimRel Repo version of 
+# this file are nearly identical, and could in theory be made more so. 
+# The main difference is the REPO_ROOT value. 
+# There is also currently a slightly different pattern used in the
+# "on hold" composite files.
+
+
 # Note, copy is used, instead of move, so that the parent directory's "modified time" does not change.
 # That way the mirroring script won't falsely report "no mirrors" (for a while).
 #
@@ -51,7 +57,9 @@ then
   usage
   exit 1
 fi
-REPO_ROOT=/home/data/httpd/download.eclipse.org/releases/neon
+
+# TODO: make "train name" a variable?
+REPO_ROOT=/home/data/httpd/download.eclipse.org/technology/epp/packages/neon
 
 # be paranoid with sanity checks
 if [[ ! -e "${REPO_ROOT}" ]]
@@ -62,35 +70,35 @@ else
   echo -e "\n\t[INFO] REPO_ROOT existed as expected:\n\tREPO_ROOT: ${REPO_ROOT}"
 fi
 
-if [[ ! -e "${REPO_ROOT}/compositeArtifacts${LABEL}.jar" ]]
+if [[ ! -e "${REPO_ROOT}/compositeArtifacts.jar.${LABEL}" ]]
 then
-  echo -e "\n\t[ERROR] compositeArtifacts${LABEL}.jar did not exist in REPO_ROOT!"
+  echo -e "\n\t[ERROR] compositeArtifacts.jar.${LABEL} did not exist in REPO_ROOT!"
   exit 1
 fi
-if [[ ! -e "${REPO_ROOT}/compositeArtifacts${LABEL}.jar" ]]
+if [[ ! -e "${REPO_ROOT}/compositeArtifacts.jar.${LABEL}" ]]
 then
-  echo -e "\n\t[ERROR] compositeContent${LABEL}.jar did not exist in REPO_ROOT!"
+  echo -e "\n\t[ERROR] compositeContent.jar.${LABEL} did not exist in REPO_ROOT!"
   exit 1
 fi
 
 
 
-cp --verbose ${REPO_ROOT}/compositeArtifacts${LABEL}.jar ${REPO_ROOT}/compositeArtifacts.jar
+cp --verbose ${REPO_ROOT}/compositeArtifacts.jar.${LABEL} ${REPO_ROOT}/compositeArtifacts.jar
 RC=$?
 if [[ $RC != 0 ]]
 then
-  echo -e "\n\t[ERROR] copy returned a non zero return code for compositeArtifacts${LABEL}.jar. RC: $RC"
+  echo -e "\n\t[ERROR] copy returned a non zero return code for compositeArtifacts.${LABEL}.jar. RC: $RC"
   exit $RC
 fi
-cp --verbose ${REPO_ROOT}/compositeContent${LABEL}.jar   ${REPO_ROOT}/compositeContent.jar
+cp --verbose ${REPO_ROOT}/compositeContent.jar.${LABEL}   ${REPO_ROOT}/compositeContent.jar
 RC=$?
 if [[ $RC != 0 ]]
 then
-  echo -e "\n\t[ERROR] copy returned a non zero return code for compositeContent${LABEL}.jar. RC: $RC"
+  echo -e "\n\t[ERROR] copy returned a non zero return code for compositeContent.${LABEL}.jar. RC: $RC"
   exit $RC
 fi
 
-# This HTML change is rarely used, and can probably
+# This HTML change is rarely used -- and never on EPP -- and can probably
 # eliminate, if ever desired.?
 if [[ -e ${REPO_ROOT}/index${LABEL}.html ]]
 then
@@ -103,3 +111,4 @@ then
   fi
 fi
 
+exit 0
