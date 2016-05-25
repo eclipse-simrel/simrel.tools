@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #*******************************************************************************
 # Copyright (c) 2016 IBM Corporation and others.
 # All rights reserved. This program and the accompanying materials
@@ -8,14 +9,13 @@
 # Contributors:
 #     IBM Corporation - initial API and implementation
 #*******************************************************************************
-#!/usr/bin/env bash
 
 # Small utility to more automatically do the renames the morning of "making visible",
 # after artifacts have mirrored.
 
-# NOTE: the EPP version of this file and the SimRel Repo version of 
-# this file are nearly identical, and could in theory be made more so. 
-# The main difference is the REPO_ROOT value. 
+# NOTE: the EPP version of this file and the SimRel Repo version of
+# this file are nearly identical, and could in theory be made more so.
+# The main difference is the REPO_ROOT value.
 # There is also currently a slightly different pattern used in the
 # "on hold" composite files.
 

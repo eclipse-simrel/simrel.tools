@@ -13,15 +13,15 @@
 
 if [[ -z "${release}" ]]
 then
-    echo
-    echo "   ERRRO: The 'release' environment much be specified for this script. For example,"
-    echo "   release=mars ./$( basename $0 )"
-    echo
-    exit 1
+  echo
+  echo "   ERRRO: The 'release' environment much be specified for this script. For example,"
+  echo "   release=mars ./$( basename $0 )"
+  echo
+  exit 1
 else
-    echo
-    echo "release: ${release}"
-    echo
+  echo
+  echo "release: ${release}"
+  echo
 fi
 
 source promote.shsource 2>/dev/null
@@ -37,7 +37,7 @@ BUILDFILE=$1
 
 if [ -e $BUILDFILE ]
 then
-    BUILDFILESTR=" -file $BUILDFILE"
+  BUILDFILESTR=" -file $BUILDFILE"
 fi
 
 export JAVA_CMD=${JAVA_HOME}/jre/bin/java

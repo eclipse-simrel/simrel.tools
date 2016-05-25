@@ -22,7 +22,7 @@ function usage
   printf "\n" >&2
 }
 
-# Do not need to "check number of arguments" if using getopts. 
+# Do not need to "check number of arguments" if using getopts.
 # As it is (was) it gets in the way of -h
 #if [[ $# != 4 && $# != 5 ]]
 #then
