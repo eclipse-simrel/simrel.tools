@@ -49,6 +49,13 @@ quickRepoList="\
 /releases/neon/ \
 "
 
+if [[ "$quickCheck" == "true" ]]
+ then
+   reposToCheck=${quickRepoList}
+ else
+   reposToCheck=${repoList}
+fi
+
 # WORKSPACE will be defined in Hudson. For convenience of local, remote, testing we will make several
 # assumptions if it is not defined.
 if [[ -z "${WORKSPACE}" ]]
@@ -71,15 +78,21 @@ then
   tar -xf ${baseEclipse} -C ${WORKSPACE}
 fi
 
-for repo in ${repoList}
+for repo in ${reposToCheck}
 do
+  echo -e "\n\n\Note: search for 'Checking repo:' to jump ahead in long listings"
   echo -e "\n\n\tChecking repo:\n\t${repoAccess}${repo}\n\n"
-  nice -n 10 ${WORKSPACE}/eclipse/eclipse -nosplash -consolelog --launcher.suppressErrors -application org.eclipse.equinox.p2.director -repository ${repoAccess}${repo} -list -vm /shared/common/jdk1.8.0_x64-latest/bin/java
+  repoShortName=${repo##*/}
+  repoListFilename="${repoShortName}Listing.txt"
+  repoCount=${repoShortName}Count
+  nice -n 10 ${WORKSPACE}/eclipse/eclipse -nosplash -consolelog --launcher.suppressErrors -application org.eclipse.equinox.p2.director -repository ${repoAccess}${repo} -list -vm /shared/common/jdk1.8.0_x64-latest/bin/java | tee "$WORKSPACE}/${repoListFilename}"
   RC=$?
   if [[ $RC != 0 ]]
   then
     echo -e "\n\t[ERROR]: p2.director list returned a non-zero return code: $RC"
     exit $RC
   fi
+  repoCount=$(cat "$WORKSPACE}/${repoListFilename}" | wc -l)
+  printf "\n\tNumber if IUs in $repoShortName: $repoCount\n" 
 done
 
