@@ -53,11 +53,11 @@ quickRepoList="\
   /releases/neon/ \
   "
 
-if [[ "$quickCheck" == "true" ]]
+if [[ "$fullCheck" == "true" ]]
 then
-  reposToCheck=${quickRepoList}
-else
   reposToCheck=${repoList}
+else
+  reposToCheck=${quickRepoList}
 fi
 
 # WORKSPACE will be defined in Hudson. For convenience of local, remote, testing we will make several
