@@ -1,0 +1,10 @@
+# JGit/EGit does support gitattributes starting in 4.3. See bug 342372
+# https://bugs.eclipse.org/bugs/show_bug.cgi?id=342372
+
+
+*       text=auto
+
+*.sh        text
+*.shsource  text
+*.prefs     text
+*.xml       text
