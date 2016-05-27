@@ -83,14 +83,14 @@ fi
 
 
 
-cp -a --verbose ${REPO_ROOT}/compositeArtifacts.jar.${LABEL} ${REPO_ROOT}/compositeArtifacts.jar
+cp --verbose ${REPO_ROOT}/compositeArtifacts.jar.${LABEL} ${REPO_ROOT}/compositeArtifacts.jar
 RC=$?
 if [[ $RC != 0 ]]
 then
   echo -e "\n\t[ERROR] copy returned a non zero return code for compositeArtifacts.${LABEL}.jar. RC: $RC"
   exit $RC
 fi
-cp -a --verbose ${REPO_ROOT}/compositeContent.jar.${LABEL}   ${REPO_ROOT}/compositeContent.jar
+cp --verbose ${REPO_ROOT}/compositeContent.jar.${LABEL}   ${REPO_ROOT}/compositeContent.jar
 RC=$?
 if [[ $RC != 0 ]]
 then
@@ -102,7 +102,7 @@ fi
 # eliminate, if ever desired.?
 if [[ -e ${REPO_ROOT}/index${LABEL}.html ]]
 then
-  cp -a --verbose ${REPO_ROOT}/index${LABEL}.html ${REPO_ROOT}/index.html
+  cp --verbose ${REPO_ROOT}/index${LABEL}.html ${REPO_ROOT}/index.html
   RC=$?
   if [[ $RC != 0 ]]
   then
