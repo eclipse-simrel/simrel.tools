@@ -62,6 +62,7 @@ do
       # so ... decided to handle "no arguments" case before calling getopts.
       printf "\n\tUnknown option: -%s\n" $OPTARG
       usage
+      exit 1
       ;;
     *)
       # This fall-through not really needed in this case, esp. with '?' clause.
@@ -72,7 +73,7 @@ do
       printf "\n\t%s" "ERROR: unhandled option found: $OPTION. Check script case statements. " >&2
       printf "\n" >&2
       usage
-      exit
+      exit 1
       ;;
   esac
 done
@@ -133,6 +134,7 @@ then
   echo;
   echo "   Fatal Error: the variable toDirectory must be defined to run this script";
   echo;
+  exit 1
 else
 
   # make sure 'datetimestamp' has been defined and is no zero length
@@ -161,6 +163,7 @@ else
     if [[ $RC != 0 ]]
     then
       echo -e "[ERROR] installEclipseAndTools.sh returned non zero return code: $RC"
+      exit $RC
     fi
 
     if [[ "${DRYRUN}" != "--dry-run" ]]

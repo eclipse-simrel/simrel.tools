@@ -54,6 +54,6 @@ echo "APP_NAME:      $APP_NAME"
 $JAVA_CMD -version
 echo
 
-"${ECLIPSE_EXE}"   -debug -nosplash -consolelog -console -data "$devworkspace" --launcher.suppressErrors -application "${APP_NAME}" "${OTHER_ARGS}" -vm "$JAVA_CMD" -vmargs "$devArgs"
+"${ECLIPSE_EXE}"   -debug -nosplash -consolelog -console -data "$devworkspace" --launcher.suppressErrors -application "${APP_NAME}" "${OTHER_ARGS}" -vm "$JAVA_CMD" -vmargs $devArgs
 
 
