@@ -104,20 +104,25 @@ function changeNamesByCopy ()
 # We require both arguments, since to provide a default could lead to
 # very bad errors if wrong value of "trainName" was used.
 
-if [[ ! $# = 2 ]]
+if [[ ! $# = 3 ]]
 then
   usage
   exit 1
 fi
 
-TRAIN_NAME=$1
-CHECKPOINT=$2
+# DOMAIN is to indicate if running on SimRel HIPP or EPP HIPP -- there is probably 
+# some way to "compute it", but for now will just pass in as first parameter. 
+# Or, we could just pass in whole "path name"? 
+DOMAIN=$1
+TRAIN_NAME=$2
+CHECKPOINT=$3
 
 printf "\n\tArguments to utility were:"
+printf "\n\t\tDOMAIN: ${DOMAIN}"
 printf "\n\t\tTRAIN_NAME: ${TRAIN_NAME}"
 printf "\n\t\tCHECKPOINT: ${CHECKPOINT}\n"
 
-if [[ -z "${CHECKPOINT}" || -z "${TRAIN_NAME}" ]]
+if [[ -z "${CHECKPOINT}" || -z "${TRAIN_NAME}" || -z "${DOMAIN}" ]]
 then
   # This would be rare. Equates to something like ./makevisible.sh "" M2
   # But, just in case. Note that something like ./makevisible "   " M2
@@ -131,10 +136,15 @@ fi
 # EPP metadata for update, but the Sim Rel repo not being ready.
 # Note: we allow "override" of the repo roots by env. variable to make testing easier.
 
-
+if [[ "${DOMAIN}" == "SIMREL" ]] 
+then
 SIM_REPO_ROOT=${SIM_REPO_ROOT:-/home/data/httpd/download.eclipse.org/releases/${TRAIN_NAME}}
 changeNamesByCopy "${SIM_REPO_ROOT}"
-
+elif [[  "${DOMAIN}" == "EPP" ]] 
 EPP_REPO_ROOT=${EPP_REPO_ROOT:-/home/data/httpd/download.eclipse.org/technology/epp/packages/${TRAIN_NAME}}
 changeNamesByCopy "${EPP_REPO_ROOT}"
+else
+  echo -e "\n\t[ERROR] Unexpected DOMAIN given: $DOMAIN"
+  exit 1
+fi
 
