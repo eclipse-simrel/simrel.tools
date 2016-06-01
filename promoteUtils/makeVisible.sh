@@ -140,7 +140,8 @@ if [[ "${DOMAIN}" == "SIMREL" ]]
 then
 SIM_REPO_ROOT=${SIM_REPO_ROOT:-/home/data/httpd/download.eclipse.org/releases/${TRAIN_NAME}}
 changeNamesByCopy "${SIM_REPO_ROOT}"
-elif [[  "${DOMAIN}" == "EPP" ]] 
+elif [[  "${DOMAIN}" == "EPP" ]]
+then
 EPP_REPO_ROOT=${EPP_REPO_ROOT:-/home/data/httpd/download.eclipse.org/technology/epp/packages/${TRAIN_NAME}}
 changeNamesByCopy "${EPP_REPO_ROOT}"
 else
