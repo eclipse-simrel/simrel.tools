@@ -70,14 +70,14 @@ function changeNamesByCopy ()
 
   # The real work begins here
 
-  cp -a --verbose ${REPO_ROOT}/compositeArtifacts${CHECKPOINT}.jar ${REPO_ROOT}/compositeArtifacts.jar
+  cp --preserve=mode,ownership --verbose ${REPO_ROOT}/compositeArtifacts${CHECKPOINT}.jar ${REPO_ROOT}/compositeArtifacts.jar
   RC=$?
   if [[ $RC != 0 ]]
   then
     echo -e "\n\t[ERROR] copy returned a non zero return code for compositeArtifacts${CHECKPOINT}.jar. RC: $RC"
     exit $RC
   fi
-  cp -a --verbose ${REPO_ROOT}/compositeContent${CHECKPOINT}.jar   ${REPO_ROOT}/compositeContent.jar
+  cp --preserve=mode,ownership --verbose ${REPO_ROOT}/compositeContent${CHECKPOINT}.jar   ${REPO_ROOT}/compositeContent.jar
   RC=$?
   if [[ $RC != 0 ]]
   then
@@ -89,7 +89,7 @@ function changeNamesByCopy ()
   # eliminate, if ever desired.?
   if [[ -e ${REPO_ROOT}/index${CHECKPOINT}.html ]]
   then
-    cp -a --verbose ${REPO_ROOT}/index${CHECKPOINT}.html ${REPO_ROOT}/index.html
+    cp --preserve=mode,ownership --verbose ${REPO_ROOT}/index${CHECKPOINT}.html ${REPO_ROOT}/index.html
     RC=$?
     if [[ $RC != 0 ]]
     then
