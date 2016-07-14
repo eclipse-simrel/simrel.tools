@@ -70,6 +70,7 @@ void cancelIfAlsoQueued (String jobName) {
 }
 
 println("[INFO] Beginning Groovy script"); 
+printAllProperties();
 String  thisProjectName = "";
 //  println("**** Dump this");
 //  dumpObjectProperties(this);
@@ -78,7 +79,6 @@ String  thisProjectName = "";
 //  println("**** Dump binding.getVariable('build')");
 //  dumpObjectProperties(this.getBinding().getVariable("build"));
 //  thisBuildName = this.getBinding().getVariable("build").getFullName();
-//  printAllProperties()
 thisProjectName = this.getBinding().getVariable("build").getParent().getFullName();
 //  println("thisBuildName: " + thisBuildName);
 //  println("thisProjectName: " + thisProjectName);
