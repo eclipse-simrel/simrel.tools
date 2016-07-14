@@ -1,7 +1,10 @@
 #!/usr/bin/env groovy
+
+/* Remember for our Hudson jobs this needs to be ran as a 
+   _system_ groovy build stem, not a simple groovy build step. 
+*/
+
 import org.eclipse.hudson.model.*
-
-
 
 void printAllProperties() {
   println("\n= = = All Properties = = =\n")
@@ -73,9 +76,10 @@ String  thisProjectName = "";
 //  println("**** Dump binding.getVariable('build')");
 //  dumpObjectProperties(this.getBinding().getVariable("build"))
 //  thisBuildName = this.getBinding().getVariable("build").getFullName();
+//  printAllProperties()
 thisProjectName = this.getBinding().getVariable("build").getParent().getFullName();
 //  println("thisBuildName: " + thisBuildName);
 //  println("thisProjectName: " + thisProjectName);
-//printAllProperties()
+
 cancelIfAlsoQueued(thisProjectName)
 
