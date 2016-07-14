@@ -123,12 +123,10 @@ function checkForErrorExit
 
 case "$stream" in
         main)
-            export release=mars
-            export stagingsegment=staging
+            export release=oxygen
             ;;
         maintenance)
-            export release=luna
-            export stagingsegment=maintenance
+            export release=neon
             ;;
         *)
             usage
@@ -181,7 +179,6 @@ echo "BUILD_HOME: $BUILD_HOME"
 echo "BUILD_TOOLS_DIR: ${BUILD_TOOLS_DIR}"
 echo "stream: $stream"
 echo "release: $release"
-echo "stagingSegment: $stagingSegment"
 echo "fromDirectory: $fromDirectory"
 echo "toDirectory: $toDirectory"
 

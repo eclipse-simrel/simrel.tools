@@ -1,19 +1,5 @@
 #!/usr/bin/env bash
 
-stagingsegment=$1
-
-if [[ -z "${stagingsegment}" ]]
-then
-    echo
-    echo "   ERROR: The 'stagingsegment' variable must be specified for this script."
-    echo
-    exit 1
-else 
-    echo
-    echo "stagingsegment: ${stagingsegment}"
-    echo
-fi
-
 source aggr_properties.shsource
 
 APP_NAME=org.eclipse.wtp.releng.tools.addRepoProperties
@@ -29,8 +15,6 @@ ibmDevArgs="-Xms128M -Xmx256M -Dosgi.ws=gtk -Dosgi.os=linux -Dosgi.arch=x86"
 devArgs="$ibmDevArgs -Dp2MirrorsURL=http://www.eclipse.org/downloads/download.php?format=xml&file=/releases/${stagingsegment}/ -DartifactRepoDirectory=${REPO_ROOT}/releases/${stagingsegment}/ -Dp2StatsURI=http://download.eclipse.org/stats/releases/${stagingsegment} -Dp2ArtifactRepositoryName=release/${stagingsegment}"
 
 echo "dev:          " $0
-echo
-echo "stagingsegment: " $stagingsegment
 echo
 echo "devworkspace: " $devworkspace
 echo

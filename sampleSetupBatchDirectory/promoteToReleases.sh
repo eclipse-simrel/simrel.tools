@@ -84,22 +84,16 @@ function checkForErrorExit
 
 case "$stream" in
         main)
-            export release=mars
-            export stagingsegment=staging
-            export releasesegment=current
+            export release=oxygen
             ;;
         maintenance)
-            export release=luna
-            export stagingsegment=maintenance
-            export releasesegment=maintenance
+            export release=neon
             ;;
         *)
             usage
             exit 1
       ;;
 esac
-
-
 
 # finds file on users path, before current directory
 # hence, non-production users can set their own values for test machines
