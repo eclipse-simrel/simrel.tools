@@ -68,18 +68,20 @@ void cancelIfAlsoQueued (String jobName) {
     }
   }
 }
+
+println("[INFO] Beginning Groovy script"); 
 String  thisProjectName = "";
-//  println("**** Dump this")
+//  println("**** Dump this");
 //  dumpObjectProperties(this);
-//  println("**** Dump this.getBinding()")
+//  println("**** Dump this.getBinding()");
 //  dumpObjectProperties(this.getBinding());
 //  println("**** Dump binding.getVariable('build')");
-//  dumpObjectProperties(this.getBinding().getVariable("build"))
+//  dumpObjectProperties(this.getBinding().getVariable("build"));
 //  thisBuildName = this.getBinding().getVariable("build").getFullName();
 //  printAllProperties()
 thisProjectName = this.getBinding().getVariable("build").getParent().getFullName();
 //  println("thisBuildName: " + thisBuildName);
 //  println("thisProjectName: " + thisProjectName);
 
-cancelIfAlsoQueued(thisProjectName)
-
+cancelIfAlsoQueued(thisProjectName);
+println("[INFO] Ending Groovy script"); 
