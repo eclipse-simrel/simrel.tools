@@ -70,6 +70,7 @@ void cancelIfAlsoQueued (String jobName) {
 }
 
 println("[INFO] Beginning Groovy script"); 
+println("Groovy Version: " + GroovySystem.version);
 printAllProperties();
 String  thisProjectName = "";
 //  println("**** Dump this");
