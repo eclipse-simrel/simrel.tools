@@ -153,6 +153,13 @@ else
     echo "        from  ${fromDirectory}"
     echo "          to  ${toSubDir}"
     echo ""
+    mkdir -p ${toSubDir}
+    RC=$?
+    if [[ $RC != 0 ]]
+    then
+      echo -e "\n\t[ERROR] Could not make the directory ${toSubDir}. RC: $RC"
+      exit $RC
+    fi
 
     # plugins and features
     rsync ${DRYRUN}  -rp ${fromDirectory}/* ${toSubDir}/
