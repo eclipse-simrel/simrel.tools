@@ -44,13 +44,16 @@ printf "\n\t[INFO] quickCheck was $quickCheck\n"
 # Also note: "staging" is a simple repo, at this time, but wouldn't hurt to
 # get a listing, and see what was there?
 repoList="\
+  /releases/oxygen/ \
   /releases/neon/ \
   /staging/neon/ \
+  /staging/oxygen/ \
   /releases/mars/ \
   "
-# We may want to check only this repo after "makeVisible"
+# We may want to check only one of these repos after "makeVisible"
 quickRepoList="\
   /releases/neon/ \
+  /releases/oxygen/ \
   "
 
 if [[ "$fullCheck" == "true" ]]
