@@ -35,7 +35,7 @@
 
   <property
     name="referenceRepoDir"
-    value="${REPO_ROOT}/releases/mars/201602261000/" />
+    value="${REPO_ROOT}/releases/neon/201606221000" />
 
   <property
     name="eclipseTestExecutable"
