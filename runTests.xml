@@ -27,12 +27,6 @@
   <!-- buildInfo should already exist, and contain "properties" of build -->
   <mkdir dir="${reportOutputDir}" />
 
-  <!--
-  <property
-    name="reportRepoDir"
-    value="${stagingDirectory}" />
-  -->
-
   <property
     name="referenceRepoDir"
     value="${REPO_ROOT}/releases/neon/201606221000" />
