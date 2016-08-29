@@ -27,11 +27,35 @@
   <!-- buildInfo should already exist, and contain "properties" of build -->
   <mkdir dir="${reportOutputDir}" />
 
-  <property
-    name="referenceRepoDir"
-    value="${REPO_ROOT}/releases/neon/201606221000" />
+  <!-- We should be passed (or, inherit) the release value from where
+       this script it called in build.xml.
+       TODO: would be best to control this value from Hudson property, 
+       so that changes in future do not require changes in code.
+       NOTE: another example of where "update" and "mainline" would 
+       be useful variables to have?
+  -->
+  <!-- reference repository for update releases is alwasy the previous release.
+       reference repository for mainline release should be the latest "update staging" repostory, 
+       once it exists and is accurate.
+  -->
+    <condition property="referenceRepoDir" value="${REPO_ROOT}/staging/neon/">
+      <equals arg1="${release}"
+              arg2="oxygen" />
+    </condition>
+    <condition property="referenceRepoDir" value="${REPO_ROOT}/releases/neon/201606221000">
+      <equals arg1="${release}"
+              arg2="neon" />
+    </condition>
+    <echo message="[DEBUG] Computing referenceRepoDir. release: ${release}"/>
+    <echo message="[DEBUG] Computed referenceRepoDir: ${referenceRepoDir}" />
 
-  <property
+    <!-- For now, provide this fall back in case 'release' is not inherited as expected -->
+    <property
+      name="referenceRepoDir"
+      value="${REPO_ROOT}/releases/neon/201606221000" />
+    <echo message="[DEBUG] after including fall-back: referenceRepoDir: ${referenceRepoDir}" />
+
+    <property
     name="eclipseTestExecutable"
     value="${ECLIPSE_TEST_EXE}" />
 
