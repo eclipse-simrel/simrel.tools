@@ -74,20 +74,6 @@ done
 # handle additional trailing arguments not intended for getopts.
 shift $(($OPTIND - 1))
 
-function checkForErrorExit
-{
-  # arg 1 must be return code, $?
-  # arg 2 (remaining line) can be message to print before exiting do to non-zero exit code
-  exitCode=$1
-  shift
-  message="$*"
-  if [ "${exitCode}" -ne "0" ]
-  then
-    printf "\n\tERROR. exit code: ${exitCode}  ${message}\n"
-  fi
-  exit "${exitCode}"
-}
-
 case "$stream" in
   neon)
     export release=neon
@@ -131,6 +117,13 @@ then
   exit 1
 fi
 
+# sanity check existence
+if [[ ! -e "${toDirectory}" ]] 
+then
+  printf "\n\t[ERROR] the 'toDirectory' does not exist\n\t\t${toDirectory}\n"
+  exit 1
+fi
+
 # sanity check that we have write access to "toDirectory"
 if [[ ! -w "${toDirectory}" ]] 
 then
@@ -163,12 +156,13 @@ fi
 # plugins and features
 rsync ${DRYRUN}  -rp ${fromDirectory}/* ${toSubDir}/
 RC=$?
-checkForErrorExit $RC "could not copy files as expected"
-if [ $RC -ne 0 ] then;
+if [[ "$RC" != "0" ]] 
+then
+  printf "\n\t[ERROR] could not copy files as expected"
   exit $RC
 fi
 
-${BUILD_TOOLS_DIR}/promoteUtils/installEclipseAndTools.sh
+"${BUILD_TOOLS_DIR}/promoteUtils/installEclipseAndTools.sh
 RC=$?
 if [[ $RC != 0 ]]
 then
@@ -176,12 +170,13 @@ then
   exit $RC
 fi
 
-if [[ -z ${DRYRUN}" ]]
+if [[ -z "${DRYRUN}" ]]
 then
   "${BUILD_TOOLS_DIR}/promoteUtils/addRepoProperties-release.sh" ${release} ${datetimestamp}
   RC=$?
-  checkForErrorExit $RC "repo properties could not be updated as expected"
-  if [ $RC -ne 0 ] then;
+  if [[ "$RC" != "0" ]] 
+  then
+    printf "\n\t[ERROR] repo properties could not be updated as expected. RC: $RC"
     exit $RC
   fi
   if [[ -e "${toSubDir}/p2.index" ]]
@@ -193,8 +188,9 @@ then
   fi
   "${BUILD_TOOLS_DIR}/promoteUtils/convertxz.sh" "${toSubDir}"
   RC=$?
-  checkForErrorExit $RC "convertxz.sh did not complete as expected"
-  if [ $RC -ne 0 ] then;
+  if [[ "$RC" != "0" ] 
+  then
+    printf "\n\t[ERROR] convertxz.sh did not complete as expected. RC: $RC\n"
     exit $RC
   fi
 else
