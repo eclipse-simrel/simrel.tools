@@ -34,7 +34,7 @@ then
 fi
 REPO="file:///home/data/httpd/download.eclipse.org/webtools/releng/repository"
 
-${ECLIPSE_HOME}/eclipse/eclipse -nosplash -debug -data workspace-intallEclipseAndTOols  \
+${ECLIPSE_HOME}/eclipse/eclipse -nosplash -debug -data workspace-intallEclipseAndTools  \
   -application org.eclipse.equinox.p2.director \
   -repository  "${REPO}" \
   -installIU \
