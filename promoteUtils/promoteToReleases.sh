@@ -18,7 +18,7 @@ function usage
   printf "\n\tUsage: %s [-n] -s <stream> -d <datetimestamp>" "$(basename $0)" >&2
   printf "\n\t\t%s" "where <stream> is train name, such as 'neon' or 'oxygen'" >&2
   printf "\n\t\t%s" "and where <datetimestamp> is the date and time for the directory name of the composite child repository, such as '201208240900'" >&2
-  printf "\n\t\t%s" "and the optional \"-n\" means \"no copying\" or 'dry-run'"
+  printf "\n\t\t%s" "and the optional \"-n\" means \"no copying\" or 'dry-run'" >&2
   printf "\n" >&2
 }
 
@@ -83,9 +83,7 @@ function checkForErrorExit
   message="$*"
   if [ "${exitCode}" -ne "0" ]
   then
-    echo
-    echo "   ERROR. exit code: ${exitCode}"  ${message}
-    echo
+    printf "\n\tERROR. exit code: ${exitCode}  ${message}\n"
     exit "${exitCode}"
   fi
 }
@@ -105,7 +103,7 @@ esac
 
 export BUILD_HOME=${BUILD_HOME:-${WORKSPACE}}
 
-# finds file on users path, before current directory
+# finds source file on users path, before current directory
 # hence, non-production users can set their own values for test machines
 # must be called (included) after the above variables set, since
 # above variables are used to compute some other values.
@@ -122,72 +120,71 @@ export toDirectory=${releaseDirectory}
 # make sure 'toDirectory' has been defined and is not zero length
 if [ -z "${toDirectory}" ]
 then
-  echo;
-  echo "   Fatal Error: the variable toDirectory must be defined to run this script";
-  echo;
+  printf "\n\t[ERROR] the variable toDirectory must be defined to run this script\n"
   exit 1
-else
-
-  # make sure 'datetimestamp' has been defined and is no zero length
-  if [ -z "${datetimestamp}" ]
-  then
-    echo
-    echo "   Fatal Error: the variable datetimestamp must be defined to run this script."
-    echo
-    exit 1
-  else
-
-    toSubDir=${toDirectory}/${datetimestamp}
-
-    if [[ -z "${DRYRUN}"]]
-    then
-      echo ""
-      echo "    Copying new plugins and features "
-      echo "        from  ${fromDirectory}"
-      echo "          to  ${toSubDir}"
-      echo ""
-      mkdir -p ${toSubDir}
-      RC=$?
-      if [[ $RC != 0 ]]
-      then
-        echo -e "\n\t[ERROR] Could not make the directory ${toSubDir}. RC: $RC"
-        exit $RC
-      fi
-    else
-      printf "\n\tDoing DRYRUN. But if were not doing dry run, then would first make directory:"
-      printf "\n\t\t ${toSubDir}"
-      printf "\n\tAnd, if not dry run, would copy files there from:"
-      printf "\n\t\t ${fromDirectory}"
-    fi
-
-    # plugins and features
-    rsync ${DRYRUN}  -rp ${fromDirectory}/* ${toSubDir}/
-    checkForErrorExit $? "could not copy files as expected"
-
-    ${BUILD_TOOLS_DIR}/promoteUtils/installEclipseAndTools.sh
-    RC=$?
-    if [[ $RC != 0 ]]
-    then
-      echo -e "[ERROR] installEclipseAndTools.sh returned non zero return code: $RC"
-      exit $RC
-    fi
-
-    if [[ -z "${DRYRUN}" ]]
-    then
-      "${BUILD_TOOLS_DIR}/promoteUtils/addRepoProperties-release.sh" ${release} ${datetimestamp}
-      checkForErrorExit $? "repo properties could not be updated as expected"
-      if [[ -e "${toSubDir}/p2.index" ]]
-      then
-        # remove p2.index, if exists, since convertxz will recreate, and
-        # convertxz (may) not recreate xz files, after modifications made in
-        # previous step, if p2.index already exists and appears correct.
-        rm "${toSubDir}/p2.index"
-      fi
-      "${BUILD_TOOLS_DIR}/promoteUtils/convertxz.sh" "${toSubDir}"
-    else
-      echo "Doing DRYRUN, otherwise addRepoProperties and createxz would be performed here at end."
-    fi
-
-  fi
 fi
 
+# make sure 'datetimestamp' has been defined and is no zero length
+if [ -z "${datetimestamp}" ]
+then
+  printf "\n\t[ERROR] the variable datetimestamp must be defined to run this script.\n"
+  exit 1
+fi
+
+# sanity check that we have write access to "toDirectory"
+if [[ ! -w ${toDirectory}" ]] 
+then
+  printf "\n\t[ERROR] No write access to ${toDirectory}\n"
+  exit 1
+fi
+
+toSubDir=${toDirectory}/${datetimestamp}
+
+if [[ -z "${DRYRUN}" ]]
+then
+  printf "\n\tCopying new plugins and features "
+  printf "\n\t\tfrom  ${fromDirectory}"
+  printf "\n\t\tto  ${toSubDir}\n"
+
+  mkdir -p ${toSubDir}
+  RC=$?
+  if [[ $RC != 0 ]]
+  then
+    printf "\n\t[ERROR] Could not make the directory ${toSubDir}. RC: $RC\n"
+    exit $RC
+  fi
+else
+  printf "\n\tDoing DRYRUN. But if were not doing dry run, then would first make directory:"
+  printf "\n\t\t ${toSubDir}"
+  printf "\n\tAnd, if not dry run, would copy files there from:"
+  printf "\n\t\t ${fromDirectory}\n"
+fi
+
+# plugins and features
+rsync ${DRYRUN}  -rp ${fromDirectory}/* ${toSubDir}/
+checkForErrorExit $? "could not copy files as expected"
+
+${BUILD_TOOLS_DIR}/promoteUtils/installEclipseAndTools.sh
+RC=$?
+if [[ $RC != 0 ]]
+then
+  printf "\n\t[ERROR] installEclipseAndTools.sh returned non zero return code: $RC\n"
+  exit $RC
+fi
+
+if [[ -z "${DRYRUN}" ]]
+then
+  "${BUILD_TOOLS_DIR}/promoteUtils/addRepoProperties-release.sh" ${release} ${datetimestamp}
+  checkForErrorExit $? "repo properties could not be updated as expected"
+  if [[ -e "${toSubDir}/p2.index" ]]
+  then
+    # remove p2.index, if exists, since convertxz will recreate, and
+    # convertxz (may) not recreate xz files, after modifications made in
+    # previous step, if p2.index already exists and appears correct.
+    rm "${toSubDir}/p2.index"
+  fi
+  "${BUILD_TOOLS_DIR}/promoteUtils/convertxz.sh" "${toSubDir}"
+else
+  printf "\n\tDoing DRYRUN, otherwise addRepoProperties and createxz would be performed here at end.\n"
+fi
+  fi
