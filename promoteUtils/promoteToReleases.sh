@@ -22,15 +22,6 @@ function usage
   printf "\n" >&2
 }
 
-# Do not need to "check number of arguments" if using getopts.
-# As it is (was) it gets in the way of -h
-#if [[ $# != 4 && $# != 5 ]]
-#then
-#  printf "\n\t%s\n" "ERROR: Incorrect number of arguments given."
-#  usage
-#  exit 1
-#fi
-
 datetimestamp=
 stream=
 DRYRUN=""
@@ -148,17 +139,25 @@ else
 
     toSubDir=${toDirectory}/${datetimestamp}
 
-    echo ""
-    echo "    Copying new plugins and features "
-    echo "        from  ${fromDirectory}"
-    echo "          to  ${toSubDir}"
-    echo ""
-    mkdir -p ${toSubDir}
-    RC=$?
-    if [[ $RC != 0 ]]
+    if [[ -z "${DRYRUN}"]]
     then
-      echo -e "\n\t[ERROR] Could not make the directory ${toSubDir}. RC: $RC"
-      exit $RC
+      echo ""
+      echo "    Copying new plugins and features "
+      echo "        from  ${fromDirectory}"
+      echo "          to  ${toSubDir}"
+      echo ""
+      mkdir -p ${toSubDir}
+      RC=$?
+      if [[ $RC != 0 ]]
+      then
+        echo -e "\n\t[ERROR] Could not make the directory ${toSubDir}. RC: $RC"
+        exit $RC
+      fi
+    else
+      printf "\n\tDoing DRYRUN. But if were not doing dry run, then would first make directory:"
+      printf "\n\t\t ${toSubDir}"
+      printf "\n\tAnd, if not dry run, would copy files there from:"
+      printf "\n\t\t ${fromDirectory}"
     fi
 
     # plugins and features
@@ -173,7 +172,7 @@ else
       exit $RC
     fi
 
-    if [[ "${DRYRUN}" != "--dry-run" ]]
+    if [[ -z "${DRYRUN}" ]]
     then
       "${BUILD_TOOLS_DIR}/promoteUtils/addRepoProperties-release.sh" ${release} ${datetimestamp}
       checkForErrorExit $? "repo properties could not be updated as expected"
@@ -186,7 +185,7 @@ else
       fi
       "${BUILD_TOOLS_DIR}/promoteUtils/convertxz.sh" "${toSubDir}"
     else
-      echo "Doing DRYRUN, otherwise addRepoProperties and createxz called here."
+      echo "Doing DRYRUN, otherwise addRepoProperties and createxz would be performed here at end."
     fi
 
   fi

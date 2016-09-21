@@ -110,9 +110,9 @@ then
   exit 1
 fi
 
-# DOMAIN is to indicate if running on SimRel HIPP or EPP HIPP -- there is probably 
-# some way to "compute it", but for now will just pass in as first parameter. 
-# Or, we could just pass in whole "path name"? 
+# DOMAIN is to indicate if running on SimRel HIPP or EPP HIPP -- there is probably
+# some way to "compute it", but for now will just pass in as first parameter.
+# Or, we could just pass in whole "path name"?
 DOMAIN=$1
 TRAIN_NAME=$2
 CHECKPOINT=$3
@@ -136,7 +136,7 @@ fi
 # EPP metadata for update, but the Sim Rel repo not being ready.
 # Note: we allow "override" of the repo roots by env. variable to make testing easier.
 
-if [[ "${DOMAIN}" == "SIMREL" ]] 
+if [[ "${DOMAIN}" == "SIMREL" ]]
 then
 SIM_REPO_ROOT=${SIM_REPO_ROOT:-/home/data/httpd/download.eclipse.org/releases/${TRAIN_NAME}}
 changeNamesByCopy "${SIM_REPO_ROOT}"
