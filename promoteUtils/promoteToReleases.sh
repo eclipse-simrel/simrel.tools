@@ -162,7 +162,7 @@ then
   exit $RC
 fi
 
-"${BUILD_TOOLS_DIR}/promoteUtils/installEclipseAndTools.sh
+"${BUILD_TOOLS_DIR}/promoteUtils/installEclipseAndTools.sh"
 RC=$?
 if [[ $RC != 0 ]]
 then
