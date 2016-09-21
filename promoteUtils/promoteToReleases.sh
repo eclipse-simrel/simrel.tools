@@ -84,8 +84,8 @@ function checkForErrorExit
   if [ "${exitCode}" -ne "0" ]
   then
     printf "\n\tERROR. exit code: ${exitCode}  ${message}\n"
-    exit "${exitCode}"
   fi
+  exit "${exitCode}"
 }
 
 case "$stream" in
@@ -184,6 +184,7 @@ then
     rm "${toSubDir}/p2.index"
   fi
   "${BUILD_TOOLS_DIR}/promoteUtils/convertxz.sh" "${toSubDir}"
+  checkForErrorExit $? "convertxz.sh did not complete as expected"
 else
   printf "\n\tDoing DRYRUN, otherwise addRepoProperties and createxz would be performed here at end.\n"
 fi
