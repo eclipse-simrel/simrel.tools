@@ -162,7 +162,11 @@ fi
 
 # plugins and features
 rsync ${DRYRUN}  -rp ${fromDirectory}/* ${toSubDir}/
-checkForErrorExit $? "could not copy files as expected"
+RC=$?
+checkForErrorExit $RC "could not copy files as expected"
+if [ $RC -ne 0 ] then;
+  exit $RC
+fi
 
 ${BUILD_TOOLS_DIR}/promoteUtils/installEclipseAndTools.sh
 RC=$?
@@ -175,7 +179,11 @@ fi
 if [[ -z ${DRYRUN}" ]]
 then
   "${BUILD_TOOLS_DIR}/promoteUtils/addRepoProperties-release.sh" ${release} ${datetimestamp}
-  checkForErrorExit $? "repo properties could not be updated as expected"
+  RC=$?
+  checkForErrorExit $RC "repo properties could not be updated as expected"
+  if [ $RC -ne 0 ] then;
+    exit $RC
+  fi
   if [[ -e "${toSubDir}/p2.index" ]]
   then
     # remove p2.index, if exists, since convertxz will recreate, and
@@ -184,9 +192,12 @@ then
     rm "${toSubDir}/p2.index"
   fi
   "${BUILD_TOOLS_DIR}/promoteUtils/convertxz.sh" "${toSubDir}"
-  checkForErrorExit $? "convertxz.sh did not complete as expected"
+  RC=$?
+  checkForErrorExit $RC "convertxz.sh did not complete as expected"
+  if [ $RC -ne 0 ] then;
+    exit $RC
+  fi
 else
   printf "\n\tDoing DRYRUN, otherwise addRepoProperties and createxz would be performed here at end.\n"
+  exit 0
 fi
-
-exit 0
