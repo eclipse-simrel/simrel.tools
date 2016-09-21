@@ -188,11 +188,11 @@ then
   fi
   "${BUILD_TOOLS_DIR}/promoteUtils/convertxz.sh" "${toSubDir}"
   RC=$?
-  if [[ "$RC" != "0" ] 
+  if [[ "$RC" != "0" ]] 
   then
     printf "\n\t[ERROR] convertxz.sh did not complete as expected. RC: $RC\n"
-    exit $RC
   fi
+  exit $RC
 else
   printf "\n\tDoing DRYRUN, otherwise addRepoProperties and createxz would be performed here at end.\n"
   exit 0
