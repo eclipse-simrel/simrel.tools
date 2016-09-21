@@ -132,7 +132,7 @@ then
 fi
 
 # sanity check that we have write access to "toDirectory"
-if [[ ! -w ${toDirectory}" ]] 
+if [[ ! -w "${toDirectory}" ]] 
 then
   printf "\n\t[ERROR] No write access to ${toDirectory}\n"
   exit 1
