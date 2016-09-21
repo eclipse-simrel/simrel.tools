@@ -187,3 +187,5 @@ then
 else
   printf "\n\tDoing DRYRUN, otherwise addRepoProperties and createxz would be performed here at end.\n"
 fi
+
+exit 0
