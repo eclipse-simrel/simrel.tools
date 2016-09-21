@@ -172,7 +172,7 @@ then
   exit $RC
 fi
 
-if [[ -z "${DRYRUN}" ]]
+if [[ -z "${DRYRUN}"]]
 then
   "${BUILD_TOOLS_DIR}/promoteUtils/addRepoProperties-release.sh" ${release} ${datetimestamp}
   checkForErrorExit $? "repo properties could not be updated as expected"
