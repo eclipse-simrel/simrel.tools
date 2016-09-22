@@ -30,19 +30,26 @@ repoAccess=${repoFileAccess}
 declare -a namesArray
 declare -a countsArray
 
-if [[ -z "$quickCheck" ]]
+# This script expects an argument similar to "trainname" but 
+# but in this case can be "all" (in which all repos in "repoList" are 
+# checked -- that is the "periodic use case".
+# Or, it can be just one, such as 'neon' or 'oxygen', in which case 
+# only that one repository is checked. 
+
+trainArg=$1
+
+if [[ -z "$tranArg" ]] 
 then
-  quickCheck="false"
+  printf "[INFO] No argument was passed to ${0##*/} so assuming \"all\".\n"
+  trainArg=all
 fi
-printf "\n\t[INFO] quickCheck was $quickCheck\n"
 
-# We may want to check all of these  repos daily but after a promote, may want to pass
-# quickCheck=true after the "makeVisisble" job.
-
-# Note, we may want to use a one of the "locks" to prevent staging or neon
+# Note, we may eventually want to use "locks" to prevent staging or other repo from
 # from changing in the middle of a run.
+
 # Also note: "staging" is a simple repo, at this time, but wouldn't hurt to
 # get a listing, and see what was there?
+
 repoList="\
   /releases/oxygen/ \
   /releases/neon/ \
@@ -50,17 +57,12 @@ repoList="\
   /staging/oxygen/ \
   /releases/mars/ \
   "
-# We may want to check only one of these repos after "makeVisible"
-quickRepoList="\
-  /releases/neon/ \
-  /releases/oxygen/ \
-  "
 
-if [[ "$fullCheck" == "true" ]]
+if [[ "$trainArg" == "all" ]]
 then
   reposToCheck=${repoList}
 else
-  reposToCheck=${quickRepoList}
+  reposToCheck="releases/$tranArg"
 fi
 
 # WORKSPACE will be defined in Hudson. For convenience of local, remote, testing we will make several
