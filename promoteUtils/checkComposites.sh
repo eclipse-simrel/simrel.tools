@@ -38,7 +38,7 @@ declare -a countsArray
 
 trainArg=$1
 
-if [[ -z "$tranArg" ]] 
+if [[ -z "$trainArg" ]] 
 then
   printf "[INFO] No argument was passed to ${0##*/} so assuming \"all\".\n"
   trainArg=all
@@ -62,7 +62,7 @@ if [[ "$trainArg" == "all" ]]
 then
   reposToCheck=${repoList}
 else
-  reposToCheck="releases/$tranArg"
+  reposToCheck="releases/$trainArg"
 fi
 
 # WORKSPACE will be defined in Hudson. For convenience of local, remote, testing we will make several
