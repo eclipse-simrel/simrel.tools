@@ -103,6 +103,7 @@ fi
 printf "\n\n\tNote: see workspace for files of IU listings"
 #printf "\n\t[DEBUG] reposToCheck: ${reposToCheck}"
 loopCount=0
+errorCount=0
 for repo in ${reposToCheck}
 do
   RAW_DATE_START="$(date +%s )"
@@ -127,7 +128,15 @@ do
   fi
 
   repoCount=$(cat "$WORKSPACE/${repoListFilename}" | wc -l)
+  # there are always 4 lines of ouput, even if "0" IUs returned (see bug 502080) 
+  # so we simply deduct 4 it be more accurate and provide a better test. 
+  repoCount=$((repoCount - 4))
   printf "\n\tNumber of IUs in $repoShortName: $repoCount\n"
+
+  if [[ $repoCount -le 0 ]] 
+  then 
+    errorCount=$((errorCount + 1))
+  fi
 
   namesArray[$loopCount]=$repoShortName
   countsArray[$loopCount]=$repoCount
@@ -136,6 +145,14 @@ do
   RAW_DATE_END="$(date +%s )"
   printf "\t[INFO] Elapsed seconds for this repo: $(($RAW_DATE_END - $RAW_DATE_START))"
 
+  # I guess for errorCount errors, I could continue with whole loop, but seems
+  # rare enough I will go ahead and "throw" error here, before finishing the 
+  # whole loop.
+  if [[ $errorCount > 0 ]] 
+  then
+    printf "\n\t[ERROR] $repoShortName has too few IUs reported. Perhaps a problem with p2.index files?\n"
+    exit $errorCount
+  fi
 done
 #printf "\t[DEBUG] names array: ${namesArray[*]}\n"
 printf "\n\n\tRepository\t Number of IUs"
