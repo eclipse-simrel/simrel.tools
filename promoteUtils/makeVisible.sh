@@ -47,24 +47,28 @@ function changeNamesByCopy ()
   # be paranoid with sanity checks
   if [[ -z "${REPO_ROOT}"  ]]
   then
-    echo -e "\n\t[ERROR] REPO_ROOT must be passed in to this function ${0##*/}"
+    printf "\n\t[ERROR] REPO_ROOT must be passed in to this function ${0##*/}\n"
     exit 1
   elif [[ ! -e "${REPO_ROOT}" ]]
   then
-    echo -e "\n\t[ERROR] REPO_ROOT did not exist!\n\tREPO_ROOT: ${REPO_ROOT}"
+    printf "\n\t[ERROR] REPO_ROOT did not exist!\n\tREPO_ROOT: ${REPO_ROOT}\n"
+    exit 1
+  elif [[ ! -w "${REPO_ROOT}" ]]
+  then
+    printf "\n\t[ERROR] REPO_ROOT is not writable?!\n"
     exit 1
   else
-    echo -e "\n\t[INFO] REPO_ROOT existed as expected:\n\tREPO_ROOT: ${REPO_ROOT}"
+    printf "\n\t[INFO] REPO_ROOT existed as expected:\n\tREPO_ROOT: ${REPO_ROOT}\n"
   fi
 
   if [[ ! -e "${REPO_ROOT}/compositeArtifacts${CHECKPOINT}.jar" ]]
   then
-    echo -e "\n\t[ERROR] compositeArtifacts${CHECKPOINT}.jar did not exist in REPO_ROOT!"
+    printf "\n\t[ERROR] compositeArtifacts${CHECKPOINT}.jar did not exist in REPO_ROOT!\n"
     exit 1
   fi
-  if [[ ! -e "${REPO_ROOT}/compositeArtifacts${CHECKPOINT}.jar" ]]
+  if [[ ! -e "${REPO_ROOT}/compositeContent${CHECKPOINT}.jar" ]]
   then
-    echo -e "\n\t[ERROR] compositeContent${CHECKPOINT}.jar did not exist in REPO_ROOT!"
+    printf "\n\t[ERROR] compositeContent${CHECKPOINT}.jar did not exist in REPO_ROOT!\n"
     exit 1
   fi
 
@@ -74,14 +78,14 @@ function changeNamesByCopy ()
   RC=$?
   if [[ $RC != 0 ]]
   then
-    echo -e "\n\t[ERROR] copy returned a non zero return code for compositeArtifacts${CHECKPOINT}.jar. RC: $RC"
+    printf "\n\t[ERROR] copy returned a non zero return code for compositeArtifacts${CHECKPOINT}.jar. RC: $RC\n"
     exit $RC
   fi
   rsync --group --verbose ${REPO_ROOT}/compositeContent${CHECKPOINT}.jar   ${REPO_ROOT}/compositeContent.jar
   RC=$?
   if [[ $RC != 0 ]]
   then
-    echo -e "\n\t[ERROR] copy returned a non zero return code for compositeContent${CHECKPOINT}.jar. RC: $RC"
+    printf "\n\t[ERROR] copy returned a non zero return code for compositeContent${CHECKPOINT}.jar. RC: $RC\n"
     exit $RC
   fi
 
@@ -93,7 +97,7 @@ function changeNamesByCopy ()
     RC=$?
     if [[ $RC != 0 ]]
     then
-      echo -e "\n\t[ERROR] copy returned a non zero return code for index${CHECKPOINT}.html. RC: $RC"
+      printf "\n\t[ERROR] copy returned a non zero return code for index${CHECKPOINT}.html. RC: $RC\n"
       exit $RC
     fi
   fi
@@ -104,25 +108,22 @@ function changeNamesByCopy ()
 # We require both arguments, since to provide a default could lead to
 # very bad errors if wrong value of "trainName" was used.
 
-if [[ ! $# = 3 ]]
+if [[ ! $# = 2 ]]
 then
+  printf "\n\t[ERROR] Wrong number of arguments to ${0##*/}\n"
   usage
   exit 1
 fi
 
-# DOMAIN is to indicate if running on SimRel HIPP or EPP HIPP -- there is probably
-# some way to "compute it", but for now will just pass in as first parameter.
-# Or, we could just pass in whole "path name"?
-DOMAIN=$1
-TRAIN_NAME=$2
-CHECKPOINT=$3
+
+TRAIN_NAME=$1
+CHECKPOINT=$2
 
 printf "\n\tArguments to utility were:"
-printf "\n\t\tDOMAIN: ${DOMAIN}"
 printf "\n\t\tTRAIN_NAME: ${TRAIN_NAME}"
 printf "\n\t\tCHECKPOINT: ${CHECKPOINT}\n"
 
-if [[ -z "${CHECKPOINT}" || -z "${TRAIN_NAME}" || -z "${DOMAIN}" ]]
+if [[ -z "${CHECKPOINT}" || -z "${TRAIN_NAME}" ]]
 then
   # This would be rare. Equates to something like ./makevisible.sh "" M2
   # But, just in case. Note that something like ./makevisible "   " M2
@@ -136,16 +137,15 @@ fi
 # EPP metadata for update, but the Sim Rel repo not being ready.
 # Note: we allow "override" of the repo roots by env. variable to make testing easier.
 
-if [[ "${DOMAIN}" == "SIMREL" ]]
+
+SIM_REPO_ROOT=${SIM_REPO_ROOT:-/home/data/httpd/download.eclipse.org/releases/${TRAIN_NAME}}
+changeNamesByCopy "${SIM_REPO_ROOT}"
+RC=$?
+if [[ $RC != 0 ]] 
 then
-  SIM_REPO_ROOT=${SIM_REPO_ROOT:-/home/data/httpd/download.eclipse.org/releases/${TRAIN_NAME}}
-  changeNamesByCopy "${SIM_REPO_ROOT}"
-elif [[  "${DOMAIN}" == "EPP" ]]
-then
-  EPP_REPO_ROOT=${EPP_REPO_ROOT:-/home/data/httpd/download.eclipse.org/technology/epp/packages/${TRAIN_NAME}}
-  changeNamesByCopy "${EPP_REPO_ROOT}"
-else
-  echo -e "\n\t[ERROR] Unexpected DOMAIN given: $DOMAIN"
-  exit 1
+  printf "\n\t[ERROR] changeNamesByCopy returned a non-zero return code: $RC\n"
+  exit $RC
 fi
+exit 0
+
 
