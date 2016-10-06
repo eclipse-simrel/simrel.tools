@@ -72,7 +72,7 @@
     -->
     <property
       name="newRepository"
-      value="http://download.XXXX" />
+      value="http://download.eclipse.org/releases/neon/201609281000/" />
 
     <echo message="calling the XSLT Ant task" />
     <echo message="  transforming files in ${inputDirectory}" />
