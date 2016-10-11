@@ -42,7 +42,7 @@
       <equals arg1="${release}"
               arg2="oxygen" />
     </condition>
-    <condition property="referenceRepoDir" value="${REPO_ROOT}/releases/neon/201609281000">
+    <condition property="referenceRepoDir" value="${REPO_ROOT}/releases/neon/201610111000">
       <equals arg1="${release}"
               arg2="neon" />
     </condition>
