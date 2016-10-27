@@ -45,20 +45,7 @@
     <property
       name="OTHER_ARGS_AGG"
       value="-metadataRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.5/I20161027-0333/ -artifactRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.5/I20161027-0333/ -installIU org.eclipse.b3.aggregator.engine.feature.feature.group" />
-        <!--
-      <property
-      name="OTHER_ARGS_AGG"
-      value="-metadataRepository http://download.eclipse.org/modeling/emft/b3/updates-4.4/ -artifactRepository http://download.eclipse.org/modeling/emft/b3/updates-4.4/
-      -installIU org.eclipse.b3.aggregator.engine.feature.feature.group" />
 
-      <property
-      name="OTHER_ARGS_AGG"
-      value="-metadataRepository http://download.eclipse.org/modeling/emft/b3/updates-4.4/,http://download.eclipse.org/releases/luna
-      -artifactRepository http://download.eclipse.org/modeling/emft/b3/updates-4.4/,http://download.eclipse.org/releases/luna -installIU
-      org.eclipse.b3.aggregator.engine.feature.feature.group" />
-    -->
-        <!-- usually do not need the version, just to "get the latest" from
-      buckminster builder site -version 1.0.0.v20090415-1651 -->
     <property
       name="VM_ARGS_AGG"
       value="-Djava.io.tmpdir=${BUILD_HOME}/tmp" />
