@@ -50,9 +50,9 @@ mkdir -p ${BUILD_HOME}/tmp
 ECLIPSE_INSTALL=${ECLIPSE_INSTALL:-${BUILD_HOME}}
 
 # properties say what to consider eclipse home
-ECLIPSE_HOME_44=${ECLIPSE_INSTALL}/eclipse44
+ECLIPSE_HOME_45=${ECLIPSE_INSTALL}/eclipse45
 
-ECLIPSE_HOME=${ECLIPSE_HOME:-${ECLIPSE_HOME_44}}
+ECLIPSE_HOME=${ECLIPSE_HOME:-${ECLIPSE_HOME_45}}
 
 releaseDirectory=${REPO_ROOT}/releases/${release}
 
