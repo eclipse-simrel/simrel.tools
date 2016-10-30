@@ -483,7 +483,7 @@
     <echo message="git clone task for ${BUILD_MODEL} to execute in ${BUILD_HOME} using branch ${BRANCH_BUILD}" />
 
     <git-clone
-      repository="git://git.eclipse.org/gitroot/simrel/${BUILD_MODEL}.git"
+      repository="https://git.eclipse.org/gitroot/simrel/${BUILD_MODEL}.git"
       dir="${BUILD_HOME}"
       branch="${BRANCH_BUILD}" />
 
@@ -499,7 +499,7 @@
     unless="localToolsRepoExists">
     <echo message="git clone task for ${BUILD_TOOLS} to execute in ${BUILD_HOME} using branch ${BRANCH_TOOLS}" />
     <git-clone
-      repository="git://git.eclipse.org/gitroot/simrel/${BUILD_TOOLS}.git"
+      repository="https://git.eclipse.org/gitroot/simrel/${BUILD_TOOLS}.git"
       dir="${BUILD_HOME}"
       branch="${BRANCH_TOOLS}" />
     <property
