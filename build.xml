@@ -483,7 +483,7 @@
     <echo message="git clone task for ${BUILD_MODEL} to execute in ${BUILD_HOME} using branch ${BRANCH_BUILD}" />
 
     <git-clone
-      repository="https://git.eclipse.org/gitroot/simrel/${BUILD_MODEL}.git"
+      repository="${git_protocol}/gitroot/simrel/${BUILD_MODEL}.git"
       dir="${BUILD_HOME}"
       branch="${BRANCH_BUILD}" />
 
@@ -499,7 +499,7 @@
     unless="localToolsRepoExists">
     <echo message="git clone task for ${BUILD_TOOLS} to execute in ${BUILD_HOME} using branch ${BRANCH_TOOLS}" />
     <git-clone
-      repository="https://git.eclipse.org/gitroot/simrel/${BUILD_TOOLS}.git"
+      repository="${git_protocol}/gitroot/simrel/${BUILD_TOOLS}.git"
       dir="${BUILD_HOME}"
       branch="${BRANCH_TOOLS}" />
     <property
@@ -896,7 +896,16 @@
 
     <loadproperties srcfile="${aggrPropertyFile}" />
 
-    <!--
+    <!-- 
+    git_protocol must be changed to somethign like 
+     "git://git.eclipse.org" or "https://git.eclipse.org"
+     if not running on Eclipse.org itself. (Note not trailing
+     slash).
+     It can be added to a local copy of 'aggrPropertyFile'
+     -->
+    <property name="git_protocol" value="file://" />
+
+      <!--
         rewriteRepositoryURLValue is an important variable, passed in through
         production.properties. It is the trigger to change http:// values, to
         file:// values.
