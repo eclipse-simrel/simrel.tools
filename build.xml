@@ -44,7 +44,7 @@
       value="org.eclipse.equinox.p2.director" />
     <property
       name="OTHER_ARGS_AGG"
-      value="-metadataRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.5/I20161027-1601/ -artifactRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.5/I20161027-1601/ -installIU org.eclipse.b3.aggregator.engine.feature.feature.group" />
+      value="-metadataRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.5/I20161031-0537/ -artifactRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.5/I20161031-0537/ -installIU org.eclipse.b3.aggregator.engine.feature.feature.group" />
 
     <property
       name="VM_ARGS_AGG"
