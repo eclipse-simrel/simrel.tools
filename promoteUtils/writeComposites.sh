@@ -86,8 +86,8 @@ repoRoots=("/home/data/httpd/download.eclipse.org/releases/${stream}")
 # Normally "writeRepoRoots" is the same as "repoRoots", but might not always be, 
 # plus it is very handy for testing this script not to have to write 
 # to the "production" area.
-writeRepoRoots=("${PWD}/$stream")
-#writeRepoRoots=(${repoRoots[@]})
+#writeRepoRoots=("${PWD}/$stream")
+writeRepoRoots=(${repoRoots[@]})
 indices=(0)
 for index in ${indices[@]} 
 do
