@@ -3,6 +3,7 @@
 function writeArtifactsHeader
 {
     outfile=$1
+    stream=$2
     printf "%s\n" "<?xml version='1.0' encoding='UTF-8'?>" > ${outfile}
     printf "%s\n" "<?compositeArtifactRepository version='1.0.0'?>" >> ${outfile}
     printf "%s\n" "<repository name='Eclipse Repository'  type='org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository' version='1.0.0'>" >> ${outfile}
@@ -12,14 +13,15 @@ function writeArtifactsHeader
     printf "%s\n" "    <property name='p2.atomic.composite.loading' value='true'/>" >> ${outfile}
     printf "%s\n" "  </properties>" >> ${outfile}
     printf "%s\n" "  <children size='4'>" >> ${outfile}
-    printf "%s\n" "     <child location='http://download.eclipse.org/technology/epp/packages/oxygen/'/>" >> ${outfile}
-    
+    printf "%s\n" "     <child location='http://download.eclipse.org/technology/epp/packages/$stream/'/>" >> ${outfile}
+
 
 }
 
 function writeContentHeader
 {
     outfile=$1
+    stream=$2
     printf "%s\n" "<?xml version='1.0' encoding='UTF-8'?>" > ${outfile}
     printf "%s\n" "<?compositeMetadataRepository version='1.0.0'?>" >> ${outfile}
     printf "%s\n" "<repository name='Eclipse Repository'  type='org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository' version='1.0.0'>" >> ${outfile}
@@ -29,6 +31,7 @@ function writeContentHeader
     printf "%s\n" "    <property name='p2.atomic.composite.loading' value='true'/>" >> ${outfile}
     printf "%s\n" "  </properties>" >> ${outfile}
     printf "%s\n" "  <children size='3'>" >> ${outfile}
+    printf "%s\n" "     <child location='http://download.eclipse.org/technology/epp/packages/$stream/'/>" >> ${outfile}
 
 }
 
@@ -86,8 +89,8 @@ repoRoots=("/home/data/httpd/download.eclipse.org/releases/${stream}")
 # Normally "writeRepoRoots" is the same as "repoRoots", but might not always be, 
 # plus it is very handy for testing this script not to have to write 
 # to the "production" area.
-#writeRepoRoots=("${PWD}/$stream")
-writeRepoRoots=(${repoRoots[@]})
+writeRepoRoots=("${PWD}/$stream")
+#writeRepoRoots=(${repoRoots[@]})
 indices=(0)
 for index in ${indices[@]} 
 do
@@ -113,11 +116,11 @@ do
     contentCompositeJar="${contentCompositeName}.jar"
     p2Index="${writeRepoRoot}/p2.index"
 
-    writeArtifactsHeader "${artifactsCompositeFile}"
+    writeArtifactsHeader "${artifactsCompositeFile}" ${stream}
     writeChildren "${artifactsCompositeFile}" "${repoRoot}"
     writeFooter "${artifactsCompositeFile}"
 
-    writeContentHeader "${contentCompositeFile}"
+    writeContentHeader "${contentCompositeFile}" ${stream}
     writeChildren "${contentCompositeFile}" "${repoRoot}"
     writeFooter "${contentCompositeFile}"
 
