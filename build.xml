@@ -1125,7 +1125,7 @@
     <property
       name="BUILD_HOME"
       value="${basedir}" />
-    <echo message="Setting BUILD_HOME as basedir: ${BUILD_HOME}" />
+    <echo message="Setting BUILD_HOME as Ant basedir: ${BUILD_HOME}" />
   </target>
 
   <target
