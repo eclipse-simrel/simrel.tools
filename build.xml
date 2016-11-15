@@ -1022,7 +1022,7 @@
     <echo message="user.dir: ${user.dir}" />
     <echo message="user.home: ${user.home}" />
     <echo message="BUILD_HOME (normally HUDSON workspace): ${BUILD_HOME}" />
-    <echo message="Eclipse WORKSPACE: ${eclipseWorkspace}" />
+    <echo message="Eclipse workspace: ${eclipseWorkspace}" />
     <echo message="PATH: ${env.PATH}" />
     <echo message="JAVA_HOME: ${JAVA_HOME}" />
     <echo message="JAVA_EXEC_DIR: ${JAVA_EXEC_DIR}" />
@@ -1130,21 +1130,12 @@
 
   <target
     name="getHudsonBUILD_HOME"
-    depends="getWorkspace"
     unless="BUILD_HOME">
+    <property environment="env" />
     <property
       name="BUILD_HOME"
       value="${env.WORKSPACE}" />
     <echo message="Setting BUILD_HOME from Hudson Builder WORKSPACE: ${BUILD_HOME}" />
-  </target>
-
-  <target
-    name="getWorkspace"
-    unless="BUILD_HOME">
-    <property
-      name="BUILD_HOME"
-      value="${WORKSPACE}" />
-    <echo message="Setting BUILD_HOME from direct property of Hudson Builder WORKSPACE: ${BUILD_HOME}" />
   </target>
 
   <target
