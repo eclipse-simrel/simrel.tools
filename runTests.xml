@@ -22,7 +22,7 @@
   -->
   <property
     name="reportOutputDir"
-    value="${testRepoDirectory}/buildInfo" />
+    value="${BUILD_HOME}/aggregation/final/buildInfo" />
 
   <!-- buildInfo should already exist, and contain "properties" of build -->
   <mkdir dir="${reportOutputDir}" />
@@ -38,26 +38,20 @@
        reference repository for mainline release should be the latest "update staging" repostory, 
        once it exists and is accurate.
   -->
-    <condition property="referenceRepoDir" value="${REPO_ROOT}/staging/neon/">
+    <condition property="referenceRepoDir" value="/home/data/httpd/download.eclipse.org/staging/neon/">
       <equals arg1="${release}"
               arg2="oxygen" />
     </condition>
-    <condition property="referenceRepoDir" value="${REPO_ROOT}/releases/neon/201610111000">
+    <condition property="referenceRepoDir" value="/home/data/httpd/download.eclipse.org/releases/neon/201610111000">
       <equals arg1="${release}"
               arg2="neon" />
     </condition>
     <echo message="[DEBUG] Computing referenceRepoDir. release: ${release}"/>
     <echo message="[DEBUG] Computed referenceRepoDir: ${referenceRepoDir}" />
 
-    <!-- For now, provide this fall back in case 'release' is not inherited as expected -->
-    <property
-      name="referenceRepoDir"
-      value="${REPO_ROOT}/releases/neon/201606221000" />
-    <echo message="[DEBUG] after including fall-back: referenceRepoDir: ${referenceRepoDir}" />
-
     <property
     name="eclipseTestExecutable"
-    value="${ECLIPSE_TEST_EXE}" />
+    value="${ECLIPSE_EXE}" />
 
   <!--
      Each "type" of build, ends by calling one of these targets.
@@ -101,7 +95,6 @@
     <property
       name="VM_TEST_ARGS"
       value="-Djava.io.tmpdir=${BUILD_HOME}/tmp -DreportOutputDir=${reportOutputDir} -DreportRepoDir=${testRepoDirectory} -DreferenceRepo=${referenceRepoDir}" />
-    <!-- eclipseTestExecutable and JAVA_EXEC_DIR is set in aggr.properties, since specific to every machine -->
     <echo message="in runReports: eclipseTestExecutable: ${eclipseTestExecutable}" />
     <echo message="in runReports: REPORT_APP_NAME: ${REPORT_APP_NAME}" />
     <echo message="in runReports: JAVA_EXEC_DIR: ${JAVA_EXEC_DIR}" />

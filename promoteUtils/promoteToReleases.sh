@@ -97,8 +97,6 @@ export BUILD_HOME=${BUILD_HOME:-${WORKSPACE}}
 source promote.shsource 2>/dev/null
 source ${BUILD_HOME}/tools/promoteUtils/promote.shsource
 
-export stagingDirectory="${REPO_ROOT}/staging/${release}"
-
 export fromDirectory=${stagingDirectory}
 export toDirectory=${releaseDirectory}
 

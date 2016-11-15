@@ -3,24 +3,6 @@
   basedir="."
   default="default">
 
-  <property environment="env" />
-        <!--
-        This property file name is itself a property, so it can be overridden
-        on one machine versus another. We do it this way, instead of just specifying
-        -propertyFile on command line, so that the property values can be "nested"
-        in other property values and evaluated lazily.
-      -->
-
-  <fail
-    unless="release"
-    message="release must be specified for this script, such as -Drelease=mars" />
-
-  <property
-    name="aggrPropertyFile"
-    value="aggr.properties" />
-
-  <loadproperties srcfile="${aggrPropertyFile}" />
-
   <target
     name="installAggregatorAndTools"
     depends="init, savePrevious,installAggregator,installRelengTools,installTestsFromRepo"
@@ -63,11 +45,7 @@
         This .options file is most useful on non-eclipse.org sites, since
         on eclipse.org, by design, should not go through mirrors, but that's the
         purpose of the .options ... so list which mirrors that artifacts come from.
-
-    <copy
-      file="${BUILD_HOME}/${BUILD_TOOLS}/p2options/.options"
-      todir="${ECLIPSE_HOME}/eclipse/" />
-    -->
+-->
     <!--
         Weird this chmod is required? Maybe an ant bug? Maybe no longer needed?
         (That is, maybe an early bug in packages?)
@@ -83,7 +61,7 @@
       dir="${basedir}"
       failonerror="true">
       <arg
-        line="-data ${eclipseWorkspace}_INSTALL_AGG -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_AGG} ${OTHER_ARGS_AGG} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS_AGG}" />
+        line="-data ${eclipseWorkspace}_install_aggr -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_AGG} ${OTHER_ARGS_AGG} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS_AGG}" />
     </exec>
     <property
       name="aggregatorInstalled"
@@ -93,7 +71,7 @@
 
   <target
     name="installTestsFromRepo"
-    depends="init, cloneToolsRepo, pullToolsRepo"
+    depends="init"
     if="installEclipseAndTools"
     unless="testsInstalled">
     <property
@@ -128,7 +106,7 @@
 
   <target
     name="installRelengTools"
-    depends="init, cloneToolsRepo, pullToolsRepo"
+    depends="init"
     if="installEclipseAndTools"
     unless="relengToolsInstalled">
     <property
@@ -253,12 +231,10 @@
   <macrodef name="git-pull">
     <attribute name="dir" />
     <attribute name="branch" />
-    <attribute name="origin" />
     <sequential>
       <echo message="Doing git-pull task: " />
       <echo message="   dir: @{dir}" />
       <echo message="   branch: @{branch}" />
-      <echo message="   origin: @{origin}" />
       <echo message="   = = = execute git clean in @{dir}" />
       <echo message="git clean -d -ff -x" />
       <exec
@@ -309,14 +285,6 @@
           name="message"
           value="fetch Failed" />
       </antcall>
-
-       <!-- not sure why, but when I used
-       - -track origin2/MarRC1-branch
-       it resulted in an error (below). Since I don't think we really need to track, I removed.
-       13:19:40       [echo] git checkout -B MarsRC1-branch - -track origin2/MarsRC1-branch
-       13:19:40       [exec] fatal: Cannot update paths and switch to branch 'MarsRC1-branch' at the same time.
-       13:19:40       [exec] Did you intend to checkout 'origin2/MarsRC1-branch' which can not be resolved as commit?
-       -->
 
       <echo message="   === git checkout -B @{branch}" />
       <exec
@@ -443,7 +411,7 @@
     <git-checkout
       dir="${BUILD_MODEL_DIR}"
       commit="${commitOrBranch}" />
-    <echo message="on HUDSON: checked out ${commitOrBranch} of ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
+    <echo message="checked out ${commitOrBranch} of org.eclipse.simrel.build into ${BUILD_MODEL_DIR}" />
 
     <property
       name="modelRetrived"
@@ -468,7 +436,7 @@
       dir="${BUILD_MODEL_DIR}"
       branch="${commitOrBranch}"
       refspec="${GERRIT_REFSPEC}" />
-    <echo message="on HUDSON from Gerrit: checked out ${commitOrBranch} with ${GERRIT_REFSPEC} for ${BUILD_MODEL} into ${BUILD_MODEL_DIR}" />
+    <echo message="checked out ${commitOrBranch} with ${GERRIT_REFSPEC} for org.eclipse.simrel.build into ${BUILD_MODEL_DIR}" />
 
     <property
       name="modelRetrived"
@@ -480,30 +448,15 @@
     depends="init"
     unless="localRepoExists">
 
-    <echo message="git clone task for ${BUILD_MODEL} to execute in ${BUILD_HOME} using branch ${BRANCH_BUILD}" />
+    <echo message="git clone task for org.eclipse.simrel.build to execute in ${BUILD_HOME} using branch ${BRANCH_BUILD}" />
 
     <git-clone
-      repository="${git_protocol}/gitroot/simrel/${BUILD_MODEL}.git"
+      repository="${git_protocol}/gitroot/simrel/org.eclipse.simrel.build.git"
       dir="${BUILD_HOME}"
       branch="${BRANCH_BUILD}" />
 
     <property
       name="localRepoExists"
-      value="true" />
-
-  </target>
-
-  <target
-    name="cloneToolsRepo"
-    depends="init"
-    unless="localToolsRepoExists">
-    <echo message="git clone task for ${BUILD_TOOLS} to execute in ${BUILD_HOME} using branch ${BRANCH_TOOLS}" />
-    <git-clone
-      repository="${git_protocol}/gitroot/simrel/${BUILD_TOOLS}.git"
-      dir="${BUILD_HOME}"
-      branch="${BRANCH_TOOLS}" />
-    <property
-      name="localToolsRepoExists"
       value="true" />
 
   </target>
@@ -517,8 +470,7 @@
     <!-- in macro "pull", we actually do a fetch, then check out -->
     <git-pull
       dir="${BUILD_MODEL_DIR}"
-      branch="${BRANCH_BUILD}"
-      origin="${BUILD_ORIGIN}" />
+      branch="${BRANCH_BUILD}" />
     <property
       name="buildRepoPulled"
       value="true" />
@@ -543,22 +495,6 @@
       configValue="input" />
   </target>
 
-  <target
-    name="pullToolsRepo"
-    depends="init"
-    if="localToolsRepoExists"
-    unless="toolsRepoPulled">
-    <echo message="git pull task to execute in ${BUILD_TOOLS_DIR}" />
-    <git-pull
-      dir="${BUILD_TOOLS_DIR}"
-      branch="${BRANCH_TOOLS}"
-      origin="${TOOLS_ORIGIN}" />
-    <property
-      name="toolsRepoPulled"
-      value="true" />
-
-  </target>
-
   <!--
        This is "the key" task. If it succeeds, we run tests (reports), and
        if they "pass", we promote to "staging".
@@ -577,8 +513,8 @@
     -->
     <property
       name="AGG_APP_ARGS"
-      value="${AGGREGATOR_APP_ARGS_CLEAN_BUILD} --eclipseLogLevel DEBUG --logLevel DEBUG" />
-
+      value="${AGGREGATOR_APP_BASE_ARGS} --action CLEAN_BUILD" />
+    <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
       <!-- Important: on any non-production machines it is important to _not_ use
         eclipse.p2.mirrors=false, so this value should be supplied by calling script's
         properties. Note, we include '-vmargs' here, in case there are not any. Not
@@ -589,21 +525,13 @@
         for example, bug 244603 and bug 279596.
     -->
 
-    <property
-      name="BUILDER_VM_ARGS"
-      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp " />
-    <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
-    <echo message="BUILDER_VM_ARGS: -vmargs ${BUILDER_VM_ARGS}" />
 
     <exec
       executable="${eclipseExecutable}"
       dir="${basedir}"
       failonerror="false"
       resultproperty="buildStatus">
-      <!--  TODO: should add a 'verbose' option for this?
-      <arg value="-debug" />
-      <arg value="file://${BUILD_HOME}/${BUILD_TOOLS}/p2options/.options" />
-      -->
+
       <!--
         Adding -consolelog makes for too much, unneeded output, since the aggregator
         produces its verbose own output, slightly cleaner.
@@ -621,7 +549,6 @@
       <arg line="${AGG_APP_ARGS}" />
       <arg value="-vm" />
       <arg value="${JAVA_EXEC_DIR}" />
-      <arg value="-vmargs" />
       <arg line="${BUILDER_VM_ARGS}" />
     </exec>
 
@@ -704,16 +631,11 @@
   <target
     name="runAggregatorBuildOnly"
     depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromRepo,initRunTestsXML">
-    <!--
-      If not otherwise set in properties file, use these values. Note
-      the build.eclipse.org production machine must override these values for property
-      values appropriate for it.
-    -->
 
     <property
       name="AGG_APP_ARGS"
-      value="${AGGREGATOR_APP_ARGS_BUILDONLY}" />
-
+      value="${AGGREGATOR_APP_BASE_ARGS} --action BUILD" />
+    <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <!--
       Important: on any non-production machines it is important to _not_ use
       eclipse.p2.mirrors=false, so this value should be supplied by calling script's
@@ -725,19 +647,13 @@
       for example, bug 244603 and bug 279596.
     -->
 
-    <property
-      name="BUILDER_VM_ARGS"
-      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp " />
-    <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
-    <echo message="BUILDER_VM_ARGS: -vmargs ${BUILDER_VM_ARGS}" />
-
     <exec
       executable="${eclipseExecutable}"
       dir="${basedir}"
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
-      <arg value="file://${BUILD_HOME}/${BUILD_TOOLS}/p2options/.options" />
+      <arg value="file://${BUILD_HOME_DIR}/p2options/.options" />
       <!--
         Adding -consolelog makes for too much, unneeded output, since the aggregator
         produces its verbose own output, slightly cleaner.
@@ -745,7 +661,7 @@
       -->
       <arg value="-nosplash" />
       <arg value="-data" />
-      <arg value="${eclipseWorkspace}_RUN_AGGR" />
+      <arg value="${eclipseWorkspace}_run_aggr" />
       <arg value="--launcher.suppressErrors" />
       <arg value="-application" />
       <arg value="org.eclipse.b3.cli.headless" />
@@ -755,7 +671,6 @@
       <arg line="${AGG_APP_ARGS}" />
       <arg value="-vm" />
       <arg value="${JAVA_EXEC_DIR}" />
-      <arg value="-vmargs" />
       <arg line="${BUILDER_VM_ARGS}" />
     </exec>
 
@@ -786,32 +701,12 @@
   <target
     name="runAggregatorValidateOnly"
     depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromRepo,initRunTestsXML">
-    <!--
-      If not otherwise set in properties file, use these values. Note
-      the build.eclipse.org production machine must override these values for property
-      values appropriate for it.
-    -->
 
     <property
       name="AGG_APP_ARGS"
-      value="${AGGREGATOR_APP_ARGS_VALIDATEONLY}" />
-
-    <!--
-      Important: on any non-production machines it is important to _not_ use
-      eclipse.p2.mirrors=false, so this value should be supplied by calling script's
-      properties. Note, we include '-vmargs' here, in case there are not any. Not
-      sure if the use of -vmargs _requires_ arguments or not, but probably would.
-      note: -Declipse.p2.MD5Check=false may be needed as a workaround for bug [253713]
-      (should not actually be required ... but have left note for historical reference)
-      note: rememeber that JAVA_6 should not be used for jar processor, see
-      for example, bug 244603 and bug 279596.
-    -->
-
-    <property
-      name="BUILDER_VM_ARGS"
-      value="-Xmx1024m -Djava.io.tmpdir=${BUILD_HOME}/tmp " />
+      value="${AGGREGATOR_APP_BASE_ARGS} --action VALIDATE" />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
-    <echo message="BUILDER_VM_ARGS: -vmargs ${BUILDER_VM_ARGS}" />
+
 
     <exec
       executable="${eclipseExecutable}"
@@ -819,7 +714,9 @@
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
-      <arg value="file://${BUILD_HOME}/${BUILD_TOOLS}/p2options/.options" />
+      <!-- In case extra tracing is desired:
+        <arg value="file://${BUILD_HOME}/org.eclipse.simrel.tools/p2options/.options" />
+      -->
       <!--
         Adding -consolelog makes for too much, unneeded output, since the aggregator
         produces its verbose own output, slightly cleaner.
@@ -837,7 +734,6 @@
       <arg line="${AGG_APP_ARGS}" />
       <arg value="-vm" />
       <arg value="${JAVA_EXEC_DIR}" />
-      <arg value="-vmargs" />
       <arg line="${BUILDER_VM_ARGS}" />
     </exec>
 
@@ -862,6 +758,7 @@
 
   <target
     name="initRunTestsXML"
+    depends="init"
     unless="runTestsXML">
     <path id="runTests.paths">
       <fileset
@@ -874,36 +771,84 @@
     <echo message="runTestsXML file: ${runTestsXML}" />
   </target>
 
+  <target name="getBuildToolsDir">
+    <property
+      name="BUILD_TOOLS_DIR"
+      value="${BUILD_HOME}/org.eclipse.simrel.tools" />
+    <!-- We no longer use this variable, localToolsRepoExists, but leaving for now, in case
+         we need to add error checking or similar 
+    -->
+    <condition property="localToolsRepoExists">
+      <available file="${BUILD_TOOLS_DIR}/.git" />
+    </condition>
+    <available
+      file="${BUILD_TOOLS_DIR}"
+      property="toolsAvailable" />
+  </target>
   <target
     name="init"
-    depends="getBuildTimestamp, getJobName, getBUILD_HOME"
+    depends="getBuildTimestamp, getJobName, getJobNumber, getBUILD_HOME, getBuildToolsDir, gitRevParseTools"
     unless="isInitialized">
 
-    <fail
+    <property environment="env" />
+      <!-- 
+        We assign a reasonable value for local builds, but
+        for production builds should be .../production.properties
+        This property file name is itself a property, so it can be overridden
+        on one machine versus another. We do it this way, instead of just specifying
+       -propertyFile on command line, so that the property values can be "nested"
+        in other property values and evaluated lazily.
+      -->
+      <property
+        name="aggrPropertyFile"
+        value="${BUILD_TOOLS_DIR}/aggr.properties" />
+
+      <property file="${aggrPropertyFile}" />
+
+      <fail
       unless="release"
       message="release must be specified for this script, such as -Drelease=mars" />
 
-    <property environment="env" />
-        <!--
-        This property file name is itself a property, so it can be overridden
-        on one machine versus another. We do it this way, instead of just specifying
-        -propertyFile on command line, so that the property values can be "nested"
-        in other property values and evaluated lazily.
-      -->
-    <property
-      name="aggrPropertyFile"
-      value="aggr.properties" />
+      <property
+        name="JAVA_HOME"
+        value="/shared/common/jdk1.8.0_x64-latest" />
+      <property
+        name="JAVA_EXEC_DIR"
+        value="${JAVA_HOME}/jre/bin" />
+      <property
+        name="JAVA_CMD"
+        value="${JAVA_EXEC_DIR}/java" />
 
-    <loadproperties srcfile="${aggrPropertyFile}" />
+      <property
+        name="FULL_FILENAME"
+        value="/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.5.2-201602121500/eclipse-SDK-4.5.2-linux-gtk-x86_64.tar.gz" />
+
+      <property
+        name="ECLIPSE_HOME"
+        value="${BUILD_HOME}/eclipseInstall" />
+
+      <property
+        name="ECLIPSE_EXE"
+        value="${ECLIPSE_HOME}/eclipse/eclipse" />
+
+      <property
+        name="AGGREGATOR_RESULTS"
+        value="${BUILD_HOME}/aggregation" />
+
+    <property
+      name="BUILD_MODEL_DIR"
+      value="${BUILD_HOME}/org.eclipse.simrel.build" />
 
     <!-- 
-    git_protocol must be changed to somethign like 
-     "git://git.eclipse.org" or "https://git.eclipse.org"
-     if not running on Eclipse.org itself. (Note not trailing
-     slash).
+    git_protocol should be changed to somethign like 
+     "file://" for production builds, for efficiency and to 
+     avoid problems when the "internal" network is down.
+     (Note no trailing slash).
      It can be added to a local copy of 'aggrPropertyFile'
      -->
-    <property name="git_protocol" value="file://" />
+    <property
+      name="git_protocol"
+      value="git://git.eclipse.org" />
 
       <!--
         rewriteRepositoryURLValue is an important variable, passed in through
@@ -922,26 +867,18 @@
       name="commonRepositoryDownloadURLValue"
       value="http://download.eclipse.org" />
 
-    <!--
-      Often, especially for Huson slaves, it is easiest to set hostForURL "manually" in properties or
-      on command line, e.g. -DhostForURL=hudson ... but, if not defined yet, we'll fallback to reasonable guess.
-      Note: not sure this is needed any longer?
-    -->
-    <property
-      name="hostForURL"
-      value="${HOSTNAME}" />
-
     <condition property="localRepoExists">
       <available file="${BUILD_MODEL_DIR}/.git" />
     </condition>
 
-    <condition property="localToolsRepoExists">
-      <available file="${BUILD_TOOLS_DIR}/.git" />
-    </condition>
-
-    <condition property="localTestsRepoExists">
-      <available file="${BUILD_TESTS_DIR}/.git" />
-    </condition>
+      <!--
+        By default we assume "master". Therefore, for update releases
+        we need to specify BRANCH_BUILD on command line, such as 
+        -DBUILD_BRANCH=Neon_maintenance
+      -->
+    <property
+      name="BRANCH_BUILD"
+      value="master" />
 
       <!-- three sources for "commit or Branch" for the main 'commit'. -->
     <condition
@@ -956,19 +893,7 @@
       <isset property="commit" />
     </condition>
 
-    <condition
-      property="toolsCommitOrBranch"
-      value="${toolsCommit}"
-      else="${BRANCH_TOOLS}">
-      <isset property="toolsCommit" />
-    </condition>
 
-    <condition
-      property="logURL"
-      value="${LOG_URL}"
-      else="${hostForURL}">
-      <isset property="LOG_URL" />
-    </condition>
 
     <property
       name="eclipseWorkspace"
@@ -982,15 +907,19 @@
       dir="${eclipseWorkspace}"
       quiet="true" />
 
-    <property
-      name="javaIOTmpdir"
-      value="${BUILD_HOME}/tmp" />
-    <mkdir dir="${javaIOTmpdir}" />
-    <!--
-         In case java.io.tmpdir is "passed in", technically, it is BUILDER_VM_ARGS
-         that is passed in from aggr.properties. So, make sure this value matches
-         the properties.
+    <!-- 
+      Note: we put -vmargs directly in BUILDER_VM_ARGS so that 
+      if desired to not have ANY vmargs, then we will not be left with 
+      a dangling (empty) -vmargs at the end of eclipse command line.
     -->
+    <property
+      name="BUILDER_VM_ARGS"
+      value="-vmargs -Djava.io.tmpdir=${BUILD_HOME}/tmp" />
+    <echo message="BUILDER_VM_ARGS: ${BUILDER_VM_ARGS}" />
+    <!-- tmp directory must exist, for Java to use it -->
+    <mkdir dir="${BUILD_HOME}/tmp" />
+    <echo message="Made directory ${BUILD_HOME}/tmp" />
+
 
     <property
       name="eclipseExecutable"
@@ -1022,11 +951,6 @@
       </and>
     </condition>
 
-    <available
-      file="${ECLIPSE_HOME_TEST}/eclipse/${RELENG_TESTS_DIR}"
-      type="dir"
-      property="eclipseTestsExists" />
-
       <!--
            set installEclipseTests on command line to force a reinstall,
            else is done only if not installed yet.
@@ -1046,28 +970,68 @@
         <isset property="installEclipseTests" />
       </and>
     </condition>
-    <echo message="= = = Properties in init = = = " />
-    <echo message="commit: ${commit}" />
-    <echo message="toolsCommit: ${toolsCommit}" />
-    <echo message="testsCommit: ${testsCommit}" />
+     
+      <!--
+       note the "https" may have to be "http" on localhost, 
+       non production machines
+      -->
+    <property
+      name="hostForURL"
+      value="https://hudson.eclipse.org" />
+
+      <!-- 
+        TODO: this will not be correct for local builds, probably. 
+        Could do more to detect "local builds" and either not set, or 
+        set to correct values for a "local hudson".
+      -->
+    <property
+      name="LOG_URL"
+      value="${hostForURL}/simrel/job/${jobName}/${jobNumber}/console" />
+
+      <!-- 
+        These are the arguments to the aggregator that are constant, 
+        whether doing "production build" or "local build". If doing 
+        production build, then is also needs the &dash;$dash;production argument 
+        (it is the one that cuases "blame mail" to be sent). 
+        If PRODUCTION is not set externally (such as on command line, 
+        or in a property file, we set it to blank here to avoid the literal
+        '${PRODUCTION} from being passed as an argument.
+        Be sure to udpate emailFrom as "build master" changes.
+      -->
+    <property
+      name="PRODUCTION"
+      value="" />
+     <!-- 
+       In the distant past, we have also used these arguments. 
+       The maven result one was always experimental. 
+       We have also learned it it better not to "trust" any repository.
+       
+       Can only use one or the other, not both
+        &dash;&dash;mavenResult
+        &dash;&dash;trustedContributions Eclipse,Equinox
+     -->
+    <property
+      name="AGGREGATOR_APP_BASE_ARGS"
+      value="${PRODUCTION} --buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr --buildRoot ${AGGREGATOR_RESULTS} --eclipseLogLevel DEBUG --logLevel DEBUG --emailFrom david_williams@eclipse.org --emailFromName ${release}Aggregator --logURL ${LOG_URL} --subjectPrefix ${release}Aggregation" />
+
+    <echo message="= = = Properties at end of init = = = " />
+    <echo message="commitOrBranch: ${commitOrBranch}" />
+    <echo message="toolsRepoCommit: ${toolsRepoCommit}" />
     <echo message="aggrPropertyFile: ${aggrPropertyFile}" />
     <echo message="buildId: ${buildTimestamp}" />
     <echo message="user.dir: ${user.dir}" />
     <echo message="user.home: ${user.home}" />
-    <echo message="BUILD_HOME (HUDSON workspace): ${BUILD_HOME}" />
+    <echo message="BUILD_HOME (normally HUDSON workspace): ${BUILD_HOME}" />
     <echo message="Eclipse WORKSPACE: ${eclipseWorkspace}" />
     <echo message="PATH: ${env.PATH}" />
     <echo message="JAVA_HOME: ${JAVA_HOME}" />
     <echo message="JAVA_EXEC_DIR: ${JAVA_EXEC_DIR}" />
     <echo message="hostForURL: ${hostForURL}" />
-    <echo message="JOB_NAME: ${env.JOB_NAME}" />
-    <echo message="BUILD_NUMBER: ${env.BUILD_NUMBER}" />
-    <echo message="logURL: ${logURL}" />
+    <echo message="jobName: ${jobName}" />
+    <echo message="jobNumber: ${jobNumber}" />
     <echo message="ECLIPSE_EXE:  ${ECLIPSE_EXE}" />
     <echo message="eclipseExists: ${eclipseExists}" />
-    <echo message="eclipseTestsExists: ${eclipseTestsExists}" />
     <echo message="BUILDER_VM_ARGS: ${BUILDER_VM_ARGS}" />
-    <echo message="javaIOTmpdir: ${javaIOTmpdir}" />
     <echo message=" = = = = = = = = = = = = " />
     <echoproperties />
 
@@ -1101,7 +1065,7 @@
         pattern="yyyy-MM-dd_HH-mm-ss"
         timezone="UTC_TIME" />
     </tstamp>
-    <echo message="Using ant computed timestamp. Why?" />
+    <echo message="Using Ant computed timestamp (since not running on Hudson): ${buildTimestamp}." />
   </target>
 
   <target
@@ -1121,7 +1085,7 @@
     <property
       name="jobName"
       value="localbuild" />
-    <echo message="Using default jobName: localbuild. Why?" />
+    <echo message="Using default jobName: localbuild." />
   </target>
 
   <target
@@ -1132,6 +1096,26 @@
       name="jobName"
       value="${env.JOB_NAME}" />
     <echo message="Using jobName from Hudson Builder: ${jobName}" />
+  </target>
+
+  <target
+    name="getJobNumber"
+    depends="getHudsonJobNumber"
+    unless="jobNumber">
+    <property
+      name="jobNumber"
+      value="none" />
+    <echo message="Using default jobNumber: ${jobNumber}." />
+  </target>
+
+  <target
+    name="getHudsonJobNumber"
+    unless="jobNumber"
+    if="env.BUILD_NUMBER">
+    <property
+      name="jobNumber"
+      value="${env.BUILD_NUMBER}" />
+    <echo message="Using jobNumber from Hudson Builder: ${jobNumber}" />
   </target>
 
   <target
@@ -1232,12 +1216,7 @@
     <available
       file="${BUILD_MODEL_DIR}"
       property="buildModelAvailable" />
-    <available
-      file="${BUILD_TOOLS_DIR}"
-      property="toolsAvailable" />
-    <available
-      file="${BUILD_TESTS_DIR}"
-      property="testsAvailable" />
+
   </target>
 
   <target name="createXZformats">
@@ -1251,7 +1230,7 @@
 
   <target
     name="createBuildinfo"
-    depends="checkAvailableDirs, gitRevParseModel, gitRevParseTools, gitRevParseTests">
+    depends="init, checkAvailableDirs, gitRevParseModel">
 
     <property
       name="BUILD_INFO_DIR"
@@ -1263,14 +1242,14 @@
         key="commit"
         value="${buildModelCommit}" />
       <entry
-        key="toolsCommit"
+        key="toolsRepoCommit"
         value="${toolsRepoCommit}" />
       <entry
         key="triggerJobName"
-        value="${env.JOB_NAME}" />
+        value="${jobName}" />
       <entry
         key="triggerJobNumber"
-        value="${env.BUILD_NUMBER}" />
+        value="${jobNumber}" />
       <entry
         key="triggerBuildTimestamp"
         value="${buildTimestamp}" />
@@ -1278,11 +1257,11 @@
         key="triggerBuildId"
         value="${buildTimestamp}" />
     </propertyfile>
-        <!-- echo the three key ones to end of log, just to have redundant record. -->
+        <!-- echo the key ones to end of log, just to have redundant record. -->
     <echo message="commit: ${buildModelCommit}" />
-    <echo message="toolsCommit: ${toolsRepoCommit}" />
-    <echo message="triggerJobName: ${env.JOB_NAME}" />
-    <echo message="triggerJobNumber: ${env.BUILD_NUMBER}" />
+    <echo message="toolsRepoCommit: ${toolsRepoCommit}" />
+    <echo message="triggerJobName: ${jobName}" />
+    <echo message="triggerJobNumber: ${jobNumber}" />
     <echo message="triggerBuildTimestamp: ${buildTimestamp}" />
     <echo message="triggerBuildId: ${buildTimestamp}" />
         <!-- just as well write out everything ... just in case something else needed in future. -->
@@ -1291,6 +1270,7 @@
 
   <target
     name="gitRevParseModel"
+    depends="init"
     if="buildModelAvailable">
     <git-rev-parse
       repodir="${BUILD_MODEL_DIR}"
@@ -1299,42 +1279,20 @@
   </target>
   <target
     name="gitRevParseTools"
+    depends="getBuildToolsDir"
     if="toolsAvailable">
     <git-rev-parse
       repodir="${BUILD_TOOLS_DIR}"
       returnproperty="toolsRepoCommit" />
     <echo message="In target, toolsRepoCommit: ${toolsRepoCommit}" />
   </target>
-  <target
-    name="gitRevParseTests"
-    if="testsAvailable">
-    <git-rev-parse
-      repodir="${BUILD_TESTS_DIR}"
-      returnproperty="testsRepoCommit" />
-    <echo message="In target, testsRepoCommit: ${testsRepoCommit}" />
-  </target>
-
-    <!--
-         No longer used ... we will rely on cleaning all of Hudson workspace manually,
-         from time to time, from Hudson't web interface.
-         But otherwise, rely on "BUILD_CLEAN" in aggregator to get a clean aggregation.
-    -->
-  <target
-    name="cleanPreviousAggregations"
-    unless="nocleanAggregations">
-    <!-- we will clean the aggregation directory ourselves, as work around for bug 354321
-      https://bugs.eclipse.org/bugs/show_bug.cgi?id=354321
-      The bug has been fixed ... but ... we'll leave as is. Perhaps gives more
-      flexibility?
-    -->
-    <echo message="Removing any previous aggregation results, from ${AGGREGATOR_RESULTS}" />
-    <delete
-      dir="${AGGREGATOR_RESULTS}"
-      failonerror="true" />
-    <mkdir dir="${AGGREGATOR_RESULTS}" />
-  </target>
 
   <target name="default">
-    <echo message="There is no default target for this build file" />
+    <echo message="Using default target:" />
+    <echo message="     runAggregatorValidateOnly" />
+    <echo message="  Other meaningful targets to specify explicitly:" />
+    <echo message="     runAggregatorBuildOnly" />
+    <echo message="     runAggregatorCleanBuild" />
+    <antcall target="runAggregatorValidateOnly" />
   </target>
 </project>

@@ -24,8 +24,8 @@ export JAVA_8_HOME=${JAVA_8_HOME:-/shared/common/jdk1.8.0_x64-latest}
 
 REPO_ROOT=${REPO_ROOT:-/home/data/httpd/download.eclipse.org}
 
-# each machine needs valid path to an appropriate, local Eclipse SDK, for fresh re-installs (see "full_filename" below)
-FULL_FILENAME=${FULL_FILENAME:-/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.4.2-201502041700/eclipse-SDK-4.4.2-linux-gtk-x86_64.tar.gz}
+# each machine needs valid path to an appropriate, local Eclipse SDK, for fresh re-installs
+FULL_FILENAME=${FULL_FILENAME:-/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.5.2-201602121500/eclipse-SDK-4.5.2-linux-gtk-x86_64.tar.gz}
 
 # ##################################
 # typically the remaining variables not have to be
@@ -33,9 +33,7 @@ FULL_FILENAME=${FULL_FILENAME:-/home/data/httpd/archive.eclipse.org/eclipse/down
 # as they just compute variables based on above,
 # or provide relatively machine-independent values.
 
-# BUILD tools must match what where git repo is cloned to.
-BUILD_TOOLS=${BUILD_TOOLS:-tools}
-export BUILD_TOOLS_DIR=${BUILD_HOME}/${BUILD_TOOLS}
+export BUILD_TOOLS_DIR=${BUILD_HOME}/org.eclipse.simrel.tools
 
 export JAVA_HOME=${JAVA_8_HOME}
 export JAVA_EXEC_DIR=${JAVA_HOME}/jre/bin
@@ -46,15 +44,10 @@ export devArgs="-Djava.io.tmpdir=${BUILD_HOME}/tmp -Dp2MirrorsURL=http://www.ecl
 
 mkdir -p ${BUILD_HOME}/tmp
 
-# platform installs.
-ECLIPSE_INSTALL=${ECLIPSE_INSTALL:-${BUILD_HOME}}
+ECLIPSE_HOME=${BUILD_HOME}/eclipseInstall
 
-# properties say what to consider eclipse home
-ECLIPSE_HOME_45=${ECLIPSE_INSTALL}/eclipse45
-
-ECLIPSE_HOME=${ECLIPSE_HOME:-${ECLIPSE_HOME_45}}
-
-releaseDirectory=${REPO_ROOT}/releases/${release}
+export stagingDirectory="${REPO_ROOT}/staging/${release}"
+export releaseDirectory=${REPO_ROOT}/releases/${release}
 
 export ECLIPSE_EXE=${ECLIPSE_HOME}/eclipse/eclipse
 

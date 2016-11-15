@@ -10,7 +10,7 @@
         name="createcomposite">
         <p2.composite.repository>
             <repository
-                location="file://${REPO_ROOT}/releases/${release}/"
+                location="file:///home/data/httpd/download.eclipse.org/releases/${release}/"
                 name="Mars repository"/>
             <add>
                 <repository
