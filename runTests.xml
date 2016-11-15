@@ -12,8 +12,8 @@
   <property
     name="aggrPropertyFile"
     value="aggr.properties" />
-
-  <properties file="${aggrPropertyFile}" />
+  <echo message="aggrPropertyFile: ${aggrPropertyFile}" />
+  <property file="${aggrPropertyFile}" />
 
   <!-- We'll put test output files right in "the p2 repository". Though, later
        we will want to "save old reports", without saving the entire repository.
@@ -21,9 +21,9 @@
        .../reporeports contains the index.html file.
   -->
 
-    <property
-      name="testRepoDirectory"
-      value="${BUILD_HOME}/aggregation/final" />
+  <property
+    name="testRepoDirectory"
+    value="${BUILD_HOME}/aggregation/final" />
 
   <property
     name="reportOutputDir"
@@ -43,18 +43,24 @@
        reference repository for mainline release should be the latest "update staging" repostory, 
        once it exists and is accurate.
   -->
-    <condition property="referenceRepoDir" value="/home/data/httpd/download.eclipse.org/staging/neon/">
-      <equals arg1="${release}"
-              arg2="oxygen" />
-    </condition>
-    <condition property="referenceRepoDir" value="/home/data/httpd/download.eclipse.org/releases/neon/201610111000">
-      <equals arg1="${release}"
-              arg2="neon" />
-    </condition>
-    <echo message="[DEBUG] Computing referenceRepoDir. release: ${release}"/>
-    <echo message="[DEBUG] Computed referenceRepoDir: ${referenceRepoDir}" />
+  <condition
+    property="referenceRepoDir"
+    value="/home/data/httpd/download.eclipse.org/staging/neon/">
+    <equals
+      arg1="${release}"
+      arg2="oxygen" />
+  </condition>
+  <condition
+    property="referenceRepoDir"
+    value="/home/data/httpd/download.eclipse.org/releases/neon/201610111000">
+    <equals
+      arg1="${release}"
+      arg2="neon" />
+  </condition>
+  <echo message="[DEBUG] Computing referenceRepoDir. release: ${release}" />
+  <echo message="[DEBUG] Computed referenceRepoDir: ${referenceRepoDir}" />
 
-    <property
+  <property
     name="eclipseTestExecutable"
     value="${ECLIPSE_EXE}" />
 
