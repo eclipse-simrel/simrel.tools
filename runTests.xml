@@ -13,16 +13,21 @@
     name="aggrPropertyFile"
     value="aggr.properties" />
 
-  <loadproperties srcfile="${aggrPropertyFile}" />
+  <properties file="${aggrPropertyFile}" />
 
   <!-- We'll put test output files right in "the p2 repository". Though, later
        we will want to "save old reports", without saving the entire repository.
        .../reporeports/reports contains the actual reports.
        .../reporeports contains the index.html file.
   -->
+
+    <property
+      name="testRepoDirectory"
+      value="${BUILD_HOME}/aggregation/final" />
+
   <property
     name="reportOutputDir"
-    value="${BUILD_HOME}/aggregation/final/buildInfo" />
+    value="${testRepoDirectory}/buildInfo" />
 
   <!-- buildInfo should already exist, and contain "properties" of build -->
   <mkdir dir="${reportOutputDir}" />
