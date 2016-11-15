@@ -1015,6 +1015,9 @@
       value="${PRODUCTION} --buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr --buildRoot ${AGGREGATOR_RESULTS} --eclipseLogLevel DEBUG --logLevel DEBUG --emailFrom david_williams@eclipse.org --emailFromName ${release}Aggregator --logURL ${LOG_URL} --subjectPrefix ${release}Aggregation" />
 
     <echo message="= = = Properties at end of init = = = " />
+    <echo message="git_protocol: ${git_protocol}"/>
+    <echo message="PRODUCTION: ${PRODUCTION}" />
+    <echo message="rewriteRepositoryURLValue: ${rewriteRepositoryURLValue}" />
     <echo message="commitOrBranch: ${commitOrBranch}" />
     <echo message="toolsRepoCommit: ${toolsRepoCommit}" />
     <echo message="aggrPropertyFile: ${aggrPropertyFile}" />
