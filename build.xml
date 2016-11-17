@@ -26,7 +26,7 @@
       value="org.eclipse.equinox.p2.director" />
     <property
       name="OTHER_ARGS_AGG"
-      value="-metadataRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.5/I20161031-0537/ -artifactRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.5/I20161031-0537/ -installIU org.eclipse.b3.aggregator.engine.feature.feature.group" />
+      value="-metadataRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.6/I20161107-2127/ -artifactRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.6/I20161107-2127/ -installIU org.eclipse.b3.aggregator.engine.feature.feature.group" />
 
     <property
       name="VM_ARGS_AGG"
@@ -821,7 +821,7 @@
 
       <property
         name="FULL_FILENAME"
-        value="/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.5.2-201602121500/eclipse-SDK-4.5.2-linux-gtk-x86_64.tar.gz" />
+        value="/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200/eclipse-SDK-4.6.1-linux-gtk-x86_64.tar.gz" />
 
       <property
         name="ECLIPSE_HOME"
