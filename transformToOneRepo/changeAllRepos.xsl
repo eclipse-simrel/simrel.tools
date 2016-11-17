@@ -6,7 +6,7 @@
   <!-- 
        naming the factory and passing in on -Djavax.xml.transform.TransformerFactory
        avoid some spurious error messages about "UTF-8 not supported by java".
-       Though we use ASCII, to match what is already in b3aggrcon files.
+       Though we use ASCII, to match what is already in aggrcon files.
        Though does require it to be on classpath, then.
    -->
   <factory name="com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl">

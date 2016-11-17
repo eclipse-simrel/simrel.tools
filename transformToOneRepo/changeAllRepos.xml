@@ -3,11 +3,11 @@
 
 
   <!-- 
-       This file is to use Ant to run XSL Transform on on b3aggrcon files.
+       This file is to use Ant to run XSL Transform on on aggrcon files.
 
        Its use for when a rebuild is needed, and as input, we want to 
        take everyone's previous output, to minimize risk of changes 
-       being introduced, that we don't know about. So we leave b3aggrcon files
+       being introduced, that we don't know about. So we leave aggrcon files
        as they were, but change only the repository 'location' attribute.
 
        As it currently is, it runs from in the workspace, where 
@@ -24,7 +24,7 @@
   <target
     name="main"
     depends="init, transformFiles, copyFiles">
-    <echo message="Transformed b3aggrcon files and copied them back to build project" />
+    <echo message="Transformed aggrcon files and copied them back to build project" />
   </target>
 
   <target
@@ -43,7 +43,7 @@
       todir="${inputDirectory}">
       <fileset
         dir="${outputDirectory}"
-        includes="*.b3aggrcon" />
+        includes="*.aggrcon" />
     </copy>
 
     <delete dir="${outputDirectory}">
@@ -89,8 +89,8 @@
       basedir="${inputDirectory}"
       destdir="${outputDirectory}"
       style="changeAllRepos.xsl"
-      includes="*.b3aggrcon"
-      extension=".b3aggrcon"
+      includes="*.aggrcon"
+      extension=".aggrcon"
       force="true">
       <param
         name="newRepository"

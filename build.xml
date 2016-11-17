@@ -26,7 +26,7 @@
       value="org.eclipse.equinox.p2.director" />
     <property
       name="OTHER_ARGS_AGG"
-      value="-metadataRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.6/S20161107-2127/ -artifactRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.6/S20161107-2127/ -installIU org.eclipse.b3.aggregator.engine.feature.feature.group" />
+      value="-metadataRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.6/ -artifactRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.6/ -installIU org.eclipse.cbi.p2repo.aggregator.engine.feature.feature.group" />
 
     <property
       name="VM_ARGS_AGG"
@@ -392,7 +392,7 @@
      We do use "pull", to make sure "current", and then
      in main task we "checkout" the exact commit we want. This is primarily so that
      all tasks (validate, build-with-Cache, and build-Clean, all operate on exact
-     same input). [Though, still need "exact" input in b3aggrcon files, for that to be completely
+     same input). [Though, still need "exact" input in aggrcon files, for that to be completely
      valid.]
   -->
   <target
@@ -542,7 +542,7 @@
       <arg value="${eclipseWorkspace}" />
       <arg value="--launcher.suppressErrors" />
       <arg value="-application" />
-      <arg value="org.eclipse.b3.cli.headless" />
+      <arg value="org.eclipse.cbi.p2repo.cli.headless" />
       <arg value="aggregate" />
       <arg value="--buildId" />
       <arg value="${buildTimestamp}" />
@@ -664,7 +664,7 @@
       <arg value="${eclipseWorkspace}_run_aggr" />
       <arg value="--launcher.suppressErrors" />
       <arg value="-application" />
-      <arg value="org.eclipse.b3.cli.headless" />
+      <arg value="org.eclipse.cbi.p2repo.cli.headless" />
       <arg value="aggregate" />
       <arg value="--buildId" />
       <arg value="${buildTimestamp}" />
@@ -695,8 +695,8 @@
   <!--
      Note, we currently have no "tests" for the "validate only" case, but we could, might
      someday, so we go ahead an install, in anticipation. For example, we might simply
-     test that all b3aggrcon files specify unique URL (to simple repository) or
-     that "versions" are specified in *.b3aggrcon file.
+     test that all aggrcon files specify unique URL (to simple repository) or
+     that "versions" are specified in *.aggrcon file.
   -->
   <target
     name="runAggregatorValidateOnly"
@@ -727,7 +727,7 @@
       <arg value="${eclipseWorkspace}" />
       <arg value="--launcher.suppressErrors" />
       <arg value="-application" />
-      <arg value="org.eclipse.b3.cli.headless" />
+      <arg value="org.eclipse.cbi.p2repo.cli.headless" />
       <arg value="aggregate" />
       <arg value="--buildId" />
       <arg value="${buildTimestamp}" />
@@ -858,7 +858,7 @@
         At one point, we needed, unrewriteMapsLine, to know how to "change back" and
         now use commonRepositoryDownloadURLValue to know "what to look for" to change
         to rewriteRepositoryURLValue, but this should not be needed to be changed,
-        since we make the strong assumption that, in *.b3aggrcon files, this string
+        since we make the strong assumption that, in *.aggrcon files, this string
         occurs only in repository location attributes. If not true, more complex
         parsing/replacement would be required.
     -->
@@ -1012,7 +1012,7 @@
      -->
     <property
       name="AGGREGATOR_APP_BASE_ARGS"
-      value="${PRODUCTION} --buildModel ${BUILD_MODEL_DIR}/simrel.b3aggr --buildRoot ${AGGREGATOR_RESULTS} --eclipseLogLevel DEBUG --logLevel DEBUG --emailFrom david_williams@eclipse.org --emailFromName ${release}Aggregator --logURL ${LOG_URL} --subjectPrefix ${release}Aggregation" />
+      value="${PRODUCTION} --buildModel ${BUILD_MODEL_DIR}/simrel.aggr --buildRoot ${AGGREGATOR_RESULTS} --eclipseLogLevel DEBUG --logLevel DEBUG --emailFrom david_williams@eclipse.org --emailFromName ${release}Aggregator --logURL ${LOG_URL} --subjectPrefix ${release}Aggregation" />
 
     <echo message="= = = Properties at end of init = = = " />
     <echo message="git_protocol: ${git_protocol}"/>
@@ -1187,10 +1187,10 @@
       dir="${BUILD_MODEL_DIR}"
       token="${commonRepositoryDownloadURLValue}"
       value="${rewriteRepositoryURLValue}">
-      <include name="*.b3aggrcon" />
+      <include name="*.aggrcon" />
       <!--
-        <exclude name="ep.b3aggrcon"/>
-        <exclude name="equinox.b3aggrcon"/>
+        <exclude name="ep.aggrcon"/>
+        <exclude name="equinox.aggrcon"/>
       -->
     </replace>
     <echo message="Rewrote repository location URLs ..." />
@@ -1198,8 +1198,8 @@
     <echo message="          To: ${rewriteRepositoryURLValue}" />
     <echo message="   Excluding no files since no composite artifacts, just agregate" />
     <!--
-      <echo message=" Excluding: ep.b3aggrcon"/>
-      <echo message=" Excluding: ep.b3aggrcon, equinox.b3aggrcon"/>
+      <echo message=" Excluding: ep.aggrcon"/>
+      <echo message=" Excluding: ep.aggrcon, equinox.aggrcon"/>
     -->
     <property
       name="rewroteURLs"

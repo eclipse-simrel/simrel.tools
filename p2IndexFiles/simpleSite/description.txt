@@ -1,4 +1,4 @@
-This p2.index files are created by recent versions of b3.aggregator,
+This p2.index files are created by recent versions of cbi aggregator,
 for Kepler, but this copy is provided for reference and use in earlier
 repositories releases.
 
