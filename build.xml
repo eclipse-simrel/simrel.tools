@@ -504,7 +504,7 @@
   -->
   <target
     name="runAggregatorCleanBuild"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools,installTestsFromRepo">
+    depends="init,rewriteRepositoryURL,installAggregatorAndTools,installTestsFromRepo">
       <!--
         If not otherwise set in properties file, use these values. Note
         the build.eclipse.org production machine must override these values for property
@@ -592,7 +592,7 @@
          to run against previous build, and acquire the lock, for that job -->
   <target
     name="runTests"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools,installTestsFromRepo,initRunTestsXML">
+    depends="init,rewriteRepositoryURL,installAggregatorAndTools,installTestsFromRepo,initRunTestsXML">
 
     <ant
       antfile="${runTestsXML}"
@@ -633,7 +633,7 @@
   -->
   <target
     name="runAggregatorBuildOnly"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromRepo,initRunTestsXML">
+    depends="init,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromRepo,initRunTestsXML">
 
     <property
       name="AGG_APP_ARGS"
