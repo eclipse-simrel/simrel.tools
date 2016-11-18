@@ -702,10 +702,13 @@
      that "versions" are specified in *.aggrcon file.
   -->
     <!-- 11/18/2016, removed "getModelFromGit" from depends list, since does not depend on 
-    a specific commit. Will assume the "right stuff" is checked out by Hudson. -->
+    a specific commit. Will assume the "right stuff" is checked out by Hudson. 
+    But, it was not. Still had "b3aggr*" file names in workspace! like it is starting with 
+    something really old?
+    -->
   <target
     name="runAggregatorValidateOnly"
-    depends="init,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromRepo,initRunTestsXML">
+    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromRepo,initRunTestsXML">
 
     <property
       name="AGG_APP_ARGS"
