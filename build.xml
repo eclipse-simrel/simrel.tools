@@ -701,9 +701,11 @@
      test that all aggrcon files specify unique URL (to simple repository) or
      that "versions" are specified in *.aggrcon file.
   -->
+    <!-- 11/18/2016, removed "getModelFromGit" from depends list, since does not depend on 
+    a specific commit. Will assume the "right stuff" is checked out by Hudson. -->
   <target
     name="runAggregatorValidateOnly"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromRepo,initRunTestsXML">
+    depends="init,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromRepo,initRunTestsXML">
 
     <property
       name="AGG_APP_ARGS"
