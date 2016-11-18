@@ -705,10 +705,12 @@
     a specific commit. Will assume the "right stuff" is checked out by Hudson. 
     But, it was not. Still had "b3aggr*" file names in workspace! like it is starting with 
     something really old?
+    Trying again after inserting "$GERRIT_REFSPEC for $commit default
+    and using $commit in repo's "reference spec" field.
     -->
   <target
     name="runAggregatorValidateOnly"
-    depends="init,getModelFromGit,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromRepo,initRunTestsXML">
+    depends="init,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromRepo,initRunTestsXML">
 
     <property
       name="AGG_APP_ARGS"
