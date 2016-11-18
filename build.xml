@@ -3,6 +3,9 @@
   basedir="."
   default="default">
 
+  <!-- globally make "environment variables" available -->
+  <property environment="env" />
+
   <target
     name="installAggregatorAndTools"
     depends="init, savePrevious,installAggregator,installRelengTools,installTestsFromRepo"
@@ -799,41 +802,41 @@
        -propertyFile on command line, so that the property values can be "nested"
         in other property values and evaluated lazily.
       -->
-      <property
-        name="aggrPropertyFile"
-        value="${BUILD_TOOLS_DIR}/aggr.properties" />
+    <property
+      name="aggrPropertyFile"
+      value="${BUILD_TOOLS_DIR}/aggr.properties" />
 
-      <property file="${aggrPropertyFile}" />
+    <property file="${aggrPropertyFile}" />
 
-      <fail
+    <fail
       unless="release"
       message="release must be specified for this script, such as -Drelease=mars" />
 
-      <property
-        name="JAVA_HOME"
-        value="/shared/common/jdk1.8.0_x64-latest" />
-      <property
-        name="JAVA_EXEC_DIR"
-        value="${JAVA_HOME}/jre/bin" />
-      <property
-        name="JAVA_CMD"
-        value="${JAVA_EXEC_DIR}/java" />
+    <property
+      name="JAVA_HOME"
+      value="/shared/common/jdk1.8.0_x64-latest" />
+    <property
+      name="JAVA_EXEC_DIR"
+      value="${JAVA_HOME}/jre/bin" />
+    <property
+      name="JAVA_CMD"
+      value="${JAVA_EXEC_DIR}/java" />
 
-      <property
-        name="FULL_FILENAME"
-        value="/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200/eclipse-SDK-4.6.1-linux-gtk-x86_64.tar.gz" />
+    <property
+      name="FULL_FILENAME"
+      value="/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200/eclipse-SDK-4.6.1-linux-gtk-x86_64.tar.gz" />
 
-      <property
-        name="ECLIPSE_HOME"
-        value="${BUILD_HOME}/eclipseInstall" />
+    <property
+      name="ECLIPSE_HOME"
+      value="${BUILD_HOME}/eclipseInstall" />
 
-      <property
-        name="ECLIPSE_EXE"
-        value="${ECLIPSE_HOME}/eclipse/eclipse" />
+    <property
+      name="ECLIPSE_EXE"
+      value="${ECLIPSE_HOME}/eclipse/eclipse" />
 
-      <property
-        name="AGGREGATOR_RESULTS"
-        value="${BUILD_HOME}/aggregation" />
+    <property
+      name="AGGREGATOR_RESULTS"
+      value="${BUILD_HOME}/aggregation" />
 
     <property
       name="BUILD_MODEL_DIR"
@@ -1015,7 +1018,7 @@
       value="${PRODUCTION} --buildModel ${BUILD_MODEL_DIR}/simrel.aggr --buildRoot ${AGGREGATOR_RESULTS} --eclipseLogLevel DEBUG --logLevel DEBUG --emailFrom david_williams@eclipse.org --emailFromName ${release}Aggregator --logURL ${LOG_URL} --subjectPrefix ${release}Aggregation" />
 
     <echo message="= = = Properties at end of init = = = " />
-    <echo message="git_protocol: ${git_protocol}"/>
+    <echo message="git_protocol: ${git_protocol}" />
     <echo message="PRODUCTION: ${PRODUCTION}" />
     <echo message="rewriteRepositoryURLValue: ${rewriteRepositoryURLValue}" />
     <echo message="commitOrBranch: ${commitOrBranch}" />
@@ -1087,8 +1090,8 @@
     unless="jobName">
     <property
       name="jobName"
-      value="localbuild" />
-    <echo message="Using default jobName: localbuild." />
+      value="none" />
+    <echo message="Using default jobName: none." />
   </target>
 
   <target
@@ -1105,6 +1108,7 @@
     name="getJobNumber"
     depends="getHudsonJobNumber"
     unless="jobNumber">
+    <property environment="env" />
     <property
       name="jobNumber"
       value="none" />
