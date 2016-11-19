@@ -509,7 +509,7 @@
   </target>
   <target
     name="init"
-    depends="getBuildTimestamp, getJobName, getJobNumber, getBUILD_HOME, getBuildToolsDir, gitRevParseTools, getBuildModelDir, gitRevParseModel"
+    depends="getJDKSettings, getBuildTimestamp, getJobName, getJobNumber, getBUILD_HOME, getBuildToolsDir, gitRevParseTools, getBuildModelDir, gitRevParseModel"
     unless="isInitialized">
 
     <!-- We assign a reasonable value for local builds, but for production
@@ -531,16 +531,6 @@
     <fail
       unless="release"
       message="release must be specified for this script, such as -Drelease=mars" />
-
-    <property
-      name="JAVA_HOME"
-      value="/shared/common/jdk1.8.0_x64-latest" />
-    <property
-      name="JAVA_EXEC_DIR"
-      value="${JAVA_HOME}/jre/bin" />
-    <property
-      name="JAVA_CMD"
-      value="${JAVA_EXEC_DIR}/java" />
 
     <property
       name="FULL_FILENAME"
@@ -712,7 +702,6 @@
     <echo message="Eclipse workspace: ${eclipseWorkspace}" />
     <echo message="PATH: ${env.PATH}" />
     <echo message="JAVA_HOME: ${JAVA_HOME}" />
-    <echo message="JAVA_EXEC_DIR: ${JAVA_EXEC_DIR}" />
     <echo message="hostForURL: ${hostForURL}" />
     <echo message="jobName: ${jobName}" />
     <echo message="jobNumber: ${jobNumber}" />
@@ -1294,5 +1283,13 @@
       value="true" />
 
   </target>
-
+  <target name="getJDKSettings">
+    <property
+      name="JAVA_HOME"
+      value="/shared/common/jdk1.8.0_x64-latest" />
+    <property
+      name="JAVA_EXEC_DIR"
+      value="${JAVA_HOME}/jre/bin" />
+  </target>
+	
 </project>

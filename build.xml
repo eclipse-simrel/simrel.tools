@@ -66,7 +66,7 @@
       dir="${basedir}"
       failonerror="true">
       <arg
-        line="-data ${eclipseWorkspace}_install_aggr -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_AGG} ${OTHER_ARGS_AGG} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS_AGG}" />
+        line="-data ${eclipseWorkspace}_install_aggr -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_AGG} ${OTHER_ARGS_AGG} -vmargs ${VM_ARGS_AGG}" />
     </exec>
     <property
       name="aggregatorInstalled"
@@ -100,7 +100,7 @@
       dir="${basedir}"
       failonerror="true">
       <arg
-        line="-data ${eclipseWorkspace}_installTests -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_TESTS} ${OTHER_ARGS_TESTS} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS_TESTS}" />
+        line="-data ${eclipseWorkspace}_installTests -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_TESTS} ${OTHER_ARGS_TESTS} -vmargs ${VM_ARGS_TESTS}" />
     </exec>
     <property
       name="testsInstalled"
@@ -131,7 +131,7 @@
       dir="${basedir}"
       failonerror="true">
       <arg
-        line="-data ${eclipseWorkspace}_installRelengTools -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_RELENG} ${OTHER_ARGS_RELENG} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS_RELENG}" />
+        line="-data ${eclipseWorkspace}_installRelengTools -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_RELENG} ${OTHER_ARGS_RELENG} -vmargs ${VM_ARGS_RELENG}" />
     </exec>
     <property
       name="relengToolsInstalled"
@@ -270,8 +270,6 @@
       <arg value="--buildId" />
       <arg value="${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
-      <arg value="-vm" />
-      <arg value="${JAVA_EXEC_DIR}" />
       <arg line="${BUILDER_VM_ARGS}" />
     </exec>
 
@@ -394,8 +392,6 @@
       <arg value="--buildId" />
       <arg value="${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
-      <arg value="-vm" />
-      <arg value="${JAVA_EXEC_DIR}" />
       <arg line="${BUILDER_VM_ARGS}" />
     </exec>
 
@@ -459,8 +455,6 @@
       <arg value="--buildId" />
       <arg value="${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
-      <arg value="-vm" />
-      <arg value="${JAVA_EXEC_DIR}" />
       <arg line="${BUILDER_VM_ARGS}" />
     </exec>
 
@@ -531,16 +525,6 @@
     <fail
       unless="release"
       message="release must be specified for this script, such as -Drelease=mars" />
-
-    <property
-      name="JAVA_HOME"
-      value="/shared/common/jdk1.8.0_x64-latest" />
-    <property
-      name="JAVA_EXEC_DIR"
-      value="${JAVA_HOME}/jre/bin" />
-    <property
-      name="JAVA_CMD"
-      value="${JAVA_EXEC_DIR}/java" />
 
     <property
       name="FULL_FILENAME"
@@ -712,7 +696,6 @@
     <echo message="Eclipse workspace: ${eclipseWorkspace}" />
     <echo message="PATH: ${env.PATH}" />
     <echo message="JAVA_HOME: ${JAVA_HOME}" />
-    <echo message="JAVA_EXEC_DIR: ${JAVA_EXEC_DIR}" />
     <echo message="hostForURL: ${hostForURL}" />
     <echo message="jobName: ${jobName}" />
     <echo message="jobNumber: ${jobNumber}" />
