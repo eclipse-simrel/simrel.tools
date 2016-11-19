@@ -509,9 +509,8 @@
   </target>
   <target
     name="init"
-    depends="getBuildTimestamp, getJobName, getJobNumber, getBUILD_HOME, getBuildToolsDir, gitRevParseTools"
+    depends="getBuildTimestamp, getJobName, getJobNumber, getBUILD_HOME, getBuildToolsDir, gitRevParseTools, getBuildModelDir, gitRevParseModel"
     unless="isInitialized">
-
 
     <!-- We assign a reasonable value for local builds, but for production
       builds should be .../production.properties This property file name
@@ -558,10 +557,6 @@
     <property
       name="AGGREGATOR_RESULTS"
       value="${BUILD_HOME}/aggregation" />
-
-    <property
-      name="BUILD_MODEL_DIR"
-      value="${BUILD_HOME}/org.eclipse.simrel.build" />
 
     <!-- git_protocol should be changed to somethign like "file://" for production
       builds, for efficiency and to avoid problems when the "internal" network
@@ -857,11 +852,14 @@
       value="true" />
 
   </target>
-  <target name="checkAvailableDirs">
+
+  <target name="getBuildModelDir">
+    <property
+      name="BUILD_MODEL_DIR"
+      value="${BUILD_HOME}/org.eclipse.simrel.build" />
     <available
       file="${BUILD_MODEL_DIR}"
       property="buildModelAvailable" />
-
   </target>
 
   <target name="createXZformats">
@@ -875,7 +873,7 @@
 
   <target
     name="createBuildinfo"
-    depends="init, checkAvailableDirs, gitRevParseModel">
+    depends="init, getBuildModelDir, gitRevParseModel">
 
     <property
       name="BUILD_INFO_DIR"
@@ -916,7 +914,7 @@
 
   <target
     name="gitRevParseModel"
-    depends="init"
+    depends="getBuildModelDir"
     if="buildModelAvailable">
     <git-rev-parse
       repodir="${BUILD_MODEL_DIR}"
