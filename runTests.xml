@@ -108,7 +108,7 @@
       value="-Djava.io.tmpdir=${BUILD_HOME}/tmp -DreportOutputDir=${reportOutputDir} -DreportRepoDir=${testRepoDirectory} -DreferenceRepo=${referenceRepoDir}" />
     <echo message="in runReports: eclipseTestExecutable: ${eclipseTestExecutable}" />
     <echo message="in runReports: REPORT_APP_NAME: ${REPORT_APP_NAME}" />
-    <echo message="in runReports: JAVA_EXEC_DIR: ${JAVA_EXEC_DIR}" />
+    <echo message="in runReports: JAVA_HOME: ${JAVA_HOME}" />
     <echo message="in runReports: VM_TEST_ARGS: ${VM_TEST_ARGS}" />
     <echo message="in runReports: reportOutputDir: ${reportOutputDir}" />
     <echo message="in runReports: testRepoDirectory: ${testRepoDirectory}" />
@@ -123,8 +123,6 @@
       <arg value="--launcher.suppressErrors" />
       <arg value="-application" />
       <arg value="${REPORT_APP_NAME}" />
-      <arg value="-vm" />
-      <arg value="${JAVA_EXEC_DIR}" />
       <arg value="-vmargs" />
       <arg line="${VM_TEST_ARGS}" />
     </exec>
