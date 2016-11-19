@@ -44,14 +44,16 @@
       src="${FULL_FILENAME}"
       dest="${ECLIPSE_HOME}" />
 
-    <!-- 
-      This .options file mentioned elsewhere is most useful on non-eclipse.org sites, since
-      on eclipse.org, by design, should not go through mirrors, but that's 
-      the purpose of the .options ... to list which mirrors that artifacts come 
-      from. 
+    <!--
+      This .options file mentioned elsewhere is most useful on non-eclipse.org
+      sites, since
+      on eclipse.org, by design, should not go through mirrors, but that's
+      the purpose of the .options ... to list which mirrors that artifacts
+      come
+      from.
     -->
-  	
-    <!-- Weird this chmod is required? Maybe an ant bug? Maybe no longer 
+
+    <!-- Weird this chmod is required? Maybe an ant bug? Maybe no longer
       needed? (That is, maybe an early bug in packages?) -->
     <chmod
       file="${ECLIPSE_HOME}/eclipse/eclipse"
@@ -143,7 +145,7 @@
     <sequential>
       <echo message="execute git in @{repodir}" />
       <echo message="git config @{configKey} @{configValue}" />
-      <!-- We list "before and after" just to learn more about the system. 
+      <!-- We list "before and after" just to learn more about the system.
         We
         will not always need to do that. -->
       <exec
@@ -221,9 +223,9 @@
   <target
     name="runAggregatorCleanBuild"
     depends="init,rewriteRepositoryURL,installAggregatorAndTools,installTestsFromP2Repo">
-    <!-- If not otherwise set in properties file, use these values. Note 
+    <!-- If not otherwise set in properties file, use these values. Note
       the
-      build.eclipse.org production machine must override these values for 
+      build.eclipse.org production machine must override these values for
       property
       values appropriate for it (namely production.properties). -->
     <!-- We no longer "trust" Eclipse and Equinox repos. -trustedContributions
@@ -234,15 +236,15 @@
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
     <!-- Important: on any non-production machines it is important to _not_
       use eclipse.p2.mirrors=false, so this value should be supplied by calling
-      script's properties. Note, we include '-vmargs' here, in case there 
+      script's properties. Note, we include '-vmargs' here, in case there
       are not
-      any. Not sure if the use of -vmargs _requires_ arguments or not, but 
+      any. Not sure if the use of -vmargs _requires_ arguments or not, but
       probably
-      would. note: -Declipse.p2.MD5Check=false may be needed as a workaround 
+      would. note: -Declipse.p2.MD5Check=false may be needed as a workaround
       for
-      bug [253713] (should not actually be required ... but have left note 
+      bug [253713] (should not actually be required ... but have left note
       for
-      historical reference) note: rememeber that JAVA_6 should not be used 
+      historical reference) note: rememeber that JAVA_6 should not be used
       for
       jar processor, see for example, bug 244603 and bug 279596. -->
 
@@ -253,9 +255,9 @@
       failonerror="false"
       resultproperty="buildStatus">
 
-      <!-- Adding -consolelog makes for too much, unneeded output, since 
+      <!-- Adding -consolelog makes for too much, unneeded output, since
         the
-        aggregator produces its verbose own output, slightly cleaner. <arg 
+        aggregator produces its verbose own output, slightly cleaner. <arg
         value="-consolelog"
         /> -->
       <arg value="-nosplash" />
@@ -309,7 +311,7 @@
   <target
     name="runTests"
     depends="init,rewriteRepositoryURL,installAggregatorAndTools,installTestsFromP2Repo,initRunTestsXML"
-  	if="toolsAvailable" >
+    if="toolsAvailable">
 
     <ant
       antfile="${runTestsXML}"
@@ -344,7 +346,7 @@
   </target>
 
   <!-- Note: many tests would not be valid on "cached" version of repo, but,
-    some might? Currently no tests are called, but, we might alter, so we 
+    some might? Currently no tests are called, but, we might alter, so we
     make
     sure installed now, in anticipation. -->
   <target
@@ -355,17 +357,21 @@
       name="AGG_APP_ARGS"
       value="${AGGREGATOR_APP_BASE_ARGS} --action BUILD" />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
-    <!-- 
+    <!--
       Important: on any non-production machines it is important to _not_
       use eclipse.p2.mirrors=false, so this value should be supplied by calling
-      script's properties. Note, we include '-vmargs' here, in case there 
-      are not any. Not sure if the use of -vmargs _requires_ arguments or not, but 
-      probably would. note: -Declipse.p2.MD5Check=false may be needed as a workaround 
-      for bug [253713] (should not be required any longer ... but have left note 
-      for historical reference) Another historical note, we used to "force" 
-      JAVA_5 to be be used for jar processor, see for example, bug 244603 and bug 279596.
-      But we have not "forced" everyone to use Java 8. 
-      -->
+      script's properties. Note, we include '-vmargs' here, in case there
+      are not any. Not sure if the use of -vmargs _requires_ arguments or
+      not, but
+      probably would. note: -Declipse.p2.MD5Check=false may be needed as
+      a workaround
+      for bug [253713] (should not be required any longer ... but have left
+      note
+      for historical reference) Another historical note, we used to "force"
+      JAVA_5 to be be used for jar processor, see for example, bug 244603
+      and bug 279596.
+      But we have not "forced" everyone to use Java 8.
+    -->
 
     <exec
       executable="${eclipseExecutable}"
@@ -374,9 +380,9 @@
       resultproperty="buildStatus">
       <arg value="-debug" />
       <arg value="file://${BUILD_HOME_DIR}/p2options/.options" />
-      <!-- 
-        Adding -consolelog makes for too much, unneeded output, since 
-        the aggregator produces its verbose own output, slightly cleaner. 
+      <!--
+        Adding -consolelog makes for too much, unneeded output, since
+        the aggregator produces its verbose own output, slightly cleaner.
       -->
       <arg value="-nosplash" />
       <arg value="-data" />
@@ -411,12 +417,12 @@
 
   </target>
 
-  <!-- 
+  <!--
     Note, we currently have no "tests" for the "validate only" case, but
-    we could, might someday, so we go ahead an install, in anticipation. 
-    For example, we might simply test that all aggrcon files specify 
-    unique URL (to simple repository) or that "versions" are 
-    specified in *.aggrcon file. 
+    we could, might someday, so we go ahead an install, in anticipation.
+    For example, we might simply test that all aggrcon files specify
+    unique URL (to simple repository) or that "versions" are
+    specified in *.aggrcon file.
   -->
   <target
     name="runAggregatorValidateOnly"
@@ -434,12 +440,13 @@
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
-      <!-- 
-      In case extra tracing is desired: 
-      <arg value="file://${BUILD_HOME}/org.eclipse.simrel.tools/p2options/.options" /> 
+      <!--
+        In case extra tracing is desired:
+        <arg value="file://${BUILD_HOME}/org.eclipse.simrel.tools/p2options/.options"
+        />
       -->
-      <!-- 
-        Adding -consolelog makes for too much, unneeded output, since 
+      <!--
+        Adding -consolelog makes for too much, unneeded output, since
         the aggregator produces its verbose own output, slightly cleaner.
       -->
       <arg value="-nosplash" />
@@ -479,7 +486,7 @@
   <target
     name="initRunTestsXML"
     depends="getBuildToolsDir"
-  	if="toolsAvailable"
+    if="toolsAvailable"
     unless="runTestsXML">
     <path id="runTests.paths">
       <fileset
@@ -507,13 +514,13 @@
 
 
     <!-- We assign a reasonable value for local builds, but for production
-      builds should be .../production.properties This property file name 
+      builds should be .../production.properties This property file name
       is itself
-      a property, so it can be overridden on one machine versus another. 
+      a property, so it can be overridden on one machine versus another.
       We do
-      it this way, instead of just specifying -propertyFile on command line, 
+      it this way, instead of just specifying -propertyFile on command line,
       so
-      that the property values can be "nested" in other property values and 
+      that the property values can be "nested" in other property values and
       evaluated
       lazily. -->
     <property
@@ -558,27 +565,27 @@
 
     <!-- git_protocol should be changed to somethign like "file://" for production
       builds, for efficiency and to avoid problems when the "internal" network
-      is down. (Note no trailing slash). It can be added to a local copy 
+      is down. (Note no trailing slash). It can be added to a local copy
       of 'aggrPropertyFile' -->
     <property
       name="git_protocol"
       value="git://git.eclipse.org" />
 
-    <!-- rewriteRepositoryURLValue is an important variable, passed in through
-      production.properties. It is the trigger to change http:// values, 
-      to file://
-      values. At one point, we needed, unrewriteMapsLine, to know how to 
-      "change
-      back" and now use commonRepositoryDownloadURLValue to know "what to 
-      look
-      for" to change to rewriteRepositoryURLValue, but this should not be 
-      needed
-      to be changed, since we make the strong assumption that, in *.aggrcon 
-      files,
-      this string occurs only in repository location attributes. If not true, 
-      more
-      complex parsing/replacement would be required. -->
-
+    <!--
+      rewriteRepositoryURLValue is an important variable, passed in through
+      production.properties. It is the trigger to change http:// values,
+      to file:// values. At one point, we needed, unrewriteMapsLine, to know
+      how to
+      "change back" and now use commonRepositoryDownloadURLValue to know
+      "what to
+      look for" to change to rewriteRepositoryURLValue, but this should not
+      be
+      needed to be changed, since we make the strong assumption that, in
+      *.aggrcon
+      files, this string occurs only in repository location attributes. If
+      not true,
+      more complex parsing/replacement would be required.
+    -->
     <property
       name="commonRepositoryDownloadURLValue"
       value="http://download.eclipse.org" />
@@ -587,37 +594,16 @@
       <available file="${BUILD_MODEL_DIR}/.git" />
     </condition>
 
-    <!-- By default we assume "master". Therefore, for update releases we 
-      need
-      to specify BRANCH_BUILD on command line, such as -DBUILD_BRANCH=Neon_maintenance -->
-    <property
-      name="BRANCH_BUILD"
-      value="master" />
-
-    <!-- three sources for "commit or Branch" for the main 'commit'. -->
-    <condition
-      property="commitOrBranch"
-      value="${GERRIT_BRANCH}">
-      <isset property="GERRIT_BRANCH" />
-    </condition>
-    <condition
-      property="commitOrBranch"
-      value="${commit}"
-      else="${BRANCH_BUILD}">
-      <isset property="commit" />
-    </condition>
-
-
-
     <property
       name="eclipseWorkspace"
       value="${BUILD_HOME}/eclipseworkingspace" />
 
-    <!-- If the eclipse workspace exists, remove it, to make sure we are 
-      starting
-      "fresh". Eclipse will create it. Be sure some "archive artifacts" job 
-      saves
-      it away, if desired, just for it's ".log", if nothing else. -->
+    <!--
+      If the eclipse workspace exists, remove it, to make sure we are
+      starting "fresh". Eclipse will create it. Be sure some "archive
+      artifacts" job saves it away, if desired, just for it's ".log",
+      if nothing else.
+    -->
     <delete
       dir="${eclipseWorkspace}"
       quiet="true" />
@@ -643,7 +629,7 @@
       type="dir"
       property="eclipseExists" />
 
-    <!-- set installEclipseAndTools on command line to force a reinstall, 
+    <!-- set installEclipseAndTools on command line to force a reinstall,
       is
       only done if not installed yet. -->
     <condition property="installEclipseAndTools">
@@ -683,9 +669,9 @@
       name="hostForURL"
       value="https://hudson.eclipse.org" />
 
-    <!-- TODO: this will not be correct for local builds, probably. Could 
+    <!-- TODO: this will not be correct for local builds, probably. Could
       do
-      more to detect "local builds" and either not set, or set to correct 
+      more to detect "local builds" and either not set, or set to correct
       values
       for a "local hudson". -->
     <property
@@ -693,24 +679,24 @@
       value="${hostForURL}/simrel/job/${jobName}/${jobNumber}/console" />
 
     <!-- These are the arguments to the aggregator that are constant, whether
-      doing "production build" or "local build". If doing production build, 
+      doing "production build" or "local build". If doing production build,
       then
-      is also needs the &dash;$dash;production argument (it is the one that 
+      is also needs the &dash;$dash;production argument (it is the one that
       cuases
-      "blame mail" to be sent). If PRODUCTION is not set externally (such 
+      "blame mail" to be sent). If PRODUCTION is not set externally (such
       as on
-      command line, or in a property file, we set it to blank here to avoid 
+      command line, or in a property file, we set it to blank here to avoid
       the
-      literal '${PRODUCTION} from being passed as an argument. Be sure to 
+      literal '${PRODUCTION} from being passed as an argument. Be sure to
       udpate
       emailFrom as "build master" changes. -->
     <property
       name="PRODUCTION"
       value="" />
     <!-- In the distant past, we have also used these arguments. The maven
-      result one was always experimental. We have also learned it it better 
+      result one was always experimental. We have also learned it it better
       not
-      to "trust" any repository. Can only use one or the other, not both 
+      to "trust" any repository. Can only use one or the other, not both
       &dash;&dash;mavenResult
       &dash;&dash;trustedContributions Eclipse,Equinox -->
     <property
@@ -721,7 +707,7 @@
     <echo message="git_protocol: ${git_protocol}" />
     <echo message="PRODUCTION: ${PRODUCTION}" />
     <echo message="rewriteRepositoryURLValue: ${rewriteRepositoryURLValue}" />
-    <echo message="commitOrBranch: ${commitOrBranch}" />
+    <echo message="buildModelCommit: ${buildModelCommit}" />
     <echo message="toolsRepoCommit: ${toolsRepoCommit}" />
     <echo message="aggrPropertyFile: ${aggrPropertyFile}" />
     <echo message="buildId: ${buildTimestamp}" />
@@ -741,7 +727,7 @@
     <echo message=" = = = = = = = = = = = = " />
     <echoproperties />
 
-    <!-- remove "build failed" status file, if there is one from previous 
+    <!-- remove "build failed" status file, if there is one from previous
       run. -->
     <delete
       failonerror="true"
@@ -898,7 +884,7 @@
 
     <propertyfile file="${BUILD_INFO_DIR}/buildInfo.properties">
       <entry
-        key="commit"
+        key="buildModelCommit"
         value="${buildModelCommit}" />
       <entry
         key="toolsRepoCommit"
@@ -917,7 +903,7 @@
         value="${buildTimestamp}" />
     </propertyfile>
     <!-- echo the key ones to end of log, just to have redundant record. -->
-    <echo message="commit: ${buildModelCommit}" />
+    <echo message="buildModelCommit: ${buildModelCommit}" />
     <echo message="toolsRepoCommit: ${toolsRepoCommit}" />
     <echo message="triggerJobName: ${jobName}" />
     <echo message="triggerJobNumber: ${jobNumber}" />
@@ -935,7 +921,8 @@
     <git-rev-parse
       repodir="${BUILD_MODEL_DIR}"
       returnproperty="buildModelCommit" />
-    <echo message="In target, buildModelCommit: ${buildModelCommit}" />
+    <echo
+      message="In target gitRevParseModel, buildModelCommit: ${buildModelCommit}" />
   </target>
   <target
     name="gitRevParseTools"
@@ -963,9 +950,9 @@
     if="saveAndInstallEclipseAndTools"
     unless="previousSaved">
 
-    <!-- Remember, old, saved versions may have to be maually cleaned up, 
+    <!-- Remember, old, saved versions may have to be maually cleaned up,
       from
-      time to time. But probably handled well enough by an occasional, manual 
+      time to time. But probably handled well enough by an occasional, manual
       "clean
       workspace" from Hudson's web interface. -->
     <move
