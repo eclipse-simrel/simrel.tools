@@ -861,8 +861,14 @@
     <property
       name="BUILD_INFO_DIR"
       value="${AGGREGATOR_RESULTS}/final/buildInfo" />
-    <mkdir dir="${BUILD_INFO_DIR}" />
-
+  	<!-- 
+  	  Note: The propertyfile task literally edits the properties, 
+  	  if the file already exists, does not create a new one. Therefore 
+  	  we delete it first.
+  	-->
+    <delete dir="${BUILD_INFO_DIR}" />
+  	<mkdir dir="${BUILD_INFO_DIR}" />
+    
     <propertyfile file="${BUILD_INFO_DIR}/buildInfo.properties">
       <entry
         key="buildModelCommit"
