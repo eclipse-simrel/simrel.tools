@@ -422,10 +422,11 @@
     For example, we might simply test that all aggrcon files specify
     unique URL (to simple repository) or that "versions" are
     specified in *.aggrcon file.
+    BUT, since none now, have removed installTestsFromP2Repo,initRunTestsXML from depends line.
   -->
   <target
     name="runAggregatorValidateOnly"
-    depends="init,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromP2Repo,initRunTestsXML">
+    depends="init,rewriteRepositoryURL,installAggregatorAndTools">
 
     <property
       name="AGG_APP_ARGS"
