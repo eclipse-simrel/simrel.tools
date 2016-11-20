@@ -509,7 +509,7 @@
   </target>
   <target
     name="init"
-    depends="getJDKSettings, getBuildTimestamp, getJobName, getJobNumber, getBUILD_HOME, getBuildToolsDir, gitRevParseTools, getBuildModelDir, gitRevParseModel"
+    depends="getJDKSettings, initBranch, getBuildTimestamp, getJobName, getJobNumber, getBUILD_HOME, getBuildToolsDir, gitRevParseTools, getBuildModelDir, gitRevParseModel"
     unless="isInitialized">
 
     <!-- We assign a reasonable value for local builds, but for production
@@ -738,8 +738,7 @@
         pattern="yyyy-MM-dd_HH-mm-ss"
         timezone="UTC_TIME" />
     </tstamp>
-    <echo
-      message="Using Ant computed timestamp (since not running on Hudson): ${buildTimestamp}." />
+    <echo message="Using Ant computed timestamp (since not running on Hudson): ${buildTimestamp}." />
   </target>
 
   <target
@@ -810,8 +809,7 @@
     <property
       name="BUILD_HOME"
       value="${env.WORKSPACE}" />
-    <echo
-      message="Setting BUILD_HOME from Hudson Builder WORKSPACE: ${BUILD_HOME}" />
+    <echo message="Setting BUILD_HOME from Hudson Builder WORKSPACE: ${BUILD_HOME}" />
   </target>
 
 
@@ -832,8 +830,7 @@
     <echo message="Rewrote repository location URLs ..." />
     <echo message="        From: ${commonRepositoryDownloadURLValue}" />
     <echo message="          To: ${rewriteRepositoryURLValue}" />
-    <echo
-      message="   Excluding no files since no composite artifacts, just agregate" />
+    <echo message="   Excluding no files since no composite artifacts, just agregate" />
     <!-- <echo message=" Excluding: ep.aggrcon"/> <echo message=" Excluding:
       ep.aggrcon, equinox.aggrcon"/> -->
     <property
@@ -873,8 +870,8 @@
   	  we delete it first.
   	-->
     <delete dir="${BUILD_INFO_DIR}" />
-  	<mkdir dir="${BUILD_INFO_DIR}" />
-    
+    <mkdir dir="${BUILD_INFO_DIR}" />
+
     <propertyfile file="${BUILD_INFO_DIR}/buildInfo.properties">
       <entry
         key="buildModelCommit"
@@ -914,8 +911,7 @@
     <git-rev-parse
       repodir="${BUILD_MODEL_DIR}"
       returnproperty="buildModelCommit" />
-    <echo
-      message="In target gitRevParseModel, buildModelCommit: ${buildModelCommit}" />
+    <echo message="In target gitRevParseModel, buildModelCommit: ${buildModelCommit}" />
   </target>
   <target
     name="gitRevParseTools"
@@ -924,8 +920,7 @@
     <git-rev-parse
       repodir="${BUILD_TOOLS_DIR}"
       returnproperty="toolsRepoCommit" />
-    <echo
-      message="In target gitRevParseTools, toolsRepoCommit: ${toolsRepoCommit}" />
+    <echo message="In target gitRevParseTools, toolsRepoCommit: ${toolsRepoCommit}" />
   </target>
 
   <target name="default">
@@ -999,10 +994,6 @@
       <isset property="commit" />
     </condition>
 
-
-
-
-
     <!-- While Hudson normall does clone and 'pull', we "check" here to make
       sure. In particular, in some cases, a build might be triggered by a
       change
@@ -1017,8 +1008,7 @@
     <git-checkout
       dir="${BUILD_MODEL_DIR}"
       commit="${commitOrBranch}" />
-    <echo
-      message="checked out ${commitOrBranch} of org.eclipse.simrel.build into ${BUILD_MODEL_DIR}" />
+    <echo message="checked out ${commitOrBranch} of org.eclipse.simrel.build into ${BUILD_MODEL_DIR}" />
 
     <property
       name="modelRetrived"
@@ -1047,8 +1037,7 @@
       dir="${BUILD_MODEL_DIR}"
       branch="${commitOrBranch}"
       refspec="${GERRIT_REFSPEC}" />
-    <echo
-      message="checked out ${commitOrBranch} with ${GERRIT_REFSPEC} for org.eclipse.simrel.build into ${BUILD_MODEL_DIR}" />
+    <echo message="checked out ${commitOrBranch} with ${GERRIT_REFSPEC} for org.eclipse.simrel.build into ${BUILD_MODEL_DIR}" />
 
     <property
       name="modelRetrived"
@@ -1060,15 +1049,13 @@
     <attribute name="branch" />
     <sequential>
       <echo message="execute git in @{dir}" />
-      <echo
-        message="git clone -b @{branch} @{repository} --config core.autocrlf=input --config merge.defaultToUpstream=true" />
+      <echo message="git clone -b @{branch} @{repository} --config core.autocrlf=input --config merge.defaultToUpstream=true" />
       <exec
         executable="git"
         failonerror="true"
         resultproperty="cloneResult"
         dir="@{dir}">
-        <arg
-          line="clone -b @{branch} @{repository} --config core.autocrlf=input --config merge.defaultToUpstream=true" />
+        <arg line="clone -b @{branch} @{repository} --config core.autocrlf=input --config merge.defaultToUpstream=true" />
       </exec>
       <antcall target="checkStatus">
         <param
@@ -1196,8 +1183,7 @@
     <attribute name="branch" />
     <attribute name="refspec" />
     <sequential>
-      <echo
-        message="execute git fetch --force origin  +@{refspec}:@{branch} in @{dir}" />
+      <echo message="execute git fetch --force origin  +@{refspec}:@{branch} in @{dir}" />
       <condition property="branchesNotEqual">
         <not>
           <equals
@@ -1260,8 +1246,7 @@
     depends="init"
     unless="localRepoExists">
 
-    <echo
-      message="git clone task for org.eclipse.simrel.build to execute in ${BUILD_HOME} using branch ${BRANCH_BUILD}" />
+    <echo message="git clone task for org.eclipse.simrel.build to execute in ${BUILD_HOME} using branch ${BRANCH_BUILD}" />
 
     <git-clone
       repository="${git_protocol}/gitroot/simrel/org.eclipse.simrel.build.git"
@@ -1297,5 +1282,26 @@
       name="JAVA_EXEC_DIR"
       value="${JAVA_HOME}/jre/bin" />
   </target>
-	
+  <target name="initBranch">
+      <!--
+        By default we assume "master". Therefore, for update releases we
+        need to specify BRANCH_BUILD on command line, such as -DBUILD_BRANCH=Neon_maintenance -->
+    <property
+      name="BRANCH_BUILD"
+      value="master" />
+
+      <!-- three sources for "commit or Branch" for the main 'commit'. -->
+    <condition
+      property="commitOrBranch"
+      value="${GERRIT_BRANCH}">
+      <isset property="GERRIT_BRANCH" />
+    </condition>
+    <condition
+      property="commitOrBranch"
+      value="${commit}"
+      else="${BRANCH_BUILD}">
+      <isset property="commit" />
+    </condition>
+
+  </target>
 </project>
