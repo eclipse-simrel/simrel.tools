@@ -55,7 +55,7 @@
 
     <!-- Weird this chmod is required? Maybe an ant bug? --> 
     <chmod
-      file="${ECLIPSE_HOME}/cbiAggr/cbiAggr"
+      file="${ECLIPSE_HOME}/eclipse/eclipse"
       perm="ugo+x"
       verbose="true" />
 
@@ -533,7 +533,7 @@
 
     <property
       name="FULL_FILENAME"
-      value="/data/httpd/download.eclipse.org/cbi/updates/aggregator/headless/4.6/I20161119-0315/headless_I20161119-0315_linux.gtk.x86_64.tar.gz" />
+      value="/data/httpd/download.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200/eclipse-platform-4.6.1-linux-gtk-x86_64.tar.gz" />
 
     <property
       name="ECLIPSE_HOME"
@@ -541,7 +541,7 @@
 
     <property
       name="ECLIPSE_EXE"
-      value="${ECLIPSE_HOME}/cbiAggr/cbiAggr" />
+      value="${ECLIPSE_HOME}/eclipse/eclipse" />
 
     <property
       name="AGGREGATOR_RESULTS"
@@ -609,7 +609,7 @@
       value="${ECLIPSE_EXE}" />
 
     <available
-      file="${ECLIPSE_HOME}/cbiAggr"
+      file="${ECLIPSE_HOME}/eclipse"
       type="dir"
       property="eclipseExists" />
 
@@ -944,8 +944,8 @@
       workspace" from Hudson's web interface. -->
     <move
       verbose="true"
-      todir="${ECLIPSE_HOME}/cbiAggr${buildTimestamp}">
-      <fileset dir="${ECLIPSE_HOME}/cbiAggr" />
+      todir="${ECLIPSE_HOME}/eclipse${buildTimestamp}">
+      <fileset dir="${ECLIPSE_HOME}/eclipse" />
     </move>
 
     <property
@@ -961,8 +961,8 @@
     <!-- remember, old ones have to be maually cleaned up, from time to time -->
     <fail unless="buildTimestamp" />
 
-    <move todir="${ECLIPSE_HOME_TEST}/cbiAggr${buildTimestamp}">
-      <fileset dir="${ECLIPSE_HOME_TEST}/cbiAggr" />
+    <move todir="${ECLIPSE_HOME_TEST}/eclipse${buildTimestamp}">
+      <fileset dir="${ECLIPSE_HOME_TEST}/eclipse" />
     </move>
 
   </target>
