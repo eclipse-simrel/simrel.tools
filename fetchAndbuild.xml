@@ -53,13 +53,12 @@
       from.
     -->
 
-    <!-- Weird this chmod is required? Maybe an ant bug? Maybe no longer
-      needed? (That is, maybe an early bug in packages?) 
+    <!-- Weird this chmod is required? Maybe an ant bug? --> 
     <chmod
       file="${ECLIPSE_HOME}/cbiAggr/cbiAggr"
       perm="ugo+x"
       verbose="true" />
--->
+
     <!-- and now get latest -->
     <exec
       executable="${eclipseExecutable}"
