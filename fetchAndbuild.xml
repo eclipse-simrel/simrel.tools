@@ -805,7 +805,8 @@
     unless="BUILD_HOME">
     <property
       name="BUILD_HOME"
-      value="${basedir}" />
+      value="env.BUILD_HOME" />
+    <fail unless="BUILD_HOME" message="BUILD_HOME must be set as env variable, such as to $PWD, if not on Hudson." />
     <echo message="BUILD_HOME set as ${BUILD_HOME}" />
   </target>
 
