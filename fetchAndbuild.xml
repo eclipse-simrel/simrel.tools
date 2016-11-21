@@ -823,9 +823,8 @@
       but in practice typically true. Better is if user
       passes in BUILD_HOME=${PWD} before ant executes.
     -->
-    <property
-      name="BUILD_HOME"
-      value="${basedir}/../" />
+    <dirname property="BUILD_HOME"
+      file="${buildToolsDir}" />
     <echo message="BUILD_HOME set as ${BUILD_HOME}" />
   </target>
 
