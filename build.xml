@@ -72,7 +72,7 @@
     <!-- and now get latest -->
     <exec
       executable="${eclipseExecutable}"
-      dir="${basedir}"
+      dir="${BUILD_HOME}"
       failonerror="true">
       <arg
         line="-data ${eclipseWorkspace}_install_aggr -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_AGG} ${otherArgsAggr} ${vm_args_aggr_settings}" />
@@ -111,7 +111,7 @@
     <!-- install latest feature from repo -->
     <exec
       executable="${eclipseExecutable}"
-      dir="${basedir}"
+      dir="${BUILD_HOME}"
       failonerror="true">
       <arg
         line="-data ${eclipseWorkspace}_installTests -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_TESTS} ${OTHER_ARGS_TESTS} ${vm_args_tests_settings}" />
@@ -148,7 +148,7 @@
     <!-- install latest feature from repo -->
     <exec
       executable="${eclipseExecutable}"
-      dir="${basedir}"
+      dir="${BUILD_HOME}"
       failonerror="true">
       <arg
         line="-data ${eclipseWorkspace}_installRelengTools -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_RELENG} ${OTHER_ARGS_RELENG} ${vm_args_releng_settings}" />
@@ -271,7 +271,7 @@
 
     <exec
       executable="${eclipseExecutable}"
-      dir="${basedir}"
+      dir="${BUILD_HOME}"
       failonerror="false"
       resultproperty="buildStatus">
 
@@ -393,7 +393,7 @@
 
     <exec
       executable="${eclipseExecutable}"
-      dir="${basedir}"
+      dir="${BUILD_HOME}"
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
@@ -452,7 +452,7 @@
 
     <exec
       executable="${eclipseExecutable}"
-      dir="${basedir}"
+      dir="${BUILD_HOME}"
       failonerror="false"
       resultproperty="buildStatus">
       <arg value="-debug" />
@@ -870,9 +870,9 @@
   <target name="createXZformats">
     <exec
       executable="/bin/bash"
-      dir="${basedir}"
+      dir="${BUILD_HOME}"
       failonerror="true">
-      <arg line="convertxz.sh ${AGGREGATOR_RESULTS}/final" />
+      <arg line="${buildToolsDir}/convertxz.sh ${AGGREGATOR_RESULTS}/final" />
     </exec>
   </target>
 
