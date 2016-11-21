@@ -1029,9 +1029,9 @@
       'build', and 'build_clean' can all work on the same revision. -->
 
     <git-checkout
-      dir="${BUILD_MODEL_DIR}"
+      dir="${buildModelDir}"
       commit="${commitOrBranch}" />
-    <echo message="checked out ${commitOrBranch} of org.eclipse.simrel.build into ${BUILD_MODEL_DIR}" />
+    <echo message="checked out ${commitOrBranch} of org.eclipse.simrel.build into ${buildModelDir}" />
 
     <property
       name="modelRetrived"
@@ -1057,10 +1057,10 @@
       'validate',
       'build', and 'build_clean' can all work on the same revision. -->
     <git-checkout-refspec
-      dir="${BUILD_MODEL_DIR}"
+      dir="${buildModelDir}"
       branch="${commitOrBranch}"
       refspec="${GERRIT_REFSPEC}" />
-    <echo message="checked out ${commitOrBranch} with ${GERRIT_REFSPEC} for org.eclipse.simrel.build into ${BUILD_MODEL_DIR}" />
+    <echo message="checked out ${commitOrBranch} with ${GERRIT_REFSPEC} for org.eclipse.simrel.build into ${buildModelDir}" />
 
     <property
       name="modelRetrived"
@@ -1287,10 +1287,10 @@
     depends="init"
     if="localRepoExists"
     unless="buildRepoPulled">
-    <echo message="git pull task to execute in ${BUILD_MODEL_DIR}" />
+    <echo message="git pull task to execute in ${buildModelDir}" />
     <!-- in macro "pull", we actually do a fetch, then check out -->
     <git-pull
-      dir="${BUILD_MODEL_DIR}"
+      dir="${buildModelDir}"
       branch="${BRANCH_BUILD}" />
     <property
       name="buildRepoPulled"
