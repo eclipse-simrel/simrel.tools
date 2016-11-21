@@ -523,7 +523,7 @@
   </target>
   <target
     name="init"
-    depends="getBuildTimestamp, getJobName, getJobNumber, getBUILD_HOME, getBuildToolsDir, gitRevParseTools, getBuildModelDir, gitRevParseModel"
+    depends="getBUILD_HOME, getBuildTimestamp, getJobName, getJobNumber, getBuildToolsDir, gitRevParseTools, getBuildModelDir, gitRevParseModel"
     unless="isInitialized">
 
     <!-- We assign a reasonable value for local builds, but for production

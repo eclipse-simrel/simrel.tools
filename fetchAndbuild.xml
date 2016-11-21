@@ -529,7 +529,7 @@
   </target>
   <target
     name="init"
-    depends="getJDKSettings, getBuildTimestamp, getJobName, getJobNumber, getBUILD_HOME, getBuildToolsDir, gitRevParseTools, getBuildModelDir, gitRevParseModel"
+    depends="getJDKSettings, getBUILD_HOME, getBuildTimestamp, getJobName, getJobNumber, getBuildToolsDir, gitRevParseTools, getBuildModelDir, gitRevParseModel"
     unless="isInitialized">
 
     <!-- We assign a reasonable value for local builds, but for production
@@ -962,39 +962,13 @@
 
   <target
     name="getModelFromGit"
-    depends="init, initBranch, cloneRepo, configRepo, pullRepo, getModelFromGerrit"
+    depends="getBUILD_HOME, init, initBranch, cloneRepo, configRepo, pullRepo, getModelFromGerrit"
     unless="modelRetrived">
 
-    <!--
-      By default we assume "master". Therefore, for update releases we
-      need to specify BRANCH_BUILD on command line, such as -DBUILD_BRANCH=Neon_maintenance -->
-    <property
-      name="BRANCH_BUILD"
-      value="master" />
-
-    <!-- three sources for "commit or Branch" for the main 'commit'. -->
-    <condition
-      property="commitOrBranch"
-      value="${GERRIT_BRANCH}">
-      <isset property="GERRIT_BRANCH" />
-    </condition>
-    <condition
-      property="commitOrBranch"
-      value="${commit}"
-      else="${BRANCH_BUILD}">
-      <isset property="commit" />
-    </condition>
-
-    <!-- While Hudson normall does clone and 'pull', we "check" here to make
-      sure. In particular, in some cases, a build might be triggered by a
-      change
-      in "tools" repo, so even then we want to make sure to get 'latest'
-      of "build"
-      repo. In both cases, we *then* want to get a specific revision, if
-      passed
-      to us by a previous job. This is so that the various jobs we have,
-      'validate',
-      'build', and 'build_clean' can all work on the same revision. -->
+    <!-- While Hudson normall does clone and 'pull'
+         we provide these methods in "fetchAndbuild.xml",
+         to ease some command line methods of running.
+     -->
 
     <git-checkout
       dir="${buildModelDir}"
