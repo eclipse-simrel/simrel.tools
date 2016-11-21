@@ -654,22 +654,6 @@
       </and>
     </condition>
 
-    <!-- set installEclipseTests on command line to force a reinstall, else
-      is done only if not installed yet. -->
-    <condition property="installEclipseTests">
-      <not>
-        <isset property="eclipseTestsExists" />
-      </not>
-    </condition>
-    <!-- saveAndInstallEclipseTests should only be true if "installEclipseTests"
-      are set on command line properties (and a version already exists). -->
-    <condition property="saveAndInstallEclipseTests">
-      <and>
-        <isset property="eclipseTestsExists" />
-        <isset property="installEclipseTests" />
-      </and>
-    </condition>
-
     <!-- note the "https" may have to be "http" on localhost, non-production
       hudson machines -->
     <property
@@ -880,7 +864,7 @@
 
   <target
     name="createBuildinfo"
-    depends="init, getBuildModelDir, gitRevParseModel">
+    depends="init, getBuildModelDir, gitRevParseModel, getBuildToolsDir, gitRevParseTools">
 
     <property
       name="BUILD_INFO_DIR"
@@ -973,22 +957,7 @@
     <property
       name="previousSaved"
       value="true" />
-
   </target>
-
-  <target
-    name="savePreviousTest"
-    depends="init"
-    if="saveAndInstallEclipseTests">
-    <!-- remember, old ones have to be maually cleaned up, from time to time -->
-    <fail unless="buildTimestamp" />
-
-    <move todir="${ECLIPSE_HOME_TEST}/eclipse${buildTimestamp}">
-      <fileset dir="${ECLIPSE_HOME_TEST}/eclipse" />
-    </move>
-
-  </target>
-
 
   <target
     name="getModelFromGit"
