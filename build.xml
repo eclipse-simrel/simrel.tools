@@ -816,17 +816,15 @@
     <property
       name="BUILD_HOME"
       value="${basedir}" />
-    <echo message="Setting BUILD_HOME as Ant basedir: ${BUILD_HOME}" />
+    <echo message="BUILD_HOME set as ${BUILD_HOME}" />
   </target>
 
   <target
     name="getHudsonBUILD_HOME"
     unless="BUILD_HOME">
-
-    <property
-      name="BUILD_HOME"
-      value="${env.WORKSPACE}" />
-    <echo message="Setting BUILD_HOME from Hudson Builder WORKSPACE: ${BUILD_HOME}" />
+    <condition property="BUILD_HOME" value="${env.WORKSPACE}">
+      <isset property="env.WORKSPACE"/>
+    </condition>
   </target>
 
 
