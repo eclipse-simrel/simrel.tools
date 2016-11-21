@@ -813,9 +813,13 @@
     name="getBUILD_HOME"
     depends="getJobName, getHudsonBUILD_HOME"
     unless="BUILD_HOME">
+    <!-- to assume "up" the directory tree is not great, 
+      but in practice typically true. Better is if user
+      passes in BUILD_HOME=${PWD} before ant executes.
+    -->
     <property
       name="BUILD_HOME"
-      value="${basedir}" />
+      value="${basedir}/../" />
     <echo message="BUILD_HOME set as ${BUILD_HOME}" />
   </target>
 
