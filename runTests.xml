@@ -71,12 +71,10 @@
   -->
   <target name="validateOnlyTests">
     <echo message="No validation-only tests, yet" />
-    <echoproperties />
   </target>
 
   <target name="cachedBuildTests">
     <echo message="No cached build tests, yet" />
-    <echoproperties />
   </target>
 
   <target

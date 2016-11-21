@@ -242,7 +242,7 @@
     if they "pass", we promote to "staging". -->
   <target
     name="runAggregatorCleanBuild"
-    depends="init,rewriteRepositoryURL,installAggregatorAndTools,installTestsFromP2Repo">
+    depends="init,rewriteRepositoryURL,installAggregatorAndTools">
     <!-- If not otherwise set in properties file, use these values. Note
       the
       build.eclipse.org production machine must override these values for
@@ -330,7 +330,7 @@
     to run against previous build, and acquire the lock, for that job -->
   <target
     name="runTests"
-    depends="init,rewriteRepositoryURL,installAggregatorAndTools,installTestsFromP2Repo,initRunTestsXML"
+    depends="init,rewriteRepositoryURL,installAggregatorAndTools,initRunTestsXML"
     if="toolsAvailable">
 
     <ant
@@ -371,7 +371,7 @@
     sure installed now, in anticipation. -->
   <target
     name="runAggregatorBuildOnly"
-    depends="init,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromP2Repo,initRunTestsXML">
+    depends="init,rewriteRepositoryURL,installAggregatorAndTools,initRunTestsXML">
 
     <property
       name="AGG_APP_ARGS"
@@ -446,7 +446,7 @@
   -->
   <target
     name="runAggregatorValidateOnly"
-    depends="init,rewriteRepositoryURL,installAggregatorAndTools, installTestsFromP2Repo,initRunTestsXML">
+    depends="init,rewriteRepositoryURL,installAggregatorAndTools,initRunTestsXML">
 
     <property
       name="AGG_APP_ARGS"
