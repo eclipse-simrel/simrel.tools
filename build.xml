@@ -795,11 +795,11 @@
 
   <target
     name="getBUILD_HOME"
-    depends="getJobName, getHudsonBUILD_HOME"
+    depends="getHudsonBUILD_HOME"
     unless="BUILD_HOME">
-    <property
-      name="BUILD_HOME"
-      value="env.BUILD_HOME" />
+    <condition property="BUILD_HOME" value="${env.BUILD_HOME}">
+      <isset property="env.BUILD_HOME"/>
+    </condition>
     <fail unless="BUILD_HOME" message="BUILD_HOME must be set as env variable, such as to $PWD, if not on Hudson." />
     <echo message="BUILD_HOME set as ${BUILD_HOME}" />
   </target>
