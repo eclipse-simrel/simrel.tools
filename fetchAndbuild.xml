@@ -28,13 +28,22 @@
       name="APP_NAME_P2DIRECTOR_AGG"
       value="org.eclipse.equinox.p2.director" />
     <property
-      name="OTHER_ARGS_AGG"
+      name="otherArgsAggr"
       value="-metadataRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.6/ -artifactRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.6/ -installIU org.eclipse.cbi.p2repo.aggregator.engine.feature.feature.group" />
 
+      <!--
+        Remote builds should use eclipse.p2.mirrors=true
+        (the default). But, in some cases may want to add
+        -Declipse.p2.mirrors=false
+      -->
     <property
-      name="VM_ARGS_AGG"
+      name="vm_args_aggr"
       value="-Djava.io.tmpdir=${BUILD_HOME}/tmp" />
-    <!-- -Declipse.p2.mirrors=false -->
+    <condition
+      property="vm_args_aggr_settings"
+      value="-vmargs ${vm_args_aggr}">
+      <isset property="vm_args_aggr" />
+    </condition>
 
     <mkdir dir="${ECLIPSE_HOME}" />
 
@@ -66,7 +75,7 @@
       dir="${basedir}"
       failonerror="true">
       <arg
-        line="-data ${eclipseWorkspace}_install_aggr -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_AGG} ${OTHER_ARGS_AGG} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS_AGG}" />
+        line="-data ${eclipseWorkspace}_install_aggr -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_AGG} ${otherArgsAggr} ${vm_args_aggr_settings}" />
     </exec>
     <property
       name="aggregatorInstalled"
@@ -91,16 +100,21 @@
       value="-metadataRepository ${repoReportURL} -artifactRepository ${repoReportURL} -installIU org.eclipse.cbi.p2repo.analyzers.feature.feature.group" />
 
     <property
-      name="VM_ARGS_TESTS"
+      name="vm_args_tests"
       value="-Djava.io.tmpdir=${BUILD_HOME}/tmp" />
+    <condition
+      property="vm_args_tests_settings"
+      value="-vmargs ${vm_args_tests}">
+      <isset property="vm_args_tests" />
+    </condition>
 
-    <!-- install latest -->
+    <!-- install latest feature from repo -->
     <exec
       executable="${eclipseExecutable}"
       dir="${basedir}"
       failonerror="true">
       <arg
-        line="-data ${eclipseWorkspace}_installTests -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_TESTS} ${OTHER_ARGS_TESTS} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS_TESTS}" />
+        line="-data ${eclipseWorkspace}_installTests -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_TESTS} ${OTHER_ARGS_TESTS} ${vm_args_tests_settings}" />
     </exec>
     <property
       name="testsInstalled"
@@ -122,16 +136,22 @@
       value="-metadataRepository http://download.eclipse.org/webtools/releng/repository/ -artifactRepository http://download.eclipse.org/webtools/releng/repository/ -installIU org.eclipse.wtp.releng.tools.feature.feature.group" />
 
     <property
-      name="VM_ARGS_RELENG"
+      name="vm_args_releng"
       value="-Djava.io.tmpdir=${BUILD_HOME}/tmp" />
 
-    <!-- install latest -->
+    <condition
+      property="vm_args_releng_settings"
+      value="-vmargs ${vm_args_releng}">
+      <isset property="vm_args_releng" />
+    </condition>
+
+    <!-- install latest feature from repo -->
     <exec
       executable="${eclipseExecutable}"
       dir="${basedir}"
       failonerror="true">
       <arg
-        line="-data ${eclipseWorkspace}_installRelengTools -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_RELENG} ${OTHER_ARGS_RELENG} -vm ${JAVA_EXEC_DIR} -vmargs ${VM_ARGS_RELENG}" />
+        line="-data ${eclipseWorkspace}_installRelengTools -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_RELENG} ${OTHER_ARGS_RELENG} ${vm_args_releng_settings}" />
     </exec>
     <property
       name="relengToolsInstalled"
@@ -210,10 +230,10 @@
     name="configRepo"
     depends="init"
     if="localRepoExists">
-    <echo message="git config task to execute in ${BUILD_MODEL_DIR}" />
+    <echo message="git config task to execute in ${buildModelDir}" />
     <!-- in macro "config" we list, then set then list again the configuration. -->
     <git-config
-      repodir="${BUILD_MODEL_DIR}"
+      repodir="${buildModelDir}"
       configKey="core.autocrlf"
       configValue="input" />
   </target>
@@ -272,7 +292,7 @@
       <arg line="${AGG_APP_ARGS}" />
       <arg value="-vm" />
       <arg value="${JAVA_EXEC_DIR}" />
-      <arg line="${BUILDER_VM_ARGS}" />
+      <arg line="${builder_vm_args_settings}" />
     </exec>
 
     <antcall target="checkStatus">
@@ -396,7 +416,7 @@
       <arg line="${AGG_APP_ARGS}" />
       <arg value="-vm" />
       <arg value="${JAVA_EXEC_DIR}" />
-      <arg line="${BUILDER_VM_ARGS}" />
+      <arg line="${builder_vm_args_settings}" />
     </exec>
 
     <antcall target="checkStatus">
@@ -461,7 +481,7 @@
       <arg line="${AGG_APP_ARGS}" />
       <arg value="-vm" />
       <arg value="${JAVA_EXEC_DIR}" />
-      <arg line="${BUILDER_VM_ARGS}" />
+      <arg line="${builder_vm_args_settings}" />
     </exec>
 
     <antcall target="checkStatus">
@@ -490,7 +510,7 @@
     unless="runTestsXML">
     <path id="runTests.paths">
       <fileset
-        dir="${BUILD_TOOLS_DIR}"
+        dir="${buildToolsDir}"
         includes="runTests.xml" />
     </path>
     <property
@@ -501,10 +521,10 @@
 
   <target name="getBuildToolsDir">
     <property
-      name="BUILD_TOOLS_DIR"
+      name="buildToolsDir"
       value="${BUILD_HOME}/org.eclipse.simrel.tools" />
     <available
-      file="${BUILD_TOOLS_DIR}"
+      file="${buildToolsDir}"
       property="toolsAvailable" />
   </target>
   <target
@@ -524,7 +544,7 @@
       lazily. -->
     <property
       name="aggrPropertyFile"
-      value="${BUILD_TOOLS_DIR}/aggr.properties" />
+      value="${buildToolsDir}/aggr.properties" />
 
     <property file="${aggrPropertyFile}" />
 
@@ -576,7 +596,7 @@
       value="http://download.eclipse.org" />
 
     <condition property="localRepoExists">
-      <available file="${BUILD_MODEL_DIR}/.git" />
+      <available file="${buildModelDir}/.git" />
     </condition>
 
     <property
@@ -593,13 +613,16 @@
       dir="${eclipseWorkspace}"
       quiet="true" />
 
-    <!-- Note: we put -vmargs directly in BUILDER_VM_ARGS so that if desired
+    <!-- Note: we put -vmargs directly in builder_vm_args_settings so that if desired
       to not have ANY vmargs, then we will not be left with a dangling (empty)
       -vmargs at the end of eclipse command line. -->
     <property
-      name="BUILDER_VM_ARGS"
-      value="-vmargs -Djava.io.tmpdir=${BUILD_HOME}/tmp" />
-    <echo message="BUILDER_VM_ARGS: ${BUILDER_VM_ARGS}" />
+      name="builder_vm_args"
+      value="-Djava.io.tmpdir=${BUILD_HOME}/tmp" />
+    <condition property="builder_vm_args_settings" value="-vmargs ${builder_vm_args}">
+        <isset property="builder_vm_args"/>
+    </condition>
+
     <!-- tmp directory must exist, for Java to use it -->
     <mkdir dir="${BUILD_HOME}/tmp" />
     <echo message="Made directory ${BUILD_HOME}/tmp" />
@@ -615,8 +638,7 @@
       property="eclipseExists" />
 
     <!-- set installEclipseAndTools on command line to force a reinstall,
-      is
-      only done if not installed yet. -->
+      Otherwise, only installed if not installed yet. -->
     <condition property="installEclipseAndTools">
       <not>
         <isset property="eclipseExists" />
@@ -648,8 +670,8 @@
       </and>
     </condition>
 
-    <!-- note the "https" may have to be "http" on localhost, non production
-      machines -->
+    <!-- note the "https" may have to be "http" on localhost, non-production
+      hudson machines -->
     <property
       name="hostForURL"
       value="https://hudson.eclipse.org" />
@@ -686,7 +708,7 @@
       &dash;&dash;trustedContributions Eclipse,Equinox -->
     <property
       name="AGGREGATOR_APP_BASE_ARGS"
-      value="${PRODUCTION} --buildModel ${BUILD_MODEL_DIR}/simrel.aggr --buildRoot ${AGGREGATOR_RESULTS} --eclipseLogLevel DEBUG --logLevel DEBUG --emailFrom david_williams@eclipse.org --emailFromName ${release}Aggregator --logURL ${LOG_URL} --subjectPrefix ${release}Aggregation" />
+      value="${PRODUCTION} --buildModel ${buildModelDir}/simrel.aggr --buildRoot ${AGGREGATOR_RESULTS} --eclipseLogLevel DEBUG --logLevel DEBUG --emailFrom david_williams@eclipse.org --emailFromName ${release}Aggregator --logURL ${LOG_URL} --subjectPrefix ${release}Aggregation" />
 
     <echo message="= = = Properties at end of init = = = " />
     <echo message="git_protocol: ${git_protocol}" />
@@ -707,7 +729,8 @@
     <echo message="jobNumber: ${jobNumber}" />
     <echo message="ECLIPSE_EXE:  ${ECLIPSE_EXE}" />
     <echo message="eclipseExists: ${eclipseExists}" />
-    <echo message="BUILDER_VM_ARGS: ${BUILDER_VM_ARGS}" />
+    <echo message="builder_vm_args: ${builder_vm_args}" />
+    <echo message="builder_vm_args_settings: ${builder_vm_args_settings}" />
     <echo message=" = = = = = = = = = = = = " />
     <echoproperties />
 
@@ -821,7 +844,7 @@
     if="rewriteRepositoryURLValue"
     unless="rewroteURLs">
     <replace
-      dir="${BUILD_MODEL_DIR}"
+      dir="${buildModelDir}"
       token="${commonRepositoryDownloadURLValue}"
       value="${rewriteRepositoryURLValue}">
       <include name="*.aggrcon" />
@@ -841,10 +864,10 @@
 
   <target name="getBuildModelDir">
     <property
-      name="BUILD_MODEL_DIR"
+      name="buildModelDir"
       value="${BUILD_HOME}/org.eclipse.simrel.build" />
     <available
-      file="${BUILD_MODEL_DIR}"
+      file="${buildModelDir}"
       property="buildModelAvailable" />
   </target>
 
@@ -909,7 +932,7 @@
     depends="getBuildModelDir"
     if="buildModelAvailable">
     <git-rev-parse
-      repodir="${BUILD_MODEL_DIR}"
+      repodir="${buildModelDir}"
       returnproperty="buildModelCommit" />
     <echo message="In target gitRevParseModel, buildModelCommit: ${buildModelCommit}" />
   </target>
@@ -918,7 +941,7 @@
     depends="getBuildToolsDir"
     if="toolsAvailable">
     <git-rev-parse
-      repodir="${BUILD_TOOLS_DIR}"
+      repodir="${buildToolsDir}"
       returnproperty="toolsRepoCommit" />
     <echo message="In target gitRevParseTools, toolsRepoCommit: ${toolsRepoCommit}" />
   </target>
@@ -1281,6 +1304,9 @@
     <property
       name="JAVA_EXEC_DIR"
       value="${JAVA_HOME}/jre/bin" />
+    <property
+      name="vm_setting"
+      value="-vm ${JAVA_EXEC_DIR}" />
   </target>
   <target name="initBranch">
       <!--
