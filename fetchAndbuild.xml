@@ -619,7 +619,7 @@
       -vmargs at the end of eclipse command line. -->
     <property
       name="builder_vm_args"
-      value="-Djava.io.tmpdir=${BUILD_HOME}/tmp" />
+      value="-Xmx1024M -Djava.io.tmpdir=${BUILD_HOME}/tmp" />
     <condition property="builder_vm_args_settings" value="-vmargs ${builder_vm_args}">
         <isset property="builder_vm_args"/>
     </condition>
