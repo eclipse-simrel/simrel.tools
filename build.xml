@@ -93,7 +93,7 @@
       value="org.eclipse.equinox.p2.director" />
     <property
       name="repoReportURL"
-      value="https://hudson.eclipse.org/cbi/job/cbi.p2repo.analyzers.build/9/artifact/output/p2repo/" />
+      value="https://hudson.eclipse.org/cbi/job/cbi.p2repo.analyzers.build/lastSuccessfulBuild/artifact/output/p2repo/" />
 
     <property
       name="OTHER_ARGS_TESTS"
@@ -546,9 +546,15 @@
       unless="release"
       message="release must be specified for this script, such as -Drelease=mars" />
 
+      <!-- 
+      The "binary platform" is enough, for now, and since smaller than the SDK,
+      it is recommended as the "base" to install tools into. But a typical "SDK" has been
+      left in this comment in case users are doing more than a normal "aggregation build".
+      value="/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200/eclipse-SDK-4.6.1-linux-gtk-x86_64.tar.gz" 
+      -->
     <property
       name="FULL_FILENAME"
-      value="/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200/eclipse-SDK-4.6.1-linux-gtk-x86_64.tar.gz" />
+      value="/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200/eclipse-platform-4.6.1-linux-gtk-x86_64.tar.gz" />
 
     <property
       name="ECLIPSE_HOME"
@@ -612,7 +618,7 @@
       -vmargs at the end of eclipse command line. -->
     <property
       name="builder_vm_args"
-      value="-Djava.io.tmpdir=${BUILD_HOME}/tmp" />
+      value="-Xmx1024M -Djava.io.tmpdir=${BUILD_HOME}/tmp" />
     <condition property="builder_vm_args_settings" value="-vmargs ${builder_vm_args}">
         <isset property="builder_vm_args"/>
     </condition>
