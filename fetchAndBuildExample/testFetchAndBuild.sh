@@ -55,13 +55,16 @@ export PATH=${JAVA_EXEC_DIR}:${ANT_HOME}/bin/:$PATH
 #
 # In addition to the targets, the following are some handy parameters which 
 # may be specified to override the defaults.
-#  -DFULL_FILENAME=/absolutePath/ofLocalPlatformBinary.tar.gz
+#  -DrootLocation=file:///absolutePath/ofLocal/PlatformBinary.tar.gz
 #     The scripts must be able to find a standard "Eclipse Platform" to install into.
 #     The default is what it would be if running on the Eclipse.org infrastructure, so 
 #     if running locally this value (correct location of local version) will need to be provided.
 # -Drelease=oxygen
 #     The 'release' value is typically required, even if building against 'master',
 #     since its "correct" value would change from year to year.
+#     While we could "assume" a value, if the value is wrong, it has the potential 
+#     to "damage" data in staging repo (i.e. replaces with wrong thing), hence
+#     we require it to be explicit.
 # -DBUILD_BRANCH=Neon_maintenance
 #     'BUILD_BRANCH' is assumed to be "master" unless overridden on command line.
 #     The value of 'release' should of course match whatever branch is being built.

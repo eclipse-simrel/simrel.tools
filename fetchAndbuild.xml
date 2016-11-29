@@ -47,10 +47,12 @@
 
     <mkdir dir="${ECLIPSE_HOME}" />
 
+    <get src="${platformResource}" dest="${localPrereqCache}" usetimestamp="true" />
+
     <untar
       compression="gzip"
       overwrite="true"
-      src="${FULL_FILENAME}"
+      src="${localPrereqCache}/${fileName}"
       dest="${ECLIPSE_HOME}" />
 
     <!--
@@ -69,7 +71,7 @@
       perm="ugo+x"
       verbose="true" />
 
-    <!-- and now get latest -->
+    <!-- and now get latest version of aggregator -->
     <exec
       executable="${eclipseExecutable}"
       dir="${basedir}"
@@ -558,9 +560,28 @@
       left in this comment in case users are doing more than a normal "aggregation build".
       value="/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200/eclipse-SDK-4.6.1-linux-gtk-x86_64.tar.gz" 
       -->
+      <!--
+      Note: if there is local file system version of the prereq platform, 
+      if it faster to specify file://<location of platform>.
+      <property name="rootLocation" value="file:///home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200" />
+      We use "http://" by default to make it easy to "run from anywhere", but
+      on the production machine, in production.properties, we specify the "file://" form.
+      -->
+
     <property
-      name="FULL_FILENAME"
-      value="/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200/eclipse-platform-4.6.1-linux-gtk-x86_64.tar.gz" />
+      name="rootLocation"
+      value="http://download.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200" />
+    <property
+      name="fileName"
+      value="eclipse-SDK-4.6.1-linux-gtk-x86_64.tar.gz" />
+    <property
+      name="localPrereqCache"
+      value="${BUILD_HOME}/localPrereqs" />
+    <property
+      name="platformResource"
+      value="${rootLocation}/${fileName}" /> 
+      <!-- directory must exist before "get" uses it or else the file is given name of "localPrereqs" -->
+    <mkdir dir="${localPrereqCache}" />
 
 
     <property
@@ -626,7 +647,9 @@
     <property
       name="builder_vm_args"
       value="-Xmx1024M -Djava.io.tmpdir=${BUILD_HOME}/tmp" />
-    <condition property="builder_vm_args_settings" value="-vmargs ${builder_vm_args}">
+    <condition
+      property="builder_vm_args_settings"
+      value="-vmargs ${builder_vm_args}">
         <isset property="builder_vm_args"/>
     </condition>
 
@@ -810,17 +833,23 @@
     name="getBUILD_HOME"
     depends="getHudsonBUILD_HOME"
     unless="BUILD_HOME">
-    <condition property="BUILD_HOME" value="${env.BUILD_HOME}">
+    <condition
+      property="BUILD_HOME"
+      value="${env.BUILD_HOME}">
       <isset property="env.BUILD_HOME"/>
     </condition>
-    <fail unless="BUILD_HOME" message="BUILD_HOME must be set as env variable, such as to $PWD, if not on Hudson." />
+    <fail
+      unless="BUILD_HOME"
+      message="BUILD_HOME must be set as env variable, such as to $PWD, if not on Hudson." />
     <echo message="BUILD_HOME set as ${BUILD_HOME}" />
   </target>
 
   <target
     name="getHudsonBUILD_HOME"
     unless="BUILD_HOME">
-    <condition property="BUILD_HOME" value="${env.WORKSPACE}">
+    <condition
+      property="BUILD_HOME"
+      value="${env.WORKSPACE}">
       <isset property="env.WORKSPACE"/>
     </condition>
   </target>
