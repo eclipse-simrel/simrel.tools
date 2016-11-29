@@ -82,4 +82,5 @@ export PATH=${JAVA_EXEC_DIR}:${ANT_HOME}/bin/:$PATH
 #    Using the parameter assumes, of course, you really do have "file" access, such as if 
 #    running on build.eclipse.org, or running against a local mirror of that 'simrel.build' repo.
 
-ant -f ${BUILD_HOME}/org.eclipse.simrel.tools/fetchAndbuild.xml -DBUILD_HOME=${BUILD_HOME} -Drelease=oxygen getModelFromGit runAggregatorValidateOnly 2>&1 | tee ${buildOutput}
+ant -f ${BUILD_HOME}/org.eclipse.simrel.tools/fetchAndbuild.xml -DBUILD_HOME=${BUILD_HOME} -DrootLocation=file:///home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200 \
+ -Drelease=oxygen getModelFromGit runAggregatorValidateOnly 2>&1 | tee ${buildOutput}
