@@ -47,7 +47,7 @@
 
     <mkdir dir="${ECLIPSE_HOME}" />
 
-    <get src="${platformResource}" dest="${localPrereqCache}" usetimestamp="true" description="Ant get platform from ${rootLocation}" />
+    <get src="${platformResource}" dest="${localPrereqCache}" usetimestamp="true" taskname="Ant get platform from ${rootLocation}" />
 
     <untar
       compression="gzip"
