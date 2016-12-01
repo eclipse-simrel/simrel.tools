@@ -95,7 +95,7 @@
       value="org.eclipse.equinox.p2.director" />
     <property
       name="repoReportURL"
-      value="https://hudson.eclipse.org/cbi/job/cbi.p2repo.analyzers.build/lastSuccessfulBuild/artifact/output/p2repo/" />
+      value="http://download.eclipse.org/cbi/updates/analyzers/4.6/" />
 
     <property
       name="OTHER_ARGS_TESTS"
