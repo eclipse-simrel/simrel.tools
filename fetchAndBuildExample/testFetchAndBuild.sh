@@ -75,7 +75,7 @@ export PATH=${JAVA_EXEC_DIR}:${ANT_HOME}/bin/:$PATH
 # -Dgit_protocol=file://
 #    'git_protocol' specifies an alternative way to "get" the git repositories of the 'simrel.build' and 'simrel.tools'. 
 #    Can be slightly more efficient and reliable to use direct file access instead
-#    of the default of "git://git.eclipse.org". 
+#    of the default of "git://git.eclipse.org".
 # -DrewriteRepositoryURLValue=file:///home/data/httpd/download.eclipse.org
 #    'rewriteRepositoryURLValue' is, again, a way to specify the file protocol be used, 
 #    but in this case is is for the input that comes from the *.aggr* files in 'simrel.build'.
