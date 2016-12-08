@@ -624,7 +624,7 @@ Useful properties
   </target>
   <target
     name="init"
-    depends="getJVMLocation, getBUILD_HOME, setDefaultBUILD_HOME, setDefaultRelease, getBuildTimestamp, getJobName, getJobNumber, getBuildToolsDir, gitRevParseTools, getBuildModelDir, gitRevParseModel"
+    depends="getJVMLocation, getBUILD_HOME, setDefaultBUILD_HOME, setDefaultRelease, getBuildTimestamp, getJobName, getJobNumber, getBuildToolsDir, gitRevParseTools, getBuildModelDir"
     unless="isInitialized">
 
     <!-- We assign a reasonable value for local builds, but for production
