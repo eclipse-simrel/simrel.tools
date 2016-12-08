@@ -142,7 +142,7 @@ Useful properties
     <untar
       compression="gzip"
       overwrite="true"
-      src="${localPrereqCache}/${fileName}"
+      src="${localPrereqCache}/${platformFilename}"
       dest="${ECLIPSE_HOME}" />
 
     <!--
@@ -167,7 +167,7 @@ Useful properties
       dir="${basedir}"
       failonerror="true">
       <arg
-        line="-data ${eclipseWorkspace}_install_aggr -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_AGG} ${otherArgsAggr} ${vm_args_aggr_settings}" />
+        line="-data ${eclipseWorkspaceBase}/install_aggr -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_AGG} ${otherArgsAggr} ${vm_args_aggr_settings}" />
     </exec>
     <property
       name="aggregatorInstalled"
@@ -206,7 +206,7 @@ Useful properties
       dir="${basedir}"
       failonerror="true">
       <arg
-        line="-data ${eclipseWorkspace}_installTests -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_TESTS} ${OTHER_ARGS_TESTS} ${vm_args_tests_settings}" />
+        line="-data ${eclipseWorkspaceBase}/installTests -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_TESTS} ${OTHER_ARGS_TESTS} ${vm_args_tests_settings}" />
     </exec>
     <property
       name="testsInstalled"
@@ -243,7 +243,7 @@ Useful properties
       dir="${basedir}"
       failonerror="true">
       <arg
-        line="-data ${eclipseWorkspace}_installRelengTools -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_RELENG} ${OTHER_ARGS_RELENG} ${vm_args_releng_settings}" />
+        line="-data ${eclipseWorkspaceBase}/installRelengTools -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_RELENG} ${OTHER_ARGS_RELENG} ${vm_args_releng_settings}" />
     </exec>
     <property
       name="relengToolsInstalled"
@@ -375,7 +375,7 @@ Useful properties
         /> -->
       <arg value="-nosplash" />
       <arg value="-data" />
-      <arg value="${eclipseWorkspace}" />
+      <arg value="${eclipseWorkspaceBase}/runAggregatorCleanBuild" />
       <arg value="--launcher.suppressErrors" />
       <arg value="-application" />
       <arg value="org.eclipse.cbi.p2repo.cli.headless" />
@@ -498,7 +498,7 @@ Useful properties
       -->
       <arg value="-nosplash" />
       <arg value="-data" />
-      <arg value="${eclipseWorkspace}_run_aggr" />
+      <arg value="${eclipseWorkspaceBase}/runAggregatorBuildOnly" />
       <arg value="--launcher.suppressErrors" />
       <arg value="-application" />
       <arg value="org.eclipse.cbi.p2repo.cli.headless" />
@@ -562,7 +562,7 @@ Useful properties
       -->
       <arg value="-nosplash" />
       <arg value="-data" />
-      <arg value="${eclipseWorkspace}" />
+      <arg value="${eclipseWorkspaceBase}/runAggregatorValidateOnly" />
       <arg value="--launcher.suppressErrors" />
       <arg value="-application" />
       <arg value="org.eclipse.cbi.p2repo.cli.headless" />
@@ -650,23 +650,23 @@ Useful properties
       <!--
       Note: if there is local file system version of the prereq platform, 
       if it faster to specify file://<location of platform>.
-      <property name="rootLocation" value="file:///home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200" />
+      <property name="platformLocation" value="file:///home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200" />
       We use "http://" by default to make it easy to "run from anywhere", but
       on the production machine, in production.properties, we specify the "file://" form.
       -->
 
     <property
-      name="rootLocation"
+      name="platformLocation"
       value="http://download.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200" />
     <property
-      name="fileName"
+      name="platformFilename"
       value="eclipse-SDK-4.6.1-linux-gtk-x86_64.tar.gz" />
     <property
       name="localPrereqCache"
       value="${BUILD_HOME}/localPrereqs" />
     <property
       name="platformResource"
-      value="${rootLocation}/${fileName}" /> 
+      value="${platformLocation}/${platformFilename}" /> 
       <!-- directory must exist before "get" uses it or else the file is given name of "localPrereqs" -->
     <mkdir dir="${localPrereqCache}" />
 
@@ -715,8 +715,8 @@ Useful properties
     </condition>
 
     <property
-      name="eclipseWorkspace"
-      value="${BUILD_HOME}/eclipseworkingspace" />
+      name="eclipseWorkspaceBase"
+      value="${BUILD_HOME}/eclipseworkspaces" />
 
     <!--
       If the eclipse workspace exists, remove it, to make sure we are
@@ -725,7 +725,7 @@ Useful properties
       if nothing else.
     -->
     <delete
-      dir="${eclipseWorkspace}"
+      dir="${eclipseWorkspaceBase}"
       quiet="true" />
 
     <!-- Note: we put -vmargs directly in builder_vm_args_settings so that if desired
@@ -822,7 +822,7 @@ Useful properties
     <echo message="user.dir: ${user.dir}" />
     <echo message="user.home: ${user.home}" />
     <echo message="BUILD_HOME (normally HUDSON workspace): ${BUILD_HOME}" />
-    <echo message="Eclipse workspace: ${eclipseWorkspace}" />
+    <echo message="Eclipse workspace base: ${eclipseWorkspaceBase}" />
     <echo message="PATH: ${env.PATH}" />
     <echo message="JAVA_HOME: ${JAVA_HOME}" />
     <echo message="hostForURL: ${hostForURL}" />
