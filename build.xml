@@ -3,6 +3,93 @@
   basedir="."
   default="default">
 
+<!-- 
+
+Purpose and primary targets
+
+   This build.xml is to download and install the CBI aggregator (and other tools)
+   and run one of three types of aggregations. Note: it assumes all has been checked out of Git
+   and "ready to aggregate". It does recored the "commit" of some repositories, just as a way to 
+   improve documenting what was built. 
+
+   This script has 3 main "entry targets", each corresponding to one of the 3 types of aggregations:
+
+      1. runAggregatorValidateOnly (default)
+          This simply confirms the "constraints" as specified by the the *.aggr* contributions
+          all make sense and "fit together" as well as that the repositories are available at the 
+          specified URLs. It is the "quickest" job, typically taking from 1 to 4 minutes.
+
+      2. runAggregatorBuildOnly
+          This aggregation does a complete aggregation. That is, in addition to "validating" 
+          the constraints, it downloads the artifacts, unpacks or verifies any pack.gz files, 
+          and creates a final repository. The distinguishing feature of this target is that 
+          if it is ran a second time it does not "clean" anything and downloads only anything new
+          that is needed. Hence, the first time it is ran can take several hours, 
+          but subsequent runs can be much quicker (from just a few minutes to a few dozen minutes, 
+          depending on how much is new).
+
+      3. runAggregatorCleanBuild
+          This is the aggregation is similar to above, but always does a "clean build". 
+          It remove all artifacts and metadata that previously had been downloaded and starts "fresh". 
+          Hence, it always takes several hours to complete. But this is is important since there are few things 
+          that can go wrong that would only show up in a clean build.
+
+Important properties
+
+      Listed below are some of the most important properties that can be "passed in" (either as -D parameters on command line, 
+      or in a property file that is then specified on command line with -Daggr.properties=<yourPropertyFile>).
+
+      - BUILD_HOME
+           Technically should be an environment variable rather than an ant property. Such as invoking ant on command line
+           with "BUILD_HOME=${PWD} ant ... ". The default is the environment variable "WORKSPACE" so if running on Hudson, 
+           nothing needs to be specified. Technically is not required, but if not running on Hudson, it is best to 
+           specify some directory outside of the working tree.
+
+      - release
+          'release' This is the release train name (e.g. 'neon', all lower case. It is used to form some email messages (from the CBI aggregator)
+          as well as, in the final stages, some URL segments, such as when promoted to ".../staging/<release>". For production
+
+Useful properties
+
+      Listed below are some useful properties that can be "passed in" (either as -D parameters on command line, 
+      or in a property file that is then specified on command line with -Daggr.properties=<yourPropertyFile>).
+      But, most users or use-cases will not need to be concerned with these.
+
+      - git_protocol
+          'git_protocol' specifies an alternative way to "get" the git repositories of the 'simrel.build' and 'simrel.tools'.
+          If running with local versions of the repository, it can be slightly more efficient and reliable 
+          to use direct file access ("git_protocol=file://") instead of the default of "git://git.eclipse.org".
+
+      - rewriteRepositoryURLValue
+          'rewriteRepositoryURLValue' is simlar to the git_protocol property but applies to URLs in the *aggr* files.
+          If running on Eclipse.org (or, if you otherwise have direct access to the file system, say with a mirrored repository)
+          it is more efficient to use direct file access ("rewriteRepositoryURLValue=file:///home/data/httpd/download.eclipse.org")
+          rather than the default specified in the *aggr* files ("http://download.eclipse.org"). If this property exists (i.e. has
+          a value) then the script does a simple search-and-replace to rewrite matching URLs.
+
+      - installEclipseAndTools
+          The script always installs Eclipse and required tools *unless* is sees that eclipse is already installed.
+          To force it to reinstall Eclipse and required tools use this installEclipseAndTools property. In practice, 
+          this value is seldom needed since often just as easy to delete the entire "BUILD_HOME" and start completely fresh.
+
+      - platformFilename
+          'platformFilename' is the name of the binary platform to install
+          as the "base" into which the aggregator and other tools are installed into.
+          The default is eclipse-SDK-4.6.1-linux-gtk-x86_64.tar.gz.
+
+      - platformLocation
+          'platformLocation' is the location from where to the binary platform.
+          By default, it is 
+          http://download.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200
+          If you have access to the binary platform archive on your file system, you can specify
+          its location instead, for some savings in "download time". For example: 
+          file:///files/eclipsefiles/
+
+       - JAVA_HOME
+          
+
+-->
+
   <!-- globally make "environment variables" available -->
   <property environment="env" />
 
@@ -47,7 +134,10 @@
 
     <mkdir dir="${ECLIPSE_HOME}" />
 
-    <get src="${platformResource}" dest="${localPrereqCache}" usetimestamp="true" taskname="Ant get platform from ${rootLocation}" />
+    <get
+      src="${platformResource}"
+      dest="${localPrereqCache}"
+      usetimestamp="true" />
 
     <untar
       compression="gzip"
@@ -244,6 +334,7 @@
     if they "pass", we promote to "staging". -->
   <target
     name="runAggregatorCleanBuild"
+    description="Runs a clean aggregation"
     depends="init,rewriteRepositoryURL,installAggregatorAndTools">
     <!-- If not otherwise set in properties file, use these values. Note
       the
@@ -371,6 +462,7 @@
     sure installed now, in anticipation. -->
   <target
     name="runAggregatorBuildOnly"
+    description="Runs an aggregation, but uses prevoiusly cached artifacts, unless new ones are required by contribution"
     depends="init,rewriteRepositoryURL,installAggregatorAndTools,initRunTestsXML">
 
     <property
@@ -444,6 +536,7 @@
   -->
   <target
     name="runAggregatorValidateOnly"
+    description="Runs an aggregation, but validates constraints only. Does not fetch artifacts."
     depends="init,rewriteRepositoryURL,installAggregatorAndTools,initRunTestsXML">
 
     <property
@@ -959,7 +1052,9 @@
     <echo message="In target gitRevParseTools, toolsRepoCommit: ${toolsRepoCommit}" />
   </target>
 
-  <target name="default">
+  <target
+    name="default"
+    description="By default run the runAggregatorValidateOnly target">
     <echo message="Using default target:" />
     <echo message="     runAggregatorValidateOnly" />
     <echo message="  Other meaningful targets to specify explicitly:" />
