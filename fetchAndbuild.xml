@@ -3,6 +3,93 @@
   basedir="."
   default="default">
 
+<!-- 
+
+Purpose and primary targets
+
+   This build.xml is to download and install the CBI aggregator (and other tools)
+   and run one of three types of aggregations. Note: it assumes all has been checked out of Git
+   and "ready to aggregate". It does recored the "commit" of some repositories, just as a way to 
+   improve documenting what was built. 
+
+   This script has 3 main "entry targets", each corresponding to one of the 3 types of aggregations:
+
+      1. runAggregatorValidateOnly (default)
+          This simply confirms the "constraints" as specified by the the *.aggr* contributions
+          all make sense and "fit together" as well as that the repositories are available at the 
+          specified URLs. It is the "quickest" job, typically taking from 1 to 4 minutes.
+
+      2. runAggregatorBuildOnly
+          This aggregation does a complete aggregation. That is, in addition to "validating" 
+          the constraints, it downloads the artifacts, unpacks or verifies any pack.gz files, 
+          and creates a final repository. The distinguishing feature of this target is that 
+          if it is ran a second time it does not "clean" anything and downloads only anything new
+          that is needed. Hence, the first time it is ran can take several hours, 
+          but subsequent runs can be much quicker (from just a few minutes to a few dozen minutes, 
+          depending on how much is new).
+
+      3. runAggregatorCleanBuild
+          This is the aggregation is similar to above, but always does a "clean build". 
+          It remove all artifacts and metadata that previously had been downloaded and starts "fresh". 
+          Hence, it always takes several hours to complete. But this is is important since there are few things 
+          that can go wrong that would only show up in a clean build.
+
+Important properties
+
+      Listed below are some of the most important properties that can be "passed in" (either as -D parameters on command line, 
+      or in a property file that is then specified on command line with -Daggr.properties=<yourPropertyFile>).
+
+      - BUILD_HOME
+           Technically should be an environment variable rather than an ant property. Such as invoking ant on command line
+           with "BUILD_HOME=${PWD} ant ... ". The default is the environment variable "WORKSPACE" so if running on Hudson, 
+           nothing needs to be specified. Technically is not required, but if not running on Hudson, it is best to 
+           specify some directory outside of the working tree.
+
+      - release
+          'release' This is the release train name (e.g. 'neon', all lower case. It is used to form some email messages (from the CBI aggregator)
+          as well as, in the final stages, some URL segments, such as when promoted to ".../staging/<release>". For production
+
+Useful properties
+
+      Listed below are some useful properties that can be "passed in" (either as -D parameters on command line, 
+      or in a property file that is then specified on command line with -Daggr.properties=<yourPropertyFile>).
+      But, most users or use-cases will not need to be concerned with these.
+
+      - git_protocol
+          'git_protocol' specifies an alternative way to "get" the git repositories of the 'simrel.build' and 'simrel.tools'.
+          If running with local versions of the repository, it can be slightly more efficient and reliable 
+          to use direct file access ("git_protocol=file://") instead of the default of "git://git.eclipse.org".
+
+      - rewriteRepositoryURLValue
+          'rewriteRepositoryURLValue' is simlar to the git_protocol property but applies to URLs in the *aggr* files.
+          If running on Eclipse.org (or, if you otherwise have direct access to the file system, say with a mirrored repository)
+          it is more efficient to use direct file access ("rewriteRepositoryURLValue=file:///home/data/httpd/download.eclipse.org")
+          rather than the default specified in the *aggr* files ("http://download.eclipse.org"). If this property exists (i.e. has
+          a value) then the script does a simple search-and-replace to rewrite matching URLs.
+
+      - installEclipseAndTools
+          The script always installs Eclipse and required tools *unless* is sees that eclipse is already installed.
+          To force it to reinstall Eclipse and required tools use this installEclipseAndTools property. In practice, 
+          this value is seldom needed since often just as easy to delete the entire "BUILD_HOME" and start completely fresh.
+
+      - platformFilename
+          'platformFilename' is the name of the binary platform to install
+          as the "base" into which the aggregator and other tools are installed into.
+          The default is eclipse-SDK-4.6.1-linux-gtk-x86_64.tar.gz.
+
+      - platformLocation
+          'platformLocation' is the location from where to the binary platform.
+          By default, it is 
+          http://download.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200
+          If you have access to the binary platform archive on your file system, you can specify
+          its location instead, for some savings in "download time". For example: 
+          file:///files/eclipsefiles/
+
+       - JAVA_HOME
+          
+
+-->
+
   <!-- globally make "environment variables" available -->
   <property environment="env" />
 
@@ -47,12 +134,15 @@
 
     <mkdir dir="${ECLIPSE_HOME}" />
 
-    <get src="${platformResource}" dest="${localPrereqCache}" usetimestamp="true" />
+    <get
+      src="${platformResource}"
+      dest="${localPrereqCache}"
+      usetimestamp="true" />
 
     <untar
       compression="gzip"
       overwrite="true"
-      src="${localPrereqCache}/${fileName}"
+      src="${localPrereqCache}/${platformFilename}"
       dest="${ECLIPSE_HOME}" />
 
     <!--
@@ -77,7 +167,7 @@
       dir="${basedir}"
       failonerror="true">
       <arg
-        line="-data ${eclipseWorkspace}_install_aggr -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_AGG} ${otherArgsAggr} ${vm_args_aggr_settings}" />
+        line="-data ${eclipseWorkspaceBase}/install_aggr -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_AGG} ${otherArgsAggr} ${vm_args_aggr_settings}" />
     </exec>
     <property
       name="aggregatorInstalled"
@@ -116,7 +206,7 @@
       dir="${basedir}"
       failonerror="true">
       <arg
-        line="-data ${eclipseWorkspace}_installTests -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_TESTS} ${OTHER_ARGS_TESTS} ${vm_args_tests_settings}" />
+        line="-data ${eclipseWorkspaceBase}/installTests -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_TESTS} ${OTHER_ARGS_TESTS} ${vm_args_tests_settings}" />
     </exec>
     <property
       name="testsInstalled"
@@ -153,7 +243,7 @@
       dir="${basedir}"
       failonerror="true">
       <arg
-        line="-data ${eclipseWorkspace}_installRelengTools -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_RELENG} ${OTHER_ARGS_RELENG} ${vm_args_releng_settings}" />
+        line="-data ${eclipseWorkspaceBase}/installRelengTools -debug -consolelog -nosplash --launcher.suppressErrors -application ${APP_NAME_P2DIRECTOR_RELENG} ${OTHER_ARGS_RELENG} ${vm_args_releng_settings}" />
     </exec>
     <property
       name="relengToolsInstalled"
@@ -244,6 +334,7 @@
     if they "pass", we promote to "staging". -->
   <target
     name="runAggregatorCleanBuild"
+    description="Runs a clean aggregation"
     depends="init,rewriteRepositoryURL,installAggregatorAndTools">
     <!-- If not otherwise set in properties file, use these values. Note
       the
@@ -284,7 +375,7 @@
         /> -->
       <arg value="-nosplash" />
       <arg value="-data" />
-      <arg value="${eclipseWorkspace}" />
+      <arg value="${eclipseWorkspaceBase}/runAggregatorCleanBuild" />
       <arg value="--launcher.suppressErrors" />
       <arg value="-application" />
       <arg value="org.eclipse.cbi.p2repo.cli.headless" />
@@ -292,8 +383,7 @@
       <arg value="--buildId" />
       <arg value="${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
-      <arg value="-vm" />
-      <arg value="${JAVA_EXEC_DIR}" />
+      <arg line="${vm_setting}" />
       <arg line="${builder_vm_args_settings}" />
     </exec>
 
@@ -324,21 +414,12 @@
     <echo message="Waiting 2 seconds..." />
     <sleep seconds="2" />
 
-    <antcall target="runTests" />
+    <antcall target="runTests">
+      <param
+        name="tests"
+        value="cleanBuildTests" />
+    </antcall>
 
-  </target>
-
-  <!-- runTests can be ran as manual job, but then should use custom workspace,
-    to run against previous build, and acquire the lock, for that job -->
-  <target
-    name="runTests"
-    depends="init,rewriteRepositoryURL,installAggregatorAndTools,initRunTestsXML"
-    if="toolsAvailable">
-
-    <ant
-      antfile="${runTestsXML}"
-      target="cleanBuildTests"
-      dir="${BUILD_HOME}" />
   </target>
 
   <target name="checkStatus">
@@ -373,6 +454,7 @@
     sure installed now, in anticipation. -->
   <target
     name="runAggregatorBuildOnly"
+    description="Runs an aggregation, but uses prevoiusly cached artifacts, unless new ones are required by contribution"
     depends="init,rewriteRepositoryURL,installAggregatorAndTools,initRunTestsXML">
 
     <property
@@ -408,7 +490,7 @@
       -->
       <arg value="-nosplash" />
       <arg value="-data" />
-      <arg value="${eclipseWorkspace}_run_aggr" />
+      <arg value="${eclipseWorkspaceBase}/runAggregatorBuildOnly" />
       <arg value="--launcher.suppressErrors" />
       <arg value="-application" />
       <arg value="org.eclipse.cbi.p2repo.cli.headless" />
@@ -416,8 +498,7 @@
       <arg value="--buildId" />
       <arg value="${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
-      <arg value="-vm" />
-      <arg value="${JAVA_EXEC_DIR}" />
+      <arg line="${vm_setting}" />
       <arg line="${builder_vm_args_settings}" />
     </exec>
 
@@ -432,10 +513,11 @@
 
     <antcall target="createBuildinfo" />
 
-    <ant
-      antfile="${runTestsXML}"
-      target="cachedBuildTests"
-      dir="${BUILD_HOME}" />
+    <antcall target="runTests">
+      <param
+        name="tests"
+        value="cachedBuildTests" />
+    </antcall>
 
   </target>
 
@@ -448,6 +530,7 @@
   -->
   <target
     name="runAggregatorValidateOnly"
+    description="Runs an aggregation, but validates constraints only. Does not fetch artifacts."
     depends="init,rewriteRepositoryURL,installAggregatorAndTools,initRunTestsXML">
 
     <property
@@ -473,7 +556,7 @@
       -->
       <arg value="-nosplash" />
       <arg value="-data" />
-      <arg value="${eclipseWorkspace}" />
+      <arg value="${eclipseWorkspaceBase}/runAggregatorValidateOnly" />
       <arg value="--launcher.suppressErrors" />
       <arg value="-application" />
       <arg value="org.eclipse.cbi.p2repo.cli.headless" />
@@ -481,8 +564,7 @@
       <arg value="--buildId" />
       <arg value="${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
-      <arg value="-vm" />
-      <arg value="${JAVA_EXEC_DIR}" />
+      <arg line="${vm_setting}" />
       <arg line="${builder_vm_args_settings}" />
     </exec>
 
@@ -498,9 +580,20 @@
     <!-- setting dir to our workspace, so tests done on what "we" have -->
     <antcall target="createBuildinfo" />
 
+    <antcall target="runTests">
+      <param
+        name="tests"
+        value="validateOnlyTests" />
+    </antcall>
+
+  </target>
+
+  <target
+    name="runTests"
+    if="runTestsXML">
     <ant
       antfile="${runTestsXML}"
-      target="validateOnlyTests"
+      target="${tests}"
       dir="${BUILD_HOME}" />
 
   </target>
@@ -531,7 +624,7 @@
   </target>
   <target
     name="init"
-    depends="getJDKSettings, getBUILD_HOME, getBuildTimestamp, getJobName, getJobNumber, getBuildToolsDir, gitRevParseTools, getBuildModelDir, gitRevParseModel"
+    depends="getJVMLocation, getBUILD_HOME, setDefaultBUILD_HOME, setDefaultRelease, getBuildTimestamp, getJobName, getJobNumber, getBuildToolsDir, gitRevParseTools, getBuildModelDir, gitRevParseModel"
     unless="isInitialized">
 
     <!-- We assign a reasonable value for local builds, but for production
@@ -550,10 +643,6 @@
 
     <property file="${aggrPropertyFile}" />
 
-    <fail
-      unless="release"
-      message="release must be specified for this script, such as -Drelease=mars" />
-
       <!-- 
       The "binary platform" is enough, for now, and since smaller than the SDK,
       it is recommended as the "base" to install tools into. But a typical "SDK" has been
@@ -563,23 +652,23 @@
       <!--
       Note: if there is local file system version of the prereq platform, 
       if it faster to specify file://<location of platform>.
-      <property name="rootLocation" value="file:///home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200" />
+      <property name="platformLocation" value="file:///home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200" />
       We use "http://" by default to make it easy to "run from anywhere", but
       on the production machine, in production.properties, we specify the "file://" form.
       -->
 
     <property
-      name="rootLocation"
+      name="platformLocation"
       value="http://download.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200" />
     <property
-      name="fileName"
+      name="platformFilename"
       value="eclipse-SDK-4.6.1-linux-gtk-x86_64.tar.gz" />
     <property
       name="localPrereqCache"
       value="${BUILD_HOME}/localPrereqs" />
     <property
       name="platformResource"
-      value="${rootLocation}/${fileName}" /> 
+      value="${platformLocation}/${platformFilename}" /> 
       <!-- directory must exist before "get" uses it or else the file is given name of "localPrereqs" -->
     <mkdir dir="${localPrereqCache}" />
 
@@ -628,8 +717,8 @@
     </condition>
 
     <property
-      name="eclipseWorkspace"
-      value="${BUILD_HOME}/eclipseworkingspace" />
+      name="eclipseWorkspaceBase"
+      value="${BUILD_HOME}/eclipseworkspaces" />
 
     <!--
       If the eclipse workspace exists, remove it, to make sure we are
@@ -638,7 +727,7 @@
       if nothing else.
     -->
     <delete
-      dir="${eclipseWorkspace}"
+      dir="${eclipseWorkspaceBase}"
       quiet="true" />
 
     <!-- Note: we put -vmargs directly in builder_vm_args_settings so that if desired
@@ -650,7 +739,7 @@
     <condition
       property="builder_vm_args_settings"
       value="-vmargs ${builder_vm_args}">
-        <isset property="builder_vm_args"/>
+      <isset property="builder_vm_args" />
     </condition>
 
     <!-- tmp directory must exist, for Java to use it -->
@@ -735,7 +824,7 @@
     <echo message="user.dir: ${user.dir}" />
     <echo message="user.home: ${user.home}" />
     <echo message="BUILD_HOME (normally HUDSON workspace): ${BUILD_HOME}" />
-    <echo message="Eclipse workspace: ${eclipseWorkspace}" />
+    <echo message="Eclipse workspace base: ${eclipseWorkspaceBase}" />
     <echo message="PATH: ${env.PATH}" />
     <echo message="JAVA_HOME: ${JAVA_HOME}" />
     <echo message="hostForURL: ${hostForURL}" />
@@ -836,12 +925,8 @@
     <condition
       property="BUILD_HOME"
       value="${env.BUILD_HOME}">
-      <isset property="env.BUILD_HOME"/>
+      <isset property="env.BUILD_HOME" />
     </condition>
-    <fail
-      unless="BUILD_HOME"
-      message="BUILD_HOME must be set as env variable, such as to $PWD, if not on Hudson." />
-    <echo message="BUILD_HOME set as ${BUILD_HOME}" />
   </target>
 
   <target
@@ -850,11 +935,34 @@
     <condition
       property="BUILD_HOME"
       value="${env.WORKSPACE}">
-      <isset property="env.WORKSPACE"/>
+      <isset property="env.WORKSPACE" />
     </condition>
   </target>
 
+  <target
+    name="setDefaultBUILD_HOME"
+    unless="BUILD_HOME">
+    <property
+      name="BUILD_HOME"
+      value="${basedir}" />
+    <property
+      name="buildModelDir"
+      value="${basedir}" />
 
+    <echo
+      message="WARNING: BUILD_HOME set to a default value, ${BUILD_HOME}. Typically this is not desired and may mean there is a configuration issue." />
+    <echo message="WARNING: This implies we also set buildModelDir to ${basedir}" />
+
+  </target>
+  <target
+    name="setDefaultRelease"
+    unless="release">
+    <property
+      name="release"
+      value="noReleaseSpecified" />
+    <echo
+      message="WARNING: release set to a default value, ${release}. Typically this is not desired and may mean there is a configuration issue." />
+  </target>
   <!-- Only rewrite, if a value has been provided -->
   <!-- TODO: should make the "exclude" part automatic based on presence/abscense
     of "useTrusted" property -->
@@ -881,13 +989,12 @@
 
   </target>
 
-  <target name="getBuildModelDir">
+  <target
+    name="getBuildModelDir"
+    unless="buildModelDir">
     <property
       name="buildModelDir"
       value="${BUILD_HOME}/org.eclipse.simrel.build" />
-    <available
-      file="${buildModelDir}"
-      property="buildModelAvailable" />
   </target>
 
   <target name="createXZformats">
@@ -901,7 +1008,7 @@
 
   <target
     name="createBuildinfo"
-    depends="init, getBuildModelDir, gitRevParseModel, getBuildToolsDir, gitRevParseTools">
+    depends="init, gitRevParseModel, gitRevParseTools">
 
     <property
       name="BUILD_INFO_DIR"
@@ -948,8 +1055,7 @@
 
   <target
     name="gitRevParseModel"
-    depends="getBuildModelDir"
-    if="buildModelAvailable">
+    depends="getBuildModelDir">
     <git-rev-parse
       repodir="${buildModelDir}"
       returnproperty="buildModelCommit" />
@@ -965,7 +1071,9 @@
     <echo message="In target gitRevParseTools, toolsRepoCommit: ${toolsRepoCommit}" />
   </target>
 
-  <target name="default">
+  <target
+    name="default"
+    description="By default run the runAggregatorValidateOnly target">
     <echo message="Using default target:" />
     <echo message="     runAggregatorValidateOnly" />
     <echo message="  Other meaningful targets to specify explicitly:" />
@@ -994,6 +1102,59 @@
     <property
       name="previousSaved"
       value="true" />
+  </target>
+    <!-- It is not required for user to specify "vm", only
+         needed if they want to override the system (or Hudson) 
+         default. We do the "work" in getJVMLocationInternal
+         so we can set a "null default" in this task.
+    -->
+  <target
+    name="getJVMLocation"
+    depends="getJVMLocationInternal"
+    unless="vm_setting">
+      <!-- if vm_setting not set in 'getJVMLocationInternal'
+           then we set it to "null" here so that is has a safe value
+           when later used as <arg line="${vm_setting} />
+      -->
+    <property
+      name="vm_setting"
+      value="" />
+    <echo message="vm_setting has no value: ${vm_setting}" />
+  </target>
+  <target
+    name="getJVMLocationInternal"
+    depends="getJAVA_HOME"
+    if="JAVA_HOME"
+    unless="vm_setting">
+    <property
+      name="vm_setting"
+      value="-vm ${JAVA_HOME}/jre/bin" />
+    <echo message="at end of 'getJVMLocationInternal' vm_setting: ${vm_setting}" />
+  </target>
+    <!-- we have all these "checks" and "print out" since
+         it is not known how ant "knows about" JAVA_HOME.
+         That is, ant could be running in a Java different from
+         the one that is desired to be used to run aggregator.
+         Put another way, users can define JAVA_HOME as an environment 
+         variable, or pass in a -DJAVA_HOME value. The later takes 
+         priority, if both exists. 
+         Example: -DJAVA_HOME=/shared/common/jdk1.8.0_x64-latest
+    -->
+  <target
+    name="getJAVA_HOME"
+    depends="printPredefinedJAVA_HOME"
+    unless="JAVA_HOME">
+    <condition
+      property="JAVA_HOME"
+      value="${env.JAVA_HOME}">
+      <isset property="env.JAVA_HOME" />
+    </condition>
+    <echo message="at end of 'getJAVA_HOME', JAVA_HOME: ${JAVA_HOME}" />
+  </target>
+  <target
+    name="printPredefinedJAVA_HOME"
+    if="JAVA_HOME">
+    <echo message="Found JAVA_HOME already defined to be ${JAVA_HOME}" />
   </target>
 
   <target
@@ -1275,17 +1436,7 @@
       value="true" />
 
   </target>
-  <target name="getJDKSettings">
-    <property
-      name="JAVA_HOME"
-      value="/shared/common/jdk1.8.0_x64-latest" />
-    <property
-      name="JAVA_EXEC_DIR"
-      value="${JAVA_HOME}/jre/bin" />
-    <property
-      name="vm_setting"
-      value="-vm ${JAVA_EXEC_DIR}" />
-  </target>
+
   <target name="initBranch">
       <!--
         By default we assume "master". Therefore, for update releases we

@@ -15,36 +15,44 @@ buildOutput=${BUILD_HOME}/buildoutput$( date +%Y%m%d-%H%M).log.txt
 # then contains the other utilities and files needed to do the 
 # aggregation build from the command line.
 
-wget --no-verbose -O ${BUILD_HOME}/getSimRelTools.sh http://git.eclipse.org/c/simrel/org.eclipse.simrel.tools.git/plain/bootstrapScript/getSimRelTools.sh 2>&1
-RC=$?
-if [[ $RC != 0 ]]
+# set getTools to false if tools already exists, with local modifications
+getTools=${getTools:-"true"}
+if [[ ${getTools} == "true" ]]
 then
-  printf "\n[ERROR] wget returned non-zero return code: $RC. Exiting"
-  exit 1
-fi
-chmod +x ${BUILD_HOME}/getSimRelTools.sh
-RC=$?
-if [[ $RC != 0 ]]
-then
-  printf "\n[ERROR] chmod returned non-zero return code: $RC. Exiting"
-  exit 1
-fi
-${BUILD_HOME}/getSimRelTools.sh
-RC=$?
-if [[ $RC != 0 ]]
-then
-  printf "\n[ERROR] getSimRelTools.sh returned non-zero return code: $RC. Exiting"
-  exit 1
+  wget --no-verbose -O ${BUILD_HOME}/getSimRelTools.sh http://git.eclipse.org/c/simrel/org.eclipse.simrel.tools.git/plain/bootstrapScript/getSimRelTools.sh 2>&1
+  RC=$?
+  if [[ $RC != 0 ]]
+  then
+    printf "\n[ERROR] wget returned non-zero return code: $RC. Exiting"
+    exit 1
+  fi
+  chmod +x ${BUILD_HOME}/getSimRelTools.sh
+  RC=$?
+  if [[ $RC != 0 ]]
+  then
+    printf "\n[ERROR] chmod returned non-zero return code: $RC. Exiting"
+    exit 1
+  fi
+  ${BUILD_HOME}/getSimRelTools.sh
+  RC=$?
+  if [[ $RC != 0 ]]
+  then
+    printf "\n[ERROR] getSimRelTools.sh returned non-zero return code: $RC. Exiting"
+    exit 1
+  fi
+else
+  printf "\n[INFO] 'getTools' was set to false, so simrel.tools not fetched."
 fi
 
 # We require Java to be version 8 and Ant to be at least "1.8".
 # (And, for example, the defaults on "build.eclipse.org" are still
 # set at Java 6 and Ant 1.7!) These may not be needed if your 
 # personal machine has the defaults required.
-export JAVA_HOME=/shared/common/jdk1.8.0_x64-latest
-export JAVA_EXEC_DIR=/shared/common/jdk1.8.0_x64-latest/jre/bin
-export ANT_HOME=/shared/common/apache-ant-1.8.2
-export PATH=${JAVA_EXEC_DIR}:${ANT_HOME}/bin/:$PATH
+
+#export JAVA_HOME=/shared/common/jdk1.8.0_x64-latest
+#export ANT_HOME=/shared/common/apache-ant-1.8.2
+#export PATH=${JAVA_HOME}/jre/bin:${ANT_HOME}/bin/:$PATH
+
 #
 # In addition to using the getModelFromGit target on ant command line, 
 #   One of the following "aggregation targets" can be specified.
@@ -55,7 +63,7 @@ export PATH=${JAVA_EXEC_DIR}:${ANT_HOME}/bin/:$PATH
 #
 # In addition to the targets, the following are some handy parameters which 
 # may be specified to override the defaults.
-#  -DrootLocation=file:///absolutePath/ofLocal/PlatformBinary.tar.gz
+#  -DplatformLocation=file:///absolutePath/ofLocal/PlatformBinary.tar.gz
 #     The scripts must be able to find a standard "Eclipse Platform" to install into.
 #     The default is what it would be if running on the Eclipse.org infrastructure, so 
 #     if running locally this value (correct location of local version) will need to be provided.
@@ -82,5 +90,8 @@ export PATH=${JAVA_EXEC_DIR}:${ANT_HOME}/bin/:$PATH
 #    Using the parameter assumes, of course, you really do have "file" access, such as if 
 #    running on build.eclipse.org, or running against a local mirror of that 'simrel.build' repo.
 
-ant -f ${BUILD_HOME}/org.eclipse.simrel.tools/fetchAndbuild.xml -DBUILD_HOME=${BUILD_HOME} -DrootLocation=file:///home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200 \
- -Drelease=oxygen getModelFromGit runAggregatorValidateOnly 2>&1 | tee ${buildOutput}
+ant -f ${BUILD_HOME}/org.eclipse.simrel.tools/fetchAndbuild.xml \
+  -DBUILD_HOME=${BUILD_HOME} \
+  -DplatformLocation=file:///home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200 \
+  -Drelease=oxygen \
+  getModelFromGit runAggregatorValidateOnly 2>&1 | tee ${buildOutput}

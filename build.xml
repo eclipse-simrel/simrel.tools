@@ -86,7 +86,8 @@ Useful properties
           file:///files/eclipsefiles/
 
        - JAVA_HOME
-          
+          Should rarely be needed "these days". But is provided here in case it is desired 
+          to run the aggregator with a different VM than the VM that is running Ant.
 
 -->
 
@@ -383,6 +384,7 @@ Useful properties
       <arg value="--buildId" />
       <arg value="${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
+      <arg line="${vm_setting}" />
       <arg line="${builder_vm_args_settings}" />
     </exec>
 
@@ -413,21 +415,12 @@ Useful properties
     <echo message="Waiting 2 seconds..." />
     <sleep seconds="2" />
 
-    <antcall target="runTests" />
+    <antcall target="runTests">
+      <param
+        name="tests"
+        value="cleanBuildTests" />
+    </antcall>
 
-  </target>
-
-  <!-- runTests can be ran as manual job, but then should use custom workspace,
-    to run against previous build, and acquire the lock, for that job -->
-  <target
-    name="runTests"
-    depends="init,rewriteRepositoryURL,installAggregatorAndTools,initRunTestsXML"
-    if="toolsAvailable">
-
-    <ant
-      antfile="${runTestsXML}"
-      target="cleanBuildTests"
-      dir="${BUILD_HOME}" />
   </target>
 
   <target name="checkStatus">
@@ -506,6 +499,7 @@ Useful properties
       <arg value="--buildId" />
       <arg value="${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
+      <arg line="${vm_setting}" />
       <arg line="${builder_vm_args_settings}" />
     </exec>
 
@@ -520,10 +514,11 @@ Useful properties
 
     <antcall target="createBuildinfo" />
 
-    <ant
-      antfile="${runTestsXML}"
-      target="cachedBuildTests"
-      dir="${BUILD_HOME}" />
+    <antcall target="runTests">
+      <param
+        name="tests"
+        value="cachedBuildTests" />
+    </antcall>
 
   </target>
 
@@ -570,6 +565,7 @@ Useful properties
       <arg value="--buildId" />
       <arg value="${buildTimestamp}" />
       <arg line="${AGG_APP_ARGS}" />
+      <arg line="${vm_setting}" />
       <arg line="${builder_vm_args_settings}" />
     </exec>
 
@@ -585,13 +581,22 @@ Useful properties
     <!-- setting dir to our workspace, so tests done on what "we" have -->
     <antcall target="createBuildinfo" />
 
-    <ant
-      antfile="${runTestsXML}"
-      target="validateOnlyTests"
-      dir="${BUILD_HOME}" />
+    <antcall target="runTests">
+      <param
+        name="tests"
+        value="validateOnlyTests" />
+    </antcall>
 
   </target>
 
+  <target
+    name="runTests"
+    if="runTestsXML">
+    <ant
+      antfile="${runTestsXML}"
+      target="${tests}"
+      dir="${BUILD_HOME}" />
+  </target>
   <target
     name="initRunTestsXML"
     depends="getBuildToolsDir"
@@ -618,7 +623,7 @@ Useful properties
   </target>
   <target
     name="init"
-    depends="getBUILD_HOME, getBuildTimestamp, getJobName, getJobNumber, getBuildToolsDir, gitRevParseTools, getBuildModelDir, gitRevParseModel"
+    depends="getJVMLocation, getBUILD_HOME, setDefaultBUILD_HOME, setDefaultRelease, getBuildTimestamp, getJobName, getJobNumber, getBuildToolsDir, gitRevParseTools, getBuildModelDir, gitRevParseModel"
     unless="isInitialized">
 
     <!-- We assign a reasonable value for local builds, but for production
@@ -636,10 +641,6 @@ Useful properties
       value="${buildToolsDir}/aggr.properties" />
 
     <property file="${aggrPropertyFile}" />
-
-    <fail
-      unless="release"
-      message="release must be specified for this script, such as -Drelease=mars" />
 
       <!-- 
       The "binary platform" is enough, for now, and since smaller than the SDK,
@@ -925,10 +926,6 @@ Useful properties
       value="${env.BUILD_HOME}">
       <isset property="env.BUILD_HOME" />
     </condition>
-    <fail
-      unless="BUILD_HOME"
-      message="BUILD_HOME must be set as env variable, such as to $PWD, if not on Hudson." />
-    <echo message="BUILD_HOME set as ${BUILD_HOME}" />
   </target>
 
   <target
@@ -941,7 +938,30 @@ Useful properties
     </condition>
   </target>
 
+  <target
+    name="setDefaultBUILD_HOME"
+    unless="BUILD_HOME">
+    <property
+      name="BUILD_HOME"
+      value="${basedir}" />
+    <property
+      name="buildModelDir"
+      value="${basedir}" />
 
+    <echo
+      message="WARNING: BUILD_HOME set to a default value, ${BUILD_HOME}. Typically this is not desired and may mean there is a configuration issue." />
+    <echo message="WARNING: This implies we also set buildModelDir to ${basedir}" />
+
+  </target>
+  <target
+    name="setDefaultRelease"
+    unless="release">
+    <property
+      name="release"
+      value="noReleaseSpecified" />
+    <echo
+      message="WARNING: release set to a default value, ${release}. Typically this is not desired and may mean there is a configuration issue." />
+  </target>
   <!-- Only rewrite, if a value has been provided -->
   <!-- TODO: should make the "exclude" part automatic based on presence/abscense
     of "useTrusted" property -->
@@ -968,13 +988,12 @@ Useful properties
 
   </target>
 
-  <target name="getBuildModelDir">
+  <target
+    name="getBuildModelDir"
+    unless="buildModelDir">
     <property
       name="buildModelDir"
       value="${BUILD_HOME}/org.eclipse.simrel.build" />
-    <available
-      file="${buildModelDir}"
-      property="buildModelAvailable" />
   </target>
 
   <target name="createXZformats">
@@ -988,7 +1007,7 @@ Useful properties
 
   <target
     name="createBuildinfo"
-    depends="init, getBuildModelDir, gitRevParseModel, getBuildToolsDir, gitRevParseTools">
+    depends="init, gitRevParseModel, gitRevParseTools">
 
     <property
       name="BUILD_INFO_DIR"
@@ -1035,8 +1054,7 @@ Useful properties
 
   <target
     name="gitRevParseModel"
-    depends="getBuildModelDir"
-    if="buildModelAvailable">
+    depends="getBuildModelDir">
     <git-rev-parse
       repodir="${buildModelDir}"
       returnproperty="buildModelCommit" />
@@ -1083,6 +1101,59 @@ Useful properties
     <property
       name="previousSaved"
       value="true" />
+  </target>
+    <!-- It is not required for user to specify "vm", only
+         needed if they want to override the system (or Hudson) 
+         default. We do the "work" in getJVMLocationInternal
+         so we can set a "null default" in this task.
+    -->
+  <target
+    name="getJVMLocation"
+    depends="getJVMLocationInternal"
+    unless="vm_setting">
+      <!-- if vm_setting not set in 'getJVMLocationInternal'
+           then we set it to "null" here so that is has a safe value
+           when later used as <arg line="${vm_setting} />
+      -->
+    <property
+      name="vm_setting"
+      value="" />
+    <echo message="vm_setting has no value: ${vm_setting}" />
+  </target>
+  <target
+    name="getJVMLocationInternal"
+    depends="getJAVA_HOME"
+    if="JAVA_HOME"
+    unless="vm_setting">
+    <property
+      name="vm_setting"
+      value="-vm ${JAVA_HOME}/jre/bin" />
+    <echo message="at end of 'getJVMLocationInternal' vm_setting: ${vm_setting}" />
+  </target>
+    <!-- we have all these "checks" and "print out" since
+         it is not known how ant "knows about" JAVA_HOME.
+         That is, ant could be running in a Java different from
+         the one that is desired to be used to run aggregator.
+         Put another way, users can define JAVA_HOME as an environment 
+         variable, or pass in a -DJAVA_HOME value. The later takes 
+         priority, if both exists. 
+         Example: -DJAVA_HOME=/shared/common/jdk1.8.0_x64-latest
+    -->
+  <target
+    name="getJAVA_HOME"
+    depends="printPredefinedJAVA_HOME"
+    unless="JAVA_HOME">
+    <condition
+      property="JAVA_HOME"
+      value="${env.JAVA_HOME}">
+      <isset property="env.JAVA_HOME" />
+    </condition>
+    <echo message="at end of 'getJAVA_HOME', JAVA_HOME: ${JAVA_HOME}" />
+  </target>
+  <target
+    name="printPredefinedJAVA_HOME"
+    if="JAVA_HOME">
+    <echo message="Found JAVA_HOME already defined to be ${JAVA_HOME}" />
   </target>
 
 </project>
