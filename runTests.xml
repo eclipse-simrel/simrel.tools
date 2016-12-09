@@ -70,11 +70,11 @@
      could have some checks/tests.
   -->
   <target name="validateOnlyTests">
-    <echo message="No validation-only tests, yet" />
+    <echo message="No validation-only tests, yet (other then the aggregation validation itself)." />
   </target>
 
   <target name="cachedBuildTests">
-    <echo message="No cached build tests, yet" />
+    <echo message="No cached build tests, yet (other then the cached aggregation build itself)." />
   </target>
 
   <target
