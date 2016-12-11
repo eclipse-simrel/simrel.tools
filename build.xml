@@ -3,46 +3,46 @@
   basedir="."
   default="default">
 
-<!-- 
+<!--
 
 Purpose and primary targets
 
    This build.xml is to download and install the CBI aggregator (and other tools)
    and run one of three types of aggregations. Note: it assumes all has been checked out of Git
-   and "ready to aggregate". It does recored the "commit" of some repositories, just as a way to 
-   improve documenting what was built. 
+   and "ready to aggregate". It does recored the "commit" of some repositories, just as a way to
+   improve documenting what was built.
 
    This script has 3 main "entry targets", each corresponding to one of the 3 types of aggregations:
 
       1. runAggregatorValidateOnly (default)
           This simply confirms the "constraints" as specified by the the *.aggr* contributions
-          all make sense and "fit together" as well as that the repositories are available at the 
+          all make sense and "fit together" as well as that the repositories are available at the
           specified URLs. It is the "quickest" job, typically taking from 1 to 4 minutes.
 
       2. runAggregatorBuildOnly
-          This aggregation does a complete aggregation. That is, in addition to "validating" 
-          the constraints, it downloads the artifacts, unpacks or verifies any pack.gz files, 
-          and creates a final repository. The distinguishing feature of this target is that 
+          This aggregation does a complete aggregation. That is, in addition to "validating"
+          the constraints, it downloads the artifacts, unpacks or verifies any pack.gz files,
+          and creates a final repository. The distinguishing feature of this target is that
           if it is ran a second time it does not "clean" anything and downloads only anything new
-          that is needed. Hence, the first time it is ran can take several hours, 
-          but subsequent runs can be much quicker (from just a few minutes to a few dozen minutes, 
+          that is needed. Hence, the first time it is ran can take several hours,
+          but subsequent runs can be much quicker (from just a few minutes to a few dozen minutes,
           depending on how much is new).
 
       3. runAggregatorCleanBuild
-          This is the aggregation is similar to above, but always does a "clean build". 
-          It remove all artifacts and metadata that previously had been downloaded and starts "fresh". 
-          Hence, it always takes several hours to complete. But this is is important since there are few things 
+          This is the aggregation is similar to above, but always does a "clean build".
+          It remove all artifacts and metadata that previously had been downloaded and starts "fresh".
+          Hence, it always takes several hours to complete. But this is is important since there are few things
           that can go wrong that would only show up in a clean build.
 
 Important properties
 
-      Listed below are some of the most important properties that can be "passed in" (either as -D parameters on command line, 
+      Listed below are some of the most important properties that can be "passed in" (either as -D parameters on command line,
       or in a property file that is then specified on command line with -Daggr.properties=<yourPropertyFile>).
 
       - BUILD_HOME
            Technically should be an environment variable rather than an ant property. Such as invoking ant on command line
-           with "BUILD_HOME=${PWD} ant ... ". The default is the environment variable "WORKSPACE" so if running on Hudson, 
-           nothing needs to be specified. Technically is not required, but if not running on Hudson, it is best to 
+           with "BUILD_HOME=${PWD} ant ... ". The default is the environment variable "WORKSPACE" so if running on Hudson,
+           nothing needs to be specified. Technically is not required, but if not running on Hudson, it is best to
            specify some directory outside of the working tree.
 
       - release
@@ -51,13 +51,13 @@ Important properties
 
 Useful properties
 
-      Listed below are some useful properties that can be "passed in" (either as -D parameters on command line, 
+      Listed below are some useful properties that can be "passed in" (either as -D parameters on command line,
       or in a property file that is then specified on command line with -Daggr.properties=<yourPropertyFile>).
       But, most users or use-cases will not need to be concerned with these.
 
       - git_protocol
           'git_protocol' specifies an alternative way to "get" the git repositories of the 'simrel.build' and 'simrel.tools'.
-          If running with local versions of the repository, it can be slightly more efficient and reliable 
+          If running with local versions of the repository, it can be slightly more efficient and reliable
           to use direct file access ("git_protocol=file://") instead of the default of "git://git.eclipse.org".
 
       - rewriteRepositoryURLValue
@@ -69,7 +69,7 @@ Useful properties
 
       - installEclipseAndTools
           The script always installs Eclipse and required tools *unless* is sees that eclipse is already installed.
-          To force it to reinstall Eclipse and required tools use this installEclipseAndTools property. In practice, 
+          To force it to reinstall Eclipse and required tools use this installEclipseAndTools property. In practice,
           this value is seldom needed since often just as easy to delete the entire "BUILD_HOME" and start completely fresh.
 
       - platformFilename
@@ -79,14 +79,14 @@ Useful properties
 
       - platformLocation
           'platformLocation' is the location from where to the binary platform.
-          By default, it is 
+          By default, it is
           http://download.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200
           If you have access to the binary platform archive on your file system, you can specify
-          its location instead, for some savings in "download time". For example: 
+          its location instead, for some savings in "download time". For example:
           file:///files/eclipsefiles/
 
        - JAVA_HOME
-          Should rarely be needed "these days". But is provided here in case it is desired 
+          Should rarely be needed "these days". But is provided here in case it is desired
           to run the aggregator with a different VM than the VM that is running Ant.
 
 -->
@@ -539,7 +539,6 @@ Useful properties
       value="${AGGREGATOR_APP_BASE_ARGS} --action VALIDATE" />
     <echo message="AGG_APP_ARGS: ${AGG_APP_ARGS}" />
 
-
     <exec
       executable="${eclipseExecutable}"
       dir="${basedir}"
@@ -591,11 +590,18 @@ Useful properties
 
   <target
     name="runTests"
+    depends="initRunTestsXML,checkrunTests"
     if="runTestsXML">
     <ant
       antfile="${runTestsXML}"
       target="${tests}"
-      dir="${BUILD_HOME}" />
+      dir="${buildToolsDir}" />
+  </target>
+  <target
+    name="checkrunTests"
+    depends="initRunTestsXML"
+    unless="runTestsXML">
+    <echo message="runTestsXML was not defined as expected. Hence, no tests ran." />
   </target>
   <target
     name="initRunTestsXML"
@@ -628,34 +634,28 @@ Useful properties
 
     <!-- We assign a reasonable value for local builds, but for production
       builds should be .../production.properties This property file name
-      is itself
-      a property, so it can be overridden on one machine versus another.
-      We do
-      it this way, instead of just specifying -propertyFile on command line,
-      so
-      that the property values can be "nested" in other property values and
-      evaluated
-      lazily. -->
+      is itself a property, so it can be overridden on one machine versus another.
+      We do it this way, instead of just specifying -propertyFile on command line,
+      so that the property values can be "nested" in other property values and
+      evaluated lazily. -->
     <property
       name="aggrPropertyFile"
       value="${buildToolsDir}/aggr.properties" />
-
     <property file="${aggrPropertyFile}" />
 
-      <!-- 
+      <!--
       The "binary platform" is enough, for now, and since smaller than the SDK,
       it is recommended as the "base" to install tools into. But a typical "SDK" has been
       left in this comment in case users are doing more than a normal "aggregation build".
-      value="/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200/eclipse-SDK-4.6.1-linux-gtk-x86_64.tar.gz" 
+      value="/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200/eclipse-SDK-4.6.1-linux-gtk-x86_64.tar.gz"
       -->
       <!--
-      Note: if there is local file system version of the prereq platform, 
+      Note: if there is local file system version of the prereq platform,
       if it faster to specify file://<location of platform>.
       <property name="platformLocation" value="file:///home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200" />
       We use "http://" by default to make it easy to "run from anywhere", but
       on the production machine, in production.properties, we specify the "file://" form.
       -->
-
     <property
       name="platformLocation"
       value="http://download.eclipse.org/eclipse/downloads/drops4/R-4.6.1-201609071200" />
@@ -667,7 +667,7 @@ Useful properties
       value="${BUILD_HOME}/localPrereqs" />
     <property
       name="platformResource"
-      value="${platformLocation}/${platformFilename}" /> 
+      value="${platformLocation}/${platformFilename}" />
       <!-- directory must exist before "get" uses it or else the file is given name of "localPrereqs" -->
     <mkdir dir="${localPrereqCache}" />
 
@@ -941,16 +941,16 @@ Useful properties
   <target
     name="setDefaultBUILD_HOME"
     unless="BUILD_HOME">
-    <property
-      name="BUILD_HOME"
-      value="${basedir}" />
-    <property
-      name="buildModelDir"
-      value="${basedir}" />
-
+    <!--
+         We assume BUILD_HOME is "one up" from directory where build.xml file is.
+         We always assume the 'simrel.build' and 'simrel.tools' projects are directly under "BUILD_HOME".
+    -->
+    <dirname
+      property="BUILD_HOME"
+      file="${basedir}" />
     <echo
-      message="WARNING: BUILD_HOME set to a default value, ${BUILD_HOME}. Typically this is not desired and may mean there is a configuration issue." />
-    <echo message="WARNING: This implies we also set buildModelDir to ${basedir}" />
+      message="WARNING: BUILD_HOME set to a default value, ${BUILD_HOME}. If this is not correct, you must configure is explicitly as an environment variable." />
+    <echo message="         Note: we always assume the 'simrel.build' and 'simrel.tools' projects are directly under 'BUILD_HOME'" />
 
   </target>
   <target
@@ -1012,9 +1012,9 @@ Useful properties
     <property
       name="BUILD_INFO_DIR"
       value="${AGGREGATOR_RESULTS}/final/buildInfo" />
-  	<!-- 
-  	  Note: The propertyfile task literally edits the properties, 
-  	  if the file already exists, does not create a new one. Therefore 
+  	<!--
+  	  Note: The propertyfile task literally edits the properties,
+  	  if the file already exists, does not create a new one. Therefore
   	  we delete it first.
   	-->
     <delete dir="${BUILD_INFO_DIR}" />
@@ -1103,7 +1103,7 @@ Useful properties
       value="true" />
   </target>
     <!-- It is not required for user to specify "vm", only
-         needed if they want to override the system (or Hudson) 
+         needed if they want to override the system (or Hudson)
          default. We do the "work" in getJVMLocationInternal
          so we can set a "null default" in this task.
     -->
@@ -1134,9 +1134,9 @@ Useful properties
          it is not known how ant "knows about" JAVA_HOME.
          That is, ant could be running in a Java different from
          the one that is desired to be used to run aggregator.
-         Put another way, users can define JAVA_HOME as an environment 
-         variable, or pass in a -DJAVA_HOME value. The later takes 
-         priority, if both exists. 
+         Put another way, users can define JAVA_HOME as an environment
+         variable, or pass in a -DJAVA_HOME value. The later takes
+         priority, if both exists.
          Example: -DJAVA_HOME=/shared/common/jdk1.8.0_x64-latest
     -->
   <target
@@ -1154,6 +1154,32 @@ Useful properties
     name="printPredefinedJAVA_HOME"
     if="JAVA_HOME">
     <echo message="Found JAVA_HOME already defined to be ${JAVA_HOME}" />
+  </target>
+
+  <!-- Note: this target may be useful to anyone that has ran "build.xml" from
+       their IDE workspace, since the build will leave some directories in
+       their IDE workspace that do not show up in their IDE.
+  -->
+  <target
+    name="cleanAllArtifacts"
+    depends="getBUILD_HOME, setDefaultBUILD_HOME"
+    description="This target is primarily for documentation. We do NOT want to call this automatically, since that would interfere with desired caching, etc. But may be desired to create custom versions in future, in some cases, so documented here.">
+      <!-- Note the strong assumption that "BUILD_HOME" is the same
+           value when running this 'clean' target, as when
+           the directories were created.
+      -->
+    <delete
+      dir="${BUILD_HOME}/localPrereqs"
+      includeemptydirs="true" />
+    <delete
+      dir="${BUILD_HOME}/eclipseInstall"
+      includeemptydirs="true" />
+    <delete
+      dir="${BUILD_HOME}/tmp"
+      includeemptydirs="true" />
+    <delete
+      dir="${BUILD_HOME}/aggregation"
+      includeemptydirs="true" />
   </target>
 
 </project>

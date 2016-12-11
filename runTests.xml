@@ -1,14 +1,15 @@
 <project
   name="SimRel Tests"
   basedir="."
-  default="runTests">
+  default="runReports">
 
+  <!-- define 'env' globally -->
   <property environment="env" />
-  <!-- This property file name is itself a property, so it can be overridden
+
+  <!-- The 'aggrPropertyFile' property file name is itself a property, so it can be overridden
     on one machine versus another. We do it this way, instead of just specifying
     -propertyFile on command line, so that the property values can be "nested"
     in other property values and evaluated lazily. -->
-
   <property
     name="aggrPropertyFile"
     value="aggr.properties" />
@@ -20,7 +21,6 @@
        .../reporeports/reports contains the actual reports.
        .../reporeports contains the index.html file.
   -->
-
   <property
     name="testRepoDirectory"
     value="${BUILD_HOME}/aggregation/final" />
@@ -34,13 +34,13 @@
 
   <!-- We should be passed (or, inherit) the release value from where
        this script it called in build.xml.
-       TODO: would be best to control this value from Hudson property, 
+       TODO: would be best to control this value from Hudson property,
        so that changes in future do not require changes in code.
-       NOTE: another example of where "update" and "mainline" would 
+       NOTE: another example of where "update" and "mainline" would
        be useful variables to have?
   -->
   <!-- reference repository for update releases is alwasy the previous release.
-       reference repository for mainline release should be the latest "update staging" repostory, 
+       reference repository for mainline release should be the latest "update staging" repostory,
        once it exists and is accurate.
   -->
   <condition
@@ -69,35 +69,30 @@
      So far, only the "clean build" has any real tests, be eventually others
      could have some checks/tests.
   -->
-  <target name="validateOnlyTests">
+  <target
+    name="validateOnlyTests"
+    description="Tests appropriate when only metadata available">
     <echo message="No validation-only tests, yet (other then the aggregation validation itself)." />
   </target>
 
-  <target name="cachedBuildTests">
+  <target
+    name="cachedBuildTests"
+    description="Tests appropriate when metadata and artifacts available (though, for cached build, may be 'extra' artifacts not cleaned up yet">
     <echo message="No cached build tests, yet (other then the cached aggregation build itself)." />
   </target>
 
   <target
     name="cleanBuildTests"
-    depends="runTests">
+    description="The primary and final time to test metadata and artifacts."
+    depends="runReports">
     <echo>
       Ran standard clean build reports and tests.
       See report in ${reportOutputDir}.
     </echo>
   </target>
 
-  <target name="runTests">
-    <echo message="Creating Reports" />
-
-    <echoproperties />
-
-    <antcall target="runReports" />
-
-    <!-- currently, we never "fail" ... but, will in future -->
-    <fail if="failuresoccurred" />
-  </target>
-
   <target name="runReports">
+    <echo message="Creating Reports" />
     <property
       name="REPORT_APP_NAME"
       value="org.eclipse.cbi.p2repo.analyzers.repoReport" />
@@ -115,7 +110,9 @@
     <exec
       executable="${eclipseTestExecutable}"
       dir="${basedir}"
-      failonerror="true">
+      failonerror="false"
+      failifexecutionfails="true"
+      resultproperty="applicationResult">
       <arg value="-nosplash" />
       <arg value="-debug" />
       <arg value="--launcher.suppressErrors" />
@@ -124,6 +121,18 @@
       <arg value="-vmargs" />
       <arg line="${VM_TEST_ARGS}" />
     </exec>
+
+    <echo message="DEBUG: resultproperty: ${resultproperty}" />
+    <condition property="failuresoccurred">
+      <not>
+        <equals
+          arg1="resultproperty"
+          arg2="0" />
+      </not>
+    </condition>
+      <!-- currently, we (should) never "fail" ... but, will in future -->
+      <!-- need to learn how to signal "unstable" to Hudson, as opposed to outright failure. -->
+    <fail if="failuresoccurred" />
   </target>
 
 </project>
