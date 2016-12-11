@@ -122,13 +122,16 @@
       <arg line="${VM_TEST_ARGS}" />
     </exec>
 
-    <echo message="DEBUG: resultproperty: ${resultproperty}" />
+    <echo message="DEBUG: applicationResult: ${applicationResult}" />
     <condition property="failuresoccurred">
-      <not>
-        <equals
-          arg1="resultproperty"
-          arg2="0" />
-      </not>
+      <and>
+        <isset property="applicationResult" />
+        <not>
+          <equals
+            arg1="applicationResult"
+            arg2="0" />
+        </not>
+      </and>
     </condition>
       <!-- currently, we (should) never "fail" ... but, will in future -->
       <!-- need to learn how to signal "unstable" to Hudson, as opposed to outright failure. -->
