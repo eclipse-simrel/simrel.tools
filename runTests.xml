@@ -128,7 +128,7 @@
         <isset property="applicationResult" />
         <not>
           <equals
-            arg1="applicationResult"
+            arg1="${applicationResult}"
             arg2="0" />
         </not>
       </and>
