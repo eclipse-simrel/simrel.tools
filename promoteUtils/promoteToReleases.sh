@@ -15,14 +15,14 @@
 function usage
 {
   printf "\n\tScript to promote aggregation to staging area" >&2
-  printf "\n\tUsage: %s [-n] -s <stream> -d <datetimestamp>" "$(basename $0)" >&2
+  printf "\n\tUsage: %s [-n] -s <stream> -d <dirdate>" "$(basename $0)" >&2
   printf "\n\t\t%s" "where <stream> is train name, such as 'neon' or 'oxygen'" >&2
-  printf "\n\t\t%s" "and where <datetimestamp> is the date and time for the directory name of the composite child repository, such as '201208240900'" >&2
+  printf "\n\t\t%s" "and where <dirdate> is the date and time for the directory name of the composite child repository, such as '201208240900'" >&2
   printf "\n\t\t%s" "and the optional \"-n\" means \"no copying\" or 'dry-run'" >&2
   printf "\n" >&2
 }
 
-datetimestamp=
+dirdate=
 stream=
 DRYRUN=""
 # the initial ':' keeps getopts in quiet mode ... meaning it doesn't print "illegal argument" type messages.
@@ -43,7 +43,7 @@ do
       stream=$OPTARG
       ;;
     d)
-      datetimestamp=$OPTARG
+      dirdate=$OPTARG
       ;;
     \?)
       # I've seen examples wehre just ?, or [?] is used, which means "match any one character",
@@ -108,10 +108,10 @@ then
   exit 1
 fi
 
-# make sure 'datetimestamp' has been defined and is no zero length
-if [ -z "${datetimestamp}" ]
+# make sure 'dirdate' has been defined and is no zero length
+if [ -z "${dirdate}" ]
 then
-  printf "\n\t[ERROR] the variable datetimestamp must be defined to run this script.\n"
+  printf "\n\t[ERROR] the variable dirdate must be defined to run this script.\n"
   exit 1
 fi
 
@@ -129,7 +129,7 @@ then
   exit 1
 fi
 
-toSubDir=${toDirectory}/${datetimestamp}
+toSubDir=${toDirectory}/${dirdate}
 
 if [[ -z "${DRYRUN}" ]]
 then
@@ -170,7 +170,7 @@ fi
 
 if [[ -z "${DRYRUN}" ]]
 then
-  "${BUILD_TOOLS_DIR}/promoteUtils/addRepoProperties-release.sh" ${release} ${datetimestamp}
+  "${BUILD_TOOLS_DIR}/promoteUtils/addRepoProperties-release.sh" ${release} ${dirdate}
   RC=$?
   if [[ "$RC" != "0" ]] 
   then

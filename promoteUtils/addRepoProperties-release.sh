@@ -12,10 +12,10 @@
 
 
 release=$1
-datetimestamp=$2
+dirdate=$2
 
-if [ -z "$datetimestamp" ] ; then
-  echo "ERROR: 'datetimestamp' directory variable is required for this script.";
+if [ -z "$dirdate" ] ; then
+  echo "ERROR: 'dirdate' directory variable is required for this script.";
   exit 1;
 fi
 
@@ -42,7 +42,7 @@ echo "dev:           $0"
 echo
 echo "release:       $release"
 echo
-echo "datetimestampe: $datetimestamp"
+echo "dirdate: $dirdate"
 echo
 echo "devworkspace:   $devworkspace"
 echo
