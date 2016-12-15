@@ -51,11 +51,11 @@ fi
 # get a listing, and see what was there?
 
 repoList="\
-  /releases/oxygen/ \
-  /releases/neon/ \
-  /staging/neon/ \
-  /staging/oxygen/ \
-  /releases/mars/ \
+  releases/oxygen/ \
+  releases/neon/ \
+  staging/neon/ \
+  staging/oxygen/ \
+  releases/mars/ \
   "
 
 if [[ "$trainArg" == "all" ]]
