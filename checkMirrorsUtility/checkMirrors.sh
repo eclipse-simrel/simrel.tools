@@ -162,9 +162,8 @@ then
     /releases/oxygen/201609231000/ \
     /releases/oxygen/201611041000/ \
     /releases/oxygen/201612161000/ \
-    /technology/epp/packages/neon/
-  /technology/epp/packages/neon/
-  /technology/epp/packages/oxygen/ \
+    /technology/epp/packages/neon/ \
+    /technology/epp/packages/oxygen/ \
     /cbi/updates/aggregator/ide/4.6/ \
     /cbi/updates/aggregator/headless/4.6/ \
     /eclipse/updates/4.6/R-4.6-201606061100 \
