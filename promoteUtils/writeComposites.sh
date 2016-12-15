@@ -89,7 +89,7 @@ function writeChildren
   # But, otherwise, this cheap heuristic would find existing files such as "composite*" files, 
   # which would be very wrong.
   pushd "${repoRoot}" >/dev/null
-  if [[ $checkpoint ~= ^R([0-9])$ ]]
+  if [[ $checkpoint =~ ^R([0-9])$ ]]
   then
     nChildren=${BASH_REMATCH[1]}
     nChildren=$((nChildren + 1))
