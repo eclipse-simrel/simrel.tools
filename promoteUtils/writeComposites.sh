@@ -57,13 +57,41 @@ function writeChildren
   then
     echo -e "\n[ERROR] repoRoot did not exist when passed into writeChildren." 
     echo -e "\t${repoRoot}"
+    exit 1
   fi
-  # NOTE: we always take "most recent 3 builds". 
-  # we use "20" as prefix that all our child repo directories start with 
+  checkpoint=$3
+  if [[ -z ${checkpoint} ]]
+  then
+    echo -e "\n[ERROR] checkpoint was not defined to writeChildren." 
+    echo -e "\t${checkpoint}"
+    exit 1
+  fi
+  # NOTE: we always take "most recent 3 builds" 
+  # EXCEPT when we are doing a "final release". This especially matters for
+  # "update releases" since we then we will eventually have more than 3 "dated directory"
+  # and in that case we want them all, not just most recent 3.
+  # This leads to a *hard assumption* that we name release checkpoints as "R[0..0]", such as 
+  # R0 for initial release of "neon", R1 for "neon.1", etc. 
+  # For the main stream development, we typically use M[1..9] for milestones, 
+  # and RC[0-9] for Release candidates. But we make not assumption there, 
+  # as long as it is not R[0-9].
+  # We use "20" as a prefix to match for all our child repo directories to start with 
   # such as "2016...". So, in 80 years will need some maintenance. :) 
-  # But, otherwise, this cheap heuristic would find existing files such as "composite*".
+  # But, otherwise, this cheap heuristic would find existing files such as "composite*" files, 
+  # which would be very wrong.
   pushd "${repoRoot}" >/dev/null
-  children=$(ls -1td 20* | head -3)
+  if [[ $checkpoint ~= ^R([0-9])$ ]]
+  then
+    nChildren=${BASH_REMATCH[1]}
+    nChildren=$((nChildren + 1))
+    children=$(ls -1td 20*) | head -${nChildren}
+    echo -e "\n\t[INFO] Note that checkpoint, $checkpoint, was found to be a final release"
+    echo -e "\t       and nChildren computed to be $nChildren\n"
+  else
+    children=$(ls -1td 20* | head -3)
+    echo -e "\n\t[INFO] Note that checkpoint, $checkpoint, was NOT found to be a final release"
+    echo -e "\t       so nChildren was assumed to be '3'\n"
+  fi
   popd >/dev/null
 
   for child in $children
