@@ -93,7 +93,7 @@ function writeChildren
   then
     nChildren=${BASH_REMATCH[1]}
     nChildren="$((nChildren + 1))"
-    children=$(ls -1td 20*) | head -"${nChildren}"
+    children=$(ls -1td 20* | head -${nChildren})
     echo -e "\n\t[INFO] Note that checkpoint, $checkpoint, was found to be a final release"
     echo -e "\t       and nChildren computed to be $nChildren\n"
   else
