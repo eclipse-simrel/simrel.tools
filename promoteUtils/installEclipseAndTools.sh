@@ -12,7 +12,7 @@
 
 
 source promote.shsource 2>/dev/null
-source ${BUILD_HOME}/tools/promoteUtils/promote.shsource
+source ${BUILD_HOME}/org.eclipse.simrel.tools/promoteUtils/promote.shsource
 
 INSTALL_ECLIPSE="true"
 

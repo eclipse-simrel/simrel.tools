@@ -25,7 +25,7 @@ else
 fi
 
 source promote.shsource 2>/dev/null
-source ${BUILD_HOME}/tools/promoteUtils/promote.shsource
+source ${BUILD_HOME}/org.eclipse.simrel.tools/promoteUtils/promote.shsource
 
 # specify devworkspace
 # and JRE to use to runEclipse
