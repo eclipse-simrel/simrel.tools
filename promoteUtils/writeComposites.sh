@@ -88,12 +88,12 @@ function writeChildren
   # such as "2016, 2017, ...". So, in 80 it years will need some maintenance. :) 
   # But, otherwise, this cheap heuristic would find existing files such as "composite*" files, 
   # which would be very wrong.
-  pushd "${repoRoot}" >/dev/null
+  pushd "${repoRoot}" # >/dev/null
   if [[ $checkpoint =~ ^R([0-9])$ ]]
   then
     nChildren=${BASH_REMATCH[1]}
-    nChildren=$((nChildren + 1))
-    children=$(ls -1td 20*) | head -${nChildren}
+    nChildren="$((nChildren + 1))"
+    children=$(ls -1td 20*) | head -"${nChildren}"
     echo -e "\n\t[INFO] Note that checkpoint, $checkpoint, was found to be a final release"
     echo -e "\t       and nChildren computed to be $nChildren\n"
   else
@@ -101,7 +101,7 @@ function writeChildren
     echo -e "\n\t[INFO] Note that checkpoint, $checkpoint, was NOT found to be a final release"
     echo -e "\t       so nChildren was assumed to be '3'\n"
   fi
-  popd >/dev/null
+  popd # >/dev/null
 
   for child in $children
   do
