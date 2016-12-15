@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Utility to get "real names" from group membership ids -- callisto-dev, by default.
+# Utility to get "real names" from group membership ids, which is callisto-dev, by default.
 # Note, this utility makes use of "finger" ... probably not as exact as
 # using Eclipse Foundations LDAP database, but as far as I know that is not "accessible".
 

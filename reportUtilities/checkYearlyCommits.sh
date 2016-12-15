@@ -13,7 +13,6 @@
 # For 2014 effort, in November/December of 2014, see
 #    https://bugs.eclipse.org/bugs/show_bug.cgi?id=450186
 #
-#
 # This script can be ran in an "complete clone" of org.eclipse.simrel.build.
 
 # Note that this script will not capture those in the "calisto-dev"
