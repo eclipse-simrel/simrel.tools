@@ -159,7 +159,7 @@ writeChildren "${artifactsCompositeFile}" "${repoRoot}" ${checkpoint}
 writeFooter "${artifactsCompositeFile}"
 
 writeContentHeader "${contentCompositeFile}" ${stream}
-writeChildren "${contentCompositeFile}" "${repoRoot}"
+writeChildren "${contentCompositeFile}" "${repoRoot}" ${checkpoint}
 writeFooter "${contentCompositeFile}"
 
 # We go ahead and re-write the file, since even if it 
