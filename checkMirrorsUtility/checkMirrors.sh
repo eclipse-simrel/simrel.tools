@@ -186,7 +186,7 @@ fi
 minimumMirrors=
 if [ "${urls}" ]
 then
-  echo -e "\n[DEBUG] urls: $urls\n"
+  #echo -e "\n[DEBUG] urls: $urls\n"
   for mirrorURL in ${urls}
   do
     nm=$(checkMirrorsForURL $mirrorURL $protocol)
