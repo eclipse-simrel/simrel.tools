@@ -12,6 +12,9 @@ function writeArtifactsHeader
   printf "%s\n" "    <property name='p2.compressed' value='true'/>" >> ${outfile}
   printf "%s\n" "    <property name='p2.atomic.composite.loading' value='true'/>" >> ${outfile}
   printf "%s\n" "  </properties>" >> ${outfile}
+  # Note: size will not always be accurate here, for 'update releases' there can be more, but 
+  # this number is just used to allocate an initial array (or, something) so would be a very minor
+  # performance hit to have to "grow" it. But, could be improved in future.
   printf "%s\n" "  <children size='4'>" >> ${outfile}
   printf "%s\n" "     <child location='http://download.eclipse.org/technology/epp/packages/$stream/'/>" >> ${outfile}
 
@@ -30,6 +33,9 @@ function writeContentHeader
   printf "%s\n" "    <property name='p2.compressed' value='true'/>" >> ${outfile}
   printf "%s\n" "    <property name='p2.atomic.composite.loading' value='true'/>" >> ${outfile}
   printf "%s\n" "  </properties>" >> ${outfile}
+  # Note: size will not always be accurate here, for 'update releases' there can be more, but 
+  # this number is just used to allocate an initial array (or, something) so would be a very minor
+  # performance hit to have to "grow" it. But, could be improved in future.  
   printf "%s\n" "  <children size='3'>" >> ${outfile}
   printf "%s\n" "     <child location='http://download.eclipse.org/technology/epp/packages/$stream/'/>" >> ${outfile}
 
@@ -66,17 +72,20 @@ function writeChildren
     echo -e "\t${checkpoint}"
     exit 1
   fi
-  # NOTE: we always take "most recent 3 builds" 
+  # NOTE: we always take the "3 most recent builds" 
   # EXCEPT when we are doing a "final release". This especially matters for
-  # "update releases" since we then we will eventually have more than 3 "dated directory"
+  # "update releases" since we then we will eventually have more than 3 "dated directories"
   # and in that case we want them all, not just most recent 3.
-  # This leads to a *hard assumption* that we name release checkpoints as "R[0..0]", such as 
-  # R0 for initial release of "neon", R1 for "neon.1", etc. 
-  # For the main stream development, we typically use M[1..9] for milestones, 
-  # and RC[0-9] for Release candidates. But we make not assumption there, 
-  # as long as it is not R[0-9].
-  # We use "20" as a prefix to match for all our child repo directories to start with 
-  # such as "2016...". So, in 80 years will need some maintenance. :) 
+  # This leads to a *hard assumption* that we name release checkpoints as "R[0-9]", such as 
+  # R0 for initial release of "neon", R1 for "neon.1", etc. Further, if we have a "neon.1a" it 
+  # should be R2 checkpoint (we would have an R0 and an R1 already, so this would be the third "child"
+  # repository. Even after a "1a" release, all subsequent ones also should be one higher than popularly 
+  # named. In other words, the integer (plus one) is taken as the number of <child ... /> elements to create.
+  # For the main stream development, we typically use M[0-9] for milestones, 
+  # and RC[0-9] for Release candidates. But we make no assumption there, we always create 3 child elements.
+  #
+  # We use "20" as a prefix to match for all our child repo directories 
+  # such as "2016, 2017, ...". So, in 80 it years will need some maintenance. :) 
   # But, otherwise, this cheap heuristic would find existing files such as "composite*" files, 
   # which would be very wrong.
   pushd "${repoRoot}" >/dev/null
@@ -119,8 +128,8 @@ repoRoot="/home/data/httpd/download.eclipse.org/releases/${stream}"
 # to the "production" area.
 # similarly, for some testing/debugging cases it is 
 # handiest to execute from current directory, if WORKSPACE
-# is not defined already. We can leave in this line, since 
-# it will always be defined on Hudson. 
+# is not defined already. Thus, we can leave in this line, since 
+# production builds will always be defined on Hudson. 
 WORKSPACE=${WORKSPACE:-${PWD}}
 #  writeRepoRoot="${PWD}/$stream"
 # This is the "real" place to write results.
@@ -146,7 +155,7 @@ contentCompositeJar="${writeRepoRoot}/${contentCompositeName}${checkpoint}.jar"
 p2Index="${writeRepoRoot}/p2.index"
 
 writeArtifactsHeader "${artifactsCompositeFile}" ${stream}
-writeChildren "${artifactsCompositeFile}" "${repoRoot}"
+writeChildren "${artifactsCompositeFile}" "${repoRoot}" ${checkpoint}
 writeFooter "${artifactsCompositeFile}"
 
 writeContentHeader "${contentCompositeFile}" ${stream}
