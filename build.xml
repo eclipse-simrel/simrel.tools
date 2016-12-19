@@ -802,6 +802,9 @@ Useful properties
     <property
       name="PRODUCTION"
       value="" />
+    <property
+      name="p2AgentLocation"
+      value="${BUILD_HOME}/.p2AgentLocation" />
     <!-- In the distant past, we have also used these arguments. The maven
       result one was always experimental. We have also learned it it better
       not
@@ -810,7 +813,7 @@ Useful properties
       &dash;&dash;trustedContributions Eclipse,Equinox -->
     <property
       name="AGGREGATOR_APP_BASE_ARGS"
-      value="${PRODUCTION} --buildModel ${buildModelDir}/simrel.aggr --buildRoot ${AGGREGATOR_RESULTS} --eclipseLogLevel DEBUG --logLevel DEBUG --emailFrom david_williams@eclipse.org --emailFromName ${release}Aggregator --logURL ${LOG_URL} --subjectPrefix ${release}Aggregation" />
+      value="${PRODUCTION} --buildModel ${buildModelDir}/simrel.aggr --buildRoot ${AGGREGATOR_RESULTS} --agentLocation ${p2AgentLocation} --eclipseLogLevel DEBUG --logLevel DEBUG --emailFrom david_williams@eclipse.org --emailFromName ${release}Aggregator --logURL ${LOG_URL} --subjectPrefix ${release}Aggregation" />
 
     <echo message="= = = Properties at end of init = = = " />
     <echo message="git_protocol: ${git_protocol}" />
