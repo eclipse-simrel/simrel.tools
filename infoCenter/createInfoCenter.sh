@@ -109,7 +109,7 @@ create_scripts() {
 
     # Create stop script
     echo "java -classpath eclipse/plugins/org.eclipse.help.base_$HELP_BASE_VERSION.jar org.eclipse.help.standalone.Infocenter -clean -command shutdown -eclipsehome eclipse -port $PORT 2>&1" > $WORKDIR/stopInfoCenter.sh
-   	echo "echo \"The Eclipse info center is now stopped.\"" >> $WORKDIR/startInfoCenter.sh
+   	echo "echo \"The Eclipse info center is now stopped.\"" >> $WORKDIR/stopInfoCenter.sh
 
     chmod +x $WORKDIR/*InfoCenter.sh
 }
