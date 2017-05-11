@@ -22,6 +22,7 @@ P2_BASE_DIR=/home/data/httpd/download.eclipse.org
 SCRIPT_NAME="$(basename ${0})"
 BANNER_FILE=org.foundation.helpbanner2_2.0.0.jar
 PORT=8086
+FULL_DATE=$(date +%Y-%m-%d-%H-%M-%S)
 
 usage() {
   printf "Usage %s [releaseName] [pathToArchive] [p2RepoDir] [legacyMode]\n" "${SCRIPT_NAME}"
@@ -115,11 +116,11 @@ create_scripts() {
 
 create_archive() {
     # Create tar.gz
-    if [ -f info-center-$RELEASE_NAME.tar.gz ]; then
-      rm info-center-$RELEASE_NAME.tar.gz
-    fi
+#    if [ -f info-center-$RELEASE_NAME.tar.gz ]; then
+#      rm info-center-$RELEASE_NAME.tar.gz
+#    fi
     echo "Creating info center archive..."
-    tar czf info-center-$RELEASE_NAME.tar.gz $WORKDIR
+    tar czf info-center-$RELEASE_NAME-$FULL_DATE.tar.gz $WORKDIR
 }
 
 prepare
