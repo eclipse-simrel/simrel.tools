@@ -158,6 +158,9 @@ then
     /releases/neon/201609281000/ \
     /releases/neon/201610111000/ \
     /releases/neon/201612211000/ \
+    /releases/neon/201703141400/ \
+    /releases/neon/201703231000/ \
+    /releases/neon/201705151400/ \
     /releases/oxygen/201608121000/ \
     /releases/oxygen/201609231000/ \
     /releases/oxygen/201611041000/ \
@@ -168,7 +171,8 @@ then
     /cbi/updates/aggregator/headless/4.6/ \
     /eclipse/updates/4.6/R-4.6-201606061100 \
     /eclipse/updates/4.6/R-4.6.1-201609071200 \
-    /eclipse/updates/4.6/R-4.6.2-201611241400"
+    /eclipse/updates/4.6/R-4.6.2-201611241400 \
+    /eclipse/updates/4.6/R-4.6.3-201703010400"
 
 fi
 
