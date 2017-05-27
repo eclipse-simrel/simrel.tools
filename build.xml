@@ -75,12 +75,12 @@ Useful properties
       - platformFilename
           'platformFilename' is the name of the binary platform to install
           as the "base" into which the aggregator and other tools are installed into.
-          The default is eclipse-platform-4.6.2-linux-gtk-x86_64.tar.gz.
+          The default is eclipse-platform-4.6.3-linux-gtk-x86_64.tar.gz.
 
       - platformLocation
           'platformLocation' is the location from where to the binary platform.
           By default, it is
-          http://download.eclipse.org/eclipse/downloads/drops4/R-4.6.2-201611241400
+          http://download.eclipse.org/eclipse/downloads/drops4/R-4.6.3-201703010400
           If you have access to the binary platform archive on your file system, you can specify
           its location instead, for some savings in "download time". For example:
           file:///files/eclipsefiles/
@@ -647,21 +647,21 @@ Useful properties
       The "binary platform" is enough, for now, and since smaller than the SDK,
       it is recommended as the "base" to install tools into. But a typical "SDK" has been
       left in this comment in case users are doing more than a normal "aggregation build".
-      value="/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.2-201611241400/eclipse-SDK-4.6.2-linux-gtk-x86_64.tar.gz"
+      value="/home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.3-201703010400/eclipse-SDK-4.6.3-linux-gtk-x86_64.tar.gz"
       -->
       <!--
       Note: if there is local file system version of the prereq platform,
       if it faster to specify file://<location of platform>.
-      <property name="platformLocation" value="file:///home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.2-201611241400" />
+      <property name="platformLocation" value="file:///home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.3-201703010400" />
       We use "http://" by default to make it easy to "run from anywhere", but
       on the production machine, in production.properties, we specify the "file://" form.
       -->
     <property
       name="platformLocation"
-      value="http://download.eclipse.org/eclipse/downloads/drops4/R-4.6.2-201611241400" />
+      value="http://download.eclipse.org/eclipse/downloads/drops4/R-4.6.3-201703010400" />
     <property
       name="platformFilename"
-      value="eclipse-platform-4.6.2-linux-gtk-x86_64.tar.gz" />
+      value="eclipse-platform-4.6.3-linux-gtk-x86_64.tar.gz" />
     <property
       name="localPrereqCache"
       value="${BUILD_HOME}/localPrereqs" />
