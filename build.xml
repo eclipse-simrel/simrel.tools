@@ -813,7 +813,7 @@ Useful properties
       &dash;&dash;trustedContributions Eclipse,Equinox -->
     <property
       name="AGGREGATOR_APP_BASE_ARGS"
-      value="${PRODUCTION} --buildModel ${buildModelDir}/simrel.aggr --buildRoot ${AGGREGATOR_RESULTS} --agentLocation ${p2AgentLocation} --eclipseLogLevel DEBUG --logLevel DEBUG --emailFrom david_williams@eclipse.org --emailFromName ${release}Aggregator --logURL ${LOG_URL} --subjectPrefix ${release}Aggregation" />
+      value="${PRODUCTION} --buildModel ${buildModelDir}/simrel.aggr --buildRoot ${AGGREGATOR_RESULTS} --agentLocation ${p2AgentLocation} --eclipseLogLevel DEBUG --logLevel DEBUG --emailFrom frederic.gurr@eclipse.org --emailFromName ${release}Aggregator --logURL ${LOG_URL} --subjectPrefix ${release}Aggregation" />
 
     <echo message="= = = Properties at end of init = = = " />
     <echo message="git_protocol: ${git_protocol}" />
