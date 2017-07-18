@@ -21,8 +21,8 @@
 # and then executed in "bash script" build step.
 RAW_OVERALL_DATE_START="$(date +%s )"
 baseEclipseAccessDir=/home/data/httpd/download.eclipse.org
-baseEclipseDirSegment=eclipse/downloads/drops4/R-4.6.3-201703010400
-baseEclipse=eclipse-platform-4.6.3-linux-gtk-x86_64.tar.gz
+baseEclipseDirSegment=eclipse/downloads/drops4/R-4.7-201706120950
+baseEclipse=eclipse-platform-4.7-linux-gtk-x86_64.tar.gz
 repoFileAccess=file:///home/data/httpd/download.eclipse.org/
 repoHttpAccess=http://download.eclipse.org
 repoAccess=${repoFileAccess}

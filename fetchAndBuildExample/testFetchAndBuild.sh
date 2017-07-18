@@ -92,6 +92,6 @@ fi
 
 ant -f ${BUILD_HOME}/org.eclipse.simrel.tools/fetchAndbuild.xml \
   -DBUILD_HOME=${BUILD_HOME} \
-  -DplatformLocation=file:///home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.6.3-201703010400 \
+  -DplatformLocation=file:///home/data/httpd/archive.eclipse.org/eclipse/downloads/drops4/R-4.7-201706120950 \
   -Drelease=oxygen \
   getModelFromGit runAggregatorValidateOnly 2>&1 | tee ${buildOutput}
