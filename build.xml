@@ -117,7 +117,7 @@ Useful properties
       value="org.eclipse.equinox.p2.director" />
     <property
       name="otherArgsAggr"
-      value="-metadataRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.6/ -artifactRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.6/ -installIU org.eclipse.cbi.p2repo.aggregator.engine.feature.feature.group" />
+      value="-metadataRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.7/ -artifactRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.7/ -installIU org.eclipse.cbi.p2repo.aggregator.engine.feature.feature.group" />
 
       <!--
         Remote builds should use eclipse.p2.mirrors=true
@@ -186,7 +186,7 @@ Useful properties
       value="org.eclipse.equinox.p2.director" />
     <property
       name="repoReportURL"
-      value="http://download.eclipse.org/cbi/updates/analyzers/4.6/" />
+      value="http://download.eclipse.org/cbi/updates/analyzers/4.7/" />
 
     <property
       name="OTHER_ARGS_TESTS"
