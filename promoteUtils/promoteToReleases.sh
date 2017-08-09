@@ -46,7 +46,7 @@ do
       dirdate=$OPTARG
       ;;
     \?)
-      # I've seen examples wehre just ?, or [?] is used, which means "match any one character",
+      # I've seen examples where just ?, or [?] is used, which means "match any one character",
       # whereas literal '?' is returned if getops finds unrecognized argument.
       # I've not seen documented, but if no arguments supplied, seems getopts returns
       # '?' and sets $OPTARG to '-'.
@@ -80,6 +80,9 @@ case "$stream" in
     ;;
   oxygen)
     export release=oxygen
+    ;;
+  photon)
+    export release=photon
     ;;
   *)
     usage
