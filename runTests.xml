@@ -45,7 +45,14 @@
   -->
   <condition
     property="referenceRepoDir"
-    value="/home/data/httpd/download.eclipse.org/staging/neon/">
+    value="/home/data/httpd/download.eclipse.org/staging/oxygen">
+    <equals
+      arg1="${release}"
+      arg2="photon" />
+  </condition>
+  <condition
+    property="referenceRepoDir"
+    value="/home/data/httpd/download.eclipse.org/releases/oxygen/201706281000">
     <equals
       arg1="${release}"
       arg2="oxygen" />
