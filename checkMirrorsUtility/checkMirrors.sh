@@ -154,22 +154,15 @@ then
 
   urls="\
     /tools/orbit/downloads/drops/R20160520211859/repository/ \
-    /releases/neon/201606221000/ \
-    /releases/neon/201609281000/ \
-    /releases/neon/201610111000/ \
-    /releases/neon/201612211000/ \
-    /releases/neon/201703141400/ \
-    /releases/neon/201703231000/ \
-    /releases/neon/201705151400/ \
-    /releases/oxygen/201705191000/ \
-    /releases/oxygen/201705261000/ \
-    /releases/oxygen/201706021000/ \
-    /releases/oxygen/201706091000/ \
-    /releases/oxygen/201706281000/ \
+    /releases/oxygen/201710111001/ \
+    /releases/oxygen/201803211000/ \
+    /releases/photon/201709221000/ \
+    /releases/photon/201806271001/ \
     /technology/epp/packages/neon/ \
     /technology/epp/packages/oxygen/ \
-    /cbi/updates/aggregator/ide/4.7/ \
-    /cbi/updates/aggregator/headless/4.7/ \
+    /technology/epp/packages/photon/ \
+    /cbi/updates/aggregator/ide/4.8/ \
+    /cbi/updates/aggregator/headless/4.8/ \
     /eclipse/updates/4.6/R-4.6-201606061100 \
     /eclipse/updates/4.6/R-4.6.1-201609071200 \
     /eclipse/updates/4.6/R-4.6.2-201611241400 \
