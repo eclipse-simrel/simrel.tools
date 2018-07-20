@@ -84,6 +84,9 @@ case "$stream" in
   photon)
     export release=photon
     ;;
+  2018-09)
+    export release=2018-09
+    ;;
   *)
     usage
     exit 1
