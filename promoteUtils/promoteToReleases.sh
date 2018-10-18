@@ -87,6 +87,12 @@ case "$stream" in
   2018-09)
     export release=2018-09
     ;;
+  2018-12)
+    export release=2018-12
+    ;;
+  2019-03)
+    export release=2019-03
+    ;;
   *)
     usage
     exit 1
