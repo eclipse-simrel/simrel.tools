@@ -75,15 +75,6 @@ done
 shift $(($OPTIND - 1))
 
 case "$stream" in
-  neon)
-    export release=neon
-    ;;
-  oxygen)
-    export release=oxygen
-    ;;
-  photon)
-    export release=photon
-    ;;
   2018-09)
     export release=2018-09
     ;;
@@ -93,6 +84,16 @@ case "$stream" in
   2019-03)
     export release=2019-03
     ;;
+  2019-06)
+    export release=2019-06
+    ;;
+  2019-09)
+    export release=2019-09
+    ;;
+  2019-12)
+    export release=2019-12
+    ;;
+
   *)
     usage
     exit 1
@@ -128,14 +129,14 @@ then
 fi
 
 # sanity check existence
-if [[ ! -e "${toDirectory}" ]] 
+if [[ ! -e "${toDirectory}" ]]
 then
   printf "\n\t[ERROR] the 'toDirectory' does not exist\n\t\t${toDirectory}\n"
   exit 1
 fi
 
 # sanity check that we have write access to "toDirectory"
-if [[ ! -w "${toDirectory}" ]] 
+if [[ ! -w "${toDirectory}" ]]
 then
   printf "\n\t[ERROR] No write access to ${toDirectory}\n"
   exit 1
@@ -166,7 +167,7 @@ fi
 # plugins and features
 rsync ${DRYRUN}  -rp ${fromDirectory}/* ${toSubDir}/
 RC=$?
-if [[ "$RC" != "0" ]] 
+if [[ "$RC" != "0" ]]
 then
   printf "\n\t[ERROR] could not copy files as expected"
   exit $RC
@@ -184,7 +185,7 @@ if [[ -z "${DRYRUN}" ]]
 then
   "${BUILD_TOOLS_DIR}/promoteUtils/addRepoProperties-release.sh" ${release} ${dirdate}
   RC=$?
-  if [[ "$RC" != "0" ]] 
+  if [[ "$RC" != "0" ]]
   then
     printf "\n\t[ERROR] repo properties could not be updated as expected. RC: $RC"
     exit $RC
@@ -198,7 +199,7 @@ then
   fi
   "${BUILD_TOOLS_DIR}/promoteUtils/convertxz.sh" "${toSubDir}"
   RC=$?
-  if [[ "$RC" != "0" ]] 
+  if [[ "$RC" != "0" ]]
   then
     printf "\n\t[ERROR] convertxz.sh did not complete as expected. RC: $RC\n"
   fi

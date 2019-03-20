@@ -158,9 +158,13 @@ then
     /releases/oxygen/201803211000/ \
     /releases/photon/201709221000/ \
     /releases/photon/201806271001/ \
+    /releases/2018-12/201812191000/ \
+    /releases/2019-03/201903201000/ \
     /technology/epp/packages/neon/ \
     /technology/epp/packages/oxygen/ \
     /technology/epp/packages/photon/ \
+    /technology/epp/packages/2018-09/ \
+    /technology/epp/packages/2019-03/ \
     /cbi/updates/aggregator/ide/4.8/ \
     /cbi/updates/aggregator/headless/4.8/ \
     /eclipse/updates/4.6/R-4.6-201606061100 \
