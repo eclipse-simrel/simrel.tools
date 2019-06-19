@@ -62,7 +62,7 @@ cat <<EOG > compositeArtifacts.xml
     <property name='p2.atomic.composite.loading' value='true'/>
   </properties>
   <children size='1'>
-    <child location='http://download.eclipse.org/releases/${release_name}/'/>
+    <child location='https://download.eclipse.org/releases/${release_name}/'/>
   </children>
 </repository>
 EOG
@@ -78,7 +78,7 @@ cat <<EOH > compositeContent.xml
     <property name='p2.atomic.composite.loading' value='true'/>
   </properties>
   <children size='1'>
-    <child location='http://download.eclipse.org/releases/${release_name}/'/>
+    <child location='https://download.eclipse.org/releases/${release_name}/'/>
   </children>
 </repository>
 EOH
