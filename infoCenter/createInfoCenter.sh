@@ -20,7 +20,7 @@ WORKDIR=$HELP_HOME/$RELEASE_NAME
 PLATFORM_DIR=/home/data/httpd/download.eclipse.org/eclipse/downloads/drops4
 P2_BASE_DIR=/home/data/httpd/download.eclipse.org
 SCRIPT_NAME="$(basename ${0})"
-BANNER_FILE=org.foundation.helpbanner2_2.0.0.jar
+
 PORT=8086
 FULL_DATE=$(date +%Y-%m-%d-%H-%M-%S)
 
@@ -68,10 +68,6 @@ prepare() {
     # Create dropins/plugins dir
     echo "Create dropins/plugins dir..."
     mkdir -p $WORKDIR/eclipse/dropins/plugins
-    
-    # Add custom banner
-    echo "Add custom banner..."
-    cp $BANNER_FILE $WORKDIR/eclipse/dropins/plugins
 }
 
 find_base() {
@@ -101,6 +97,43 @@ find_doc_jars() {
     fi
 }
 
+fix_banner() {
+  local version=$1
+  local banner_jar=org.foundation.helpbanner2_2.0.0.jar
+  local jar_path=./${banner_jar}
+  local tmpdir=./banner_tmp_dir
+  local banner_path=${tmpdir}/banner.html
+
+  local token="Eclipse Oxygen"
+
+  printf "Fixing banner...\n"
+
+  # remove new jar
+  if [ -f ${jar_path}.new ]; then
+    rm ${jar_path}.new
+  fi
+
+  # extract files
+  unzip -q ${jar_path} -d ${tmpdir}
+
+  # replace version
+  sed -i "s/${token}/Eclipse ${version}/g" ${banner_path}
+
+  # create jar
+  pushd ${tmpdir} > /dev/null
+  zip -rq ../${banner_jar}.new .
+  popd > /dev/null
+
+  # remove tmp dir
+  if [ -d ${tmpdir} ]; then
+    rm -rf ${tmpdir}
+  fi
+
+  # Add custom banner
+  echo "Add custom banner..."
+  cp ${banner_jar}.new $WORKDIR/eclipse/dropins/plugins/${banner_jar}
+}
+
 create_scripts() {
     # Create start script
     echo "Create start and stop scripts..."
@@ -126,6 +159,7 @@ create_archive() {
 prepare
 find_base
 find_doc_jars
+fix_banner $RELEASE_NAME $WORKDIR
 create_scripts
 create_archive
 
