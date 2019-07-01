@@ -64,7 +64,7 @@ Useful properties
           'rewriteRepositoryURLValue' is simlar to the git_protocol property but applies to URLs in the *aggr* files.
           If running on Eclipse.org (or, if you otherwise have direct access to the file system, say with a mirrored repository)
           it is more efficient to use direct file access ("rewriteRepositoryURLValue=file:///home/data/httpd/download.eclipse.org")
-          rather than the default specified in the *aggr* files ("http://download.eclipse.org"). If this property exists (i.e. has
+          rather than the default specified in the *aggr* files ("https://download.eclipse.org"). If this property exists (i.e. has
           a value) then the script does a simple search-and-replace to rewrite matching URLs.
 
       - installEclipseAndTools
@@ -80,7 +80,7 @@ Useful properties
       - platformLocation
           'platformLocation' is the location from where to the binary platform.
           By default, it is
-          http://download.eclipse.org/eclipse/downloads/drops4/R-4.8-201806110500
+          https://download.eclipse.org/eclipse/downloads/drops4/R-4.8-201806110500
           If you have access to the binary platform archive on your file system, you can specify
           its location instead, for some savings in "download time". For example:
           file:///files/eclipsefiles/
@@ -117,7 +117,7 @@ Useful properties
       value="org.eclipse.equinox.p2.director" />
     <property
       name="otherArgsAggr"
-      value="-metadataRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.8/I20180518-0759/ -artifactRepository http://download.eclipse.org/cbi/updates/aggregator/ide/4.8/I20180518-0759/ -installIU org.eclipse.cbi.p2repo.aggregator.engine.feature.feature.group" />
+      value="-metadataRepository https://download.eclipse.org/cbi/updates/aggregator/ide/4.8/I20180518-0759/ -artifactRepository https://download.eclipse.org/cbi/updates/aggregator/ide/4.8/I20180518-0759/ -installIU org.eclipse.cbi.p2repo.aggregator.engine.feature.feature.group" />
 
       <!--
         Remote builds should use eclipse.p2.mirrors=true
@@ -186,7 +186,7 @@ Useful properties
       value="org.eclipse.equinox.p2.director" />
     <property
       name="repoReportURL"
-      value="http://download.eclipse.org/cbi/updates/analyzers/4.7/" />
+      value="https://download.eclipse.org/cbi/updates/analyzers/4.7/" />
 
     <property
       name="OTHER_ARGS_TESTS"
@@ -226,7 +226,7 @@ Useful properties
       value="org.eclipse.equinox.p2.director" />
     <property
       name="OTHER_ARGS_RELENG"
-      value="-metadataRepository http://download.eclipse.org/webtools/releng/repository/ -artifactRepository http://download.eclipse.org/webtools/releng/repository/ -installIU org.eclipse.wtp.releng.tools.feature.feature.group" />
+      value="-metadataRepository https://download.eclipse.org/webtools/releng/repository/ -artifactRepository https://download.eclipse.org/webtools/releng/repository/ -installIU org.eclipse.wtp.releng.tools.feature.feature.group" />
 
     <property
       name="vm_args_releng"
@@ -658,7 +658,7 @@ Useful properties
       -->
     <property
       name="platformLocation"
-      value="http://download.eclipse.org/eclipse/downloads/drops4/R-4.8-201806110500/" />
+      value="https://download.eclipse.org/eclipse/downloads/drops4/R-4.8-201806110500/" />
     <property
       name="platformFilename"
       value="eclipse-platform-4.8-linux-gtk-x86_64.tar.gz" />
@@ -709,7 +709,7 @@ Useful properties
     -->
     <property
       name="commonRepositoryDownloadURLValue"
-      value="http://download.eclipse.org" />
+      value="https://download.eclipse.org" />
 
     <condition property="localRepoExists">
       <available file="${buildModelDir}/.git" />

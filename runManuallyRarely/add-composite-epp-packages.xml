@@ -14,7 +14,7 @@
                 name="Mars repository"/>
             <add>
                 <repository
-                    location="http://download.eclipse.org/technology/epp/packages/${release}/" />
+                    location="https://download.eclipse.org/technology/epp/packages/${release}/" />
             </add>
         </p2.composite.repository>
     </target>

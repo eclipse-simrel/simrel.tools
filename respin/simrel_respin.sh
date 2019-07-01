@@ -57,7 +57,7 @@ git checkout ${tag}
 git checkout -b ${tag}_respin
 
 #transform repo
-ant -f ${simrel_tools_path}/transformToOneRepo/changeAllRepos.xml -DnewRepository=http://download.eclipse.org/releases/${release_name}/${release_dir_name}/ -Djavax.xml.transform.TransformerFactory=com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl
+ant -f ${simrel_tools_path}/transformToOneRepo/changeAllRepos.xml -DnewRepository=https://download.eclipse.org/releases/${release_name}/${release_dir_name}/ -Djavax.xml.transform.TransformerFactory=com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl
 #git diff
 git diff ${tag} || true
 

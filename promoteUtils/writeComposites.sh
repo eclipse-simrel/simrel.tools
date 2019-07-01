@@ -16,7 +16,7 @@ function writeArtifactsHeader
   # this number is just used to allocate an initial array (or, something) so would be a very minor
   # performance hit to have to "grow" it. But, could be improved in future.
   printf "%s\n" "  <children size='4'>" >> ${outfile}
-  printf "%s\n" "     <child location='http://download.eclipse.org/technology/epp/packages/$stream/'/>" >> ${outfile}
+  printf "%s\n" "     <child location='https://download.eclipse.org/technology/epp/packages/$stream/'/>" >> ${outfile}
 
 
 }
@@ -37,7 +37,7 @@ function writeContentHeader
   # this number is just used to allocate an initial array (or, something) so would be a very minor
   # performance hit to have to "grow" it. But, could be improved in future.  
   printf "%s\n" "  <children size='3'>" >> ${outfile}
-  printf "%s\n" "     <child location='http://download.eclipse.org/technology/epp/packages/$stream/'/>" >> ${outfile}
+  printf "%s\n" "     <child location='https://download.eclipse.org/technology/epp/packages/$stream/'/>" >> ${outfile}
 
 }
 
