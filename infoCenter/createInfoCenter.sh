@@ -121,7 +121,7 @@ fix_banner() {
   unzip -q ${jar_path} -d ${tmpdir}
 
   # replace version
-  sed -i "s/${token}/Eclipse ${version}/g" ${banner_path}
+  sed -i "s/${token}/Eclipse IDE ${version}/g" ${banner_path}
 
   # create jar
   pushd ${tmpdir} > /dev/null
