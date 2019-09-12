@@ -88,7 +88,7 @@ EOG
 
 function writeFooter {
   local outfile=$1
-  cat <<EOH > "${outfile}"
+  cat <<EOH >> "${outfile}"
   </children>
 </repository>
 EOH
@@ -145,6 +145,10 @@ cp p2.index ${writeRepoRoot}/
 
 zip -q --junk-paths "${artifactsCompositeJar}" "${artifactsCompositeFile}"
 zip -q --junk-paths "${contentCompositeJar}" "${contentCompositeFile}"
+
+printf "\ncompositeContent.xml:\n"
+cat ${contentCompositeFile}
+printf "\n"
 
 # Since these files are in "workspace", we would not *have* to delete them, 
 # but seems best to, to avoid looking at them. 
