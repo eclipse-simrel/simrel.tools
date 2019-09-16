@@ -25,8 +25,7 @@ platform_dir=/home/data/httpd/download.eclipse.org/eclipse/downloads/drops4
 p2_base_dir=/home/data/httpd/download.eclipse.org
 script_name="$(basename ${0})"
 
-port=8086
-full_date=$(date +%Y-%m-%d-%H-%M-%S)
+info_center_port=8086
 
 usage() {
   printf "Usage %s [releaseName] [pathToArchive] [p2RepoDir] [legacyMode]\n" "${script_name}"
@@ -75,13 +74,13 @@ prepare() {
 }
 
 find_base() {
+  local workdir=${1:-}
   # Find org.eclipse.help.base
-  echo "Locating org.eclipse.help.base..."
-  help_base_path=`find ${workdir} -name "org.eclipse.help.base*.jar"`
-  echo "Found ${help_base_path}."
+  help_base_path=$(find ${workdir} -name "org.eclipse.help.base*.jar")
+  #TODO: deal with potential errors
   substring_tmp=${help_base_path#.*_}
   help_base_version=${substring_tmp%.jar}
-  echo "Found base version ${help_base_version}."
+  echo ${help_base_version}
 }
 
 find_doc_jars() {
@@ -139,32 +138,47 @@ fix_banner() {
 }
 
 create_scripts() {
+  local workdir=${1:-}
+  local help_base_version=${2:-}
+  local info_center_port=${3:-}
   # Create start script
   echo "Create start and stop scripts..."
-  echo "java -Dhelp.lucene.tokenizer=standard -Dorg.eclipse.equinox.http.jetty.context.sessioninactiveinterval=60 -classpath eclipse/plugins/org.eclipse.help.base_${help_base_version}.jar org.eclipse.help.standalone.Infocenter -clean -command start -eclipsehome eclipse -port ${port} -nl en -locales en -plugincustomization eclipse/plugin_customization.ini -vmargs -Xmx1024m -XX:+HeapDumpOnOutOfMemoryError &" > ${workdir}/startInfoCenter.sh
-  echo "echo \"The Eclipse info center is now started and can be accessed here: http://localhost:${port}/help/index.jsp\"" >> ${workdir}/startInfoCenter.sh
+  cat <<EOF > ${workdir}/startInfoCenter.sh
+#!/usr/bin/env bash
+port=${info_center_port}
+java -Dhelp.lucene.tokenizer=standard -Dorg.eclipse.equinox.http.jetty.context.sessioninactiveinterval=60 -classpath eclipse/plugins/org.eclipse.help.base_${help_base_version}.jar org.eclipse.help.standalone.Infocenter -clean -command start -eclipsehome eclipse -port \${port} -nl en -locales en -plugincustomization plugin_customization.ini -vmargs -Xmx1024m -XX:+HeapDumpOnOutOfMemoryError &
+echo "The Eclipse info center is now started and can be accessed here: http://localhost:\${port}/help/index.jsp"
+EOF
 
   # Create stop script
-  echo "java -classpath eclipse/plugins/org.eclipse.help.base_${help_base_version}.jar org.eclipse.help.standalone.Infocenter -clean -command shutdown -eclipsehome eclipse -port ${port} 2>&1" > ${workdir}/stopInfoCenter.sh
- 	echo "echo \"The Eclipse info center is now stopped.\"" >> ${workdir}/stopInfoCenter.sh
+  cat <<EOG > ${workdir}/stopInfoCenter.sh
+#!/usr/bin/env bash
+port=${info_center_port}
+java -classpath eclipse/plugins/org.eclipse.help.base_${help_base_version}.jar org.eclipse.help.standalone.Infocenter -clean -command shutdown -eclipsehome eclipse -port \${port} 2>&1
+echo "The Eclipse info center is now stopped."
+EOG
 
   chmod +x ${workdir}/*InfoCenter.sh
 }
 
 create_archive() {
+  local workdir=${1:-}
+  local release_name=${2:-}
   # Create tar.gz
   # if [ -f info-center-${release_name}.tar.gz ]; then
   #   rm info-center-${release_name}.tar.gz
   # fi
   echo "Creating info center archive..."
+  full_date=$(date +%Y-%m-%d-%H-%M-%S)
   tar czf info-center-${release_name}-${full_date}.tar.gz ${workdir}
 }
 
 prepare
-find_base
+help_base_version=$(find_base ${workdir})
+echo "Found base version ${help_base_version}."
 find_doc_jars
 fix_banner ${release_name} ${workdir}
-create_scripts
-create_archive
+create_scripts ${workdir} ${help_base_version} ${info_center_port}
+create_archive ${workdir} ${release_name}
 
 printf "Done.\n"
