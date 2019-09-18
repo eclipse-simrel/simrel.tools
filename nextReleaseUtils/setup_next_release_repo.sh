@@ -78,7 +78,7 @@ cat <<EOG > compositeArtifacts.xml
     <property name='p2.atomic.composite.loading' value='true'/>
   </properties>
   <children size='2'>
-    <child location='https://download.eclipse.org/technology/epp/packages/${release_name}' />
+    <child location='../../technology/epp/packages/${release_name}' />
     <child location='${last_release_dir}' />
   </children>
 </repository>
@@ -95,7 +95,7 @@ cat <<EOH > compositeContent.xml
     <property name='p2.atomic.composite.loading' value='true'/>
   </properties>
   <children size='2'>
-    <child location='https://download.eclipse.org/technology/epp/packages/${release_name}' />
+    <child location='../../technology/epp/packages/${release_name}' />
     <child location='${last_release_dir}' />
   </children>
 </repository>
