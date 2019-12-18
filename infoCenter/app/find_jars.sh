@@ -17,7 +17,7 @@ printf "Using the following P2 repository: $P2_REPO_DIR \n"
 printf "Output file: $OUTPUT_FILE \n"
 
 NO_OF_FILES=`ls -l $P2_REPO_DIR/plugins/*.jar | wc -l`
-printf "Found $NO_OF_FILES JAR files.\n"
+printf "Found $NO_OF_FILES JAR files.\n" 
 
 if [ -f $OUTPUT_FILE ]; then
   echo "Removing previous output file $OUTPUT_FILE..."

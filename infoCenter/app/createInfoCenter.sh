@@ -20,7 +20,7 @@ set -o nounset
 set -o pipefail
 
 # Parameters:
-# $1 = release name (e.g. neon, oxygen)
+# $1 = release name (e.g. 2019-09, 2019-12)
 # $2 = path to platform zip (e.g. M-4.6.2RC3-201611241400/eclipse-platform-4.6.2RC3-linux-gtk-x86_64.tar.gz)
 release_name=${1:-}
 zip_path=${2:-}
