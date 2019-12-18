@@ -1,0 +1,77 @@
+#*******************************************************************************
+# Copyright (c) 2019 Eclipse Foundation and others.
+# This program and the accompanying materials are made available
+# under the terms of the Eclipse Public License 2.0
+# which is available at http://www.eclipse.org/legal/epl-v20.html,
+# or the MIT License which is available at https://opensource.org/licenses/MIT.
+# SPDX-License-Identifier: EPL-2.0 OR MIT
+#*******************************************************************************
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    infocenter.version: "2019-12"
+  namespace: "infocenter"
+  name: "infocenter-2019-12"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      infocenter.version: "2019-12"
+  serviceName: "infocenter-2019-12"
+  template:
+    metadata:
+      labels:
+        infocenter.version: "2019-12"
+      name: "infocenter-2019-12"
+    spec:
+      serviceAccountName: "infocenter-2019-12"
+      terminationGracePeriodSeconds: 1200
+      containers:
+      - name: infocenter-2019-12
+        image: eclipsecbi/eclipse-infocenter:2019-12
+        imagePullPolicy: IfNotPresent
+        command:
+          - /infocenter/startDockerInfoCenter.sh
+        livenessProbe:
+          httpGet:
+            path: /help/index.jsp
+            port: 8086
+            scheme: HTTP
+          initialDelaySeconds: 480
+          periodSeconds: 60
+          failureThreshold: 2
+          timeoutSeconds: 90
+        readinessProbe:
+          httpGet:
+            path: /help/index.jsp
+            port: 8086
+          periodSeconds: 60
+          timeoutSeconds: 90
+          initialDelaySeconds: 60
+        ports:
+        - containerPort: 8086
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 500m
+          limits:
+            cpu: 2
+            memory: 1.5Gi
+        volumeMounts:
+        - name: workspace
+          mountPath: "/infocenter/workspace"
+      - name: nginx
+        image: twalter/openshift-nginx:stable-alpine
+        ports:
+        - containerPort: 8081
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+      volumes:
+      - name: workspace
+        emptyDir: {}
+      - name: nginx-config
+        configMap:
+          name: nginx-config-2019-12
