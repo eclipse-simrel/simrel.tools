@@ -75,12 +75,6 @@ done
 shift $(($OPTIND - 1))
 
 case "$stream" in
-  2018-09)
-    export release=2018-09
-    ;;
-  2018-12)
-    export release=2018-12
-    ;;
   2019-03)
     export release=2019-03
     ;;
@@ -92,6 +86,18 @@ case "$stream" in
     ;;
   2019-12)
     export release=2019-12
+    ;;
+  2020-03)
+    export release=2020-03
+    ;;
+  2020-06)
+    export release=2020-06
+    ;;
+  2020-09)
+    export release=2020-09
+    ;;
+  2020-12)
+    export release=2020-12
     ;;
 
   *)
