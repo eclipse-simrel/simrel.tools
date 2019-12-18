@@ -17,8 +17,9 @@ set -o pipefail
 # Parameters:
 release_name=${1:-}
 namespace="infocenter"
-hostname="help-staging.eclipse.org"
+hostname="help.eclipse.org"
 dockerhub_repo="eclipsecbi/eclipse-infocenter"
+nginx_image="eclipsefdn/nginx:stable-alpine"
 
 # Verify inputs
 if [[ -z "${release_name}" && $# -lt 1 ]]; then
@@ -90,7 +91,7 @@ spec:
   - name: "http"
     port: 80
     protocol: "TCP"
-    targetPort: 8081
+    targetPort: 8080
   selector:
     infocenter.version: "${release_name}"
 ---
@@ -131,7 +132,7 @@ data:
       sendfile        on;
       keepalive_timeout  65;
       server {
-        listen 8081;
+        listen 8080;
         location /${release_name}/ {
           proxy_pass           http://127.0.0.1:8086/help/;
         }
@@ -202,9 +203,9 @@ spec:
         - name: workspace
           mountPath: "/infocenter/workspace"
       - name: nginx
-        image: twalter/openshift-nginx:stable-alpine
+        image: ${nginx_image}
         ports:
-        - containerPort: 8081
+        - containerPort: 8080
         volumeMounts:
         - name: nginx-config
           mountPath: /etc/nginx/nginx.conf
