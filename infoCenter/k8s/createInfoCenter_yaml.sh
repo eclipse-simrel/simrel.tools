@@ -18,6 +18,7 @@ set -o pipefail
 release_name=${1:-}
 namespace="infocenter"
 hostname="help-staging.eclipse.org"
+dockerhub_repo="eclipsecbi/eclipse-infocenter"
 
 # Verify inputs
 if [[ -z "${release_name}" && $# -lt 1 ]]; then
@@ -168,10 +169,10 @@ spec:
       terminationGracePeriodSeconds: 1200
       containers:
       - name: infocenter-${release_name}
-        image: fr3d/infocentertest:${release_name}
+        image: ${dockerhub_repo}:${release_name}
         imagePullPolicy: IfNotPresent
         command:
-          - /infocenter/startInfoCenter.sh
+          - /infocenter/startDockerInfoCenter.sh
         livenessProbe:
           httpGet:
             path: /help/index.jsp
@@ -199,7 +200,7 @@ spec:
             memory: 1.5Gi
         volumeMounts:
         - name: workspace
-          mountPath: "/infocenter/eclipse/workspace"
+          mountPath: "/infocenter/workspace"
       - name: nginx
         image: twalter/openshift-nginx:stable-alpine
         ports:
