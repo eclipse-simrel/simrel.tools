@@ -16,6 +16,7 @@ set -o pipefail
 
 # Parameters:
 release_name=${1:-}
+dockerhub_repo=eclipsecbi/eclipse-infocenter
 
 # Verify inputs
 if [[ -z "${release_name}" && $# -lt 1 ]]; then
@@ -27,6 +28,12 @@ fi
 tmp_dir=tmp
 mkdir -p ${tmp_dir}
 tar xzf info-center-${release_name}-*.tar.gz --strip-components=2 -C ${tmp_dir}
+rm ${tmp_dir}/*InfoCenter.sh
+cat <<EOF > ${tmp_dir}/startDockerInfoCenter.sh
+#!/usr/bin/env bash
+./eclipse -nosplash -application org.eclipse.help.base.helpApplication -nl en -locales en -data workspace -plugincustomization plugin_customization.ini -vmargs -Xmx1024m -Dserver_port=8086
+EOF
 
-docker build -t fr3d/infocentertest:${release_name} .
+docker build -t ${dockerhub_repo}:${release_name} .
+docker push ${dockerhub_repo}:${release_name}
 rm -rf ${tmp_dir}
