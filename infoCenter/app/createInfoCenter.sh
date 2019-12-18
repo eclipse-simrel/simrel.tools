@@ -25,7 +25,7 @@ set -o pipefail
 release_name=${1:-}
 zip_path=${2:-}
 p2_repo_dir=${3:-}
-legacy_mode=${4:-'false'}
+past_release=${4:-'false'}
 
 #help_home=/home/data/httpd/help.eclipse.org/
 help_home=.
@@ -37,11 +37,11 @@ script_name="$(basename ${0})"
 info_center_port=8086
 
 usage() {
-  printf "Usage %s [releaseName] [pathToArchive] [p2RepoDir] [legacyMode]\n" "${script_name}"
+  printf "Usage %s [releaseName] [pathToArchive] [p2RepoDir] [pastRelease]\n" "${script_name}"
   printf "\t%-16s the release name (e.g. neon, neon1, oxygen, oxygen1)\n" "releaseName"
   printf "\t%-16s the path to eclipse-platform archive (e.g. M-4.6.2RC3-201611241400/eclipse-platform-4.6.2RC3-linux-gtk-x86_64.tar.gz)\n" "pathToArchive"
   printf "\t%-16s the path to the P2 repo (e.g. releases/neon/201610111000) (optional)\n" "p2RepoDir"
-  printf "\t%-16s set to 'true' to use legacy mode (default is 'false') (optional)\n" "legacyMode"
+  printf "\t%-16s set to 'true' to change banner to say 'Past release' (default is 'false') (optional)\n" "pastRelease"
 }
 
 # Verify inputs
@@ -95,18 +95,12 @@ find_base() {
 find_doc_jars() {
   # Find doc JARs
   echo "Find doc JARs..."
-  if [[ ${legacy_mode} == 'true' ]]; then
-    # Run get_jars.sh (legacy)
-    echo "Executing get_jars.sh (legacy_mode)... "
-    ./get_jars.sh ${workdir}/eclipse/dropins/plugins
-  else
-    echo "Executing find_jars.sh (p2_repo_dir: ${p2_base_dir}/${p2_repo_dir})..."
-    filename=doc_plugin_list.txt
-    ./find_jars.sh ${p2_base_dir}/${p2_repo_dir}
-    while read line; do
-      cp $line ${workdir}/eclipse/dropins/plugins
-    done < $filename
-  fi
+  echo "Executing find_jars.sh (p2_repo_dir: ${p2_base_dir}/${p2_repo_dir})..."
+  filename=doc_plugin_list.txt
+  ./find_jars.sh ${p2_base_dir}/${p2_repo_dir}
+  while read line; do
+    cp $line ${workdir}/eclipse/dropins/plugins
+  done < $filename
 }
 
 fix_banner() {
@@ -130,6 +124,10 @@ fix_banner() {
 
   # replace version
   sed -i "s/${token}/Eclipse IDE ${version}/g" ${banner_path}
+  
+  if [[ ${past_release} == 'true' ]]; then
+    sed -i "s/Current Release/Past Release/g" ${banner_path}
+  fi
 
   # create jar
   pushd ${tmpdir} > /dev/null
