@@ -31,7 +31,7 @@ fi
 
 
 pushd docker/
-wget ${url}
+wget -N ${url}
 ./build_infocenter_docker_img.sh ${release_name}
 popd
 
