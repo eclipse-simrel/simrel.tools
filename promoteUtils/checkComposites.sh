@@ -10,19 +10,17 @@
 #     David Williams - initial API and implementation
 #*******************************************************************************
 
-# Utility to run on Hudson, to periodically confirm that our
-# atomic composite repositories are valid.
+# Utility to run on CI server, to periodically confirm that our atomic composite repositories are valid.
 
 # can be retrieved as individual script with
-#
 # wget --no-verbose --no-cache  -O checkComposites.sh http://git.eclipse.org/c/simrel/org.eclipse.simrel.tools.git/plain/promoteUtils/checkComposites.sh;
 #
 # and typically set chmod +x checkComposites.sh
 # and then executed in "bash script" build step.
 RAW_OVERALL_DATE_START="$(date +%s )"
 baseEclipseAccessDir=/home/data/httpd/download.eclipse.org
-baseEclipseDirSegment=eclipse/downloads/drops4/R-4.8-201806110500
-baseEclipse=eclipse-platform-4.8-linux-gtk-x86_64.tar.gz
+baseEclipseDirSegment=eclipse/downloads/drops4/R-4.14-201912100610
+baseEclipse=eclipse-platform-4.14-linux-gtk-x86_64.tar.gz
 repoFileAccess=file:///home/data/httpd/download.eclipse.org/
 repoHttpAccess=https://download.eclipse.org
 repoAccess=${repoFileAccess}
@@ -38,8 +36,7 @@ declare -a countsArray
 
 trainArg=$1
 
-if [[ -z "$trainArg" ]] 
-then
+if [[ -z "$trainArg" ]]; then
   printf "[INFO] No argument was passed to ${0##*/} so assuming \"all\".\n"
   trainArg=all
 fi
@@ -51,52 +48,44 @@ fi
 # get a listing, and see what was there?
 
 repoList="\
-  releases/photon/ \
-  releases/oxygen/ \
-  releases/neon/ \
-  staging/photon/ \
-  staging/oxygen/ \
-  staging/neon/ \
+  releases/2019-12/ \
+  releases/2019-09/ \
+  releases/2019-06/ \
+  releases/2019-03/ \
   "
 
-if [[ "$trainArg" == "all" ]]
-then
+if [[ "$trainArg" == "all" ]]; then
   reposToCheck=${repoList}
 else
   reposToCheck="releases/$trainArg"
 fi
 
-# WORKSPACE will be defined in Hudson. For convenience of local, remote, testing we will make several
-# assumptions if it is not defined.
-if [[ -z "${WORKSPACE}" ]]
-then
+# WORKSPACE will be defined in CI instance. For convenience of local, remote, testing we will make several assumptions if it is not defined.
+if [[ -z "${WORKSPACE}" ]]; then
   echo -e "\n\t[INFO] WORKSPACE not defined. Assuming local, remote test."
   WORKSPACE="$PWD"
   #printf "\n\tWORKSPACE: $WORKSPACE\n"
-  # access can remain undefined if we have direct access, such as on Hudson.
+  # access can remain undefined if we have direct access, such as on CI instance.
   # The value used here will depend on local users .ssh/config
   access="build:"
   repoAccess="${repoHttpAccess}"
 fi
 
 # Confirm that Eclipse Platform has already been installed, if not, install it
-if [[ ! -d "${WORKSPACE}/eclipse" ]]
-then
+if [[ ! -d "${WORKSPACE}/eclipse" ]]; then
   # We assume we have file access to 'downloads'. If not direct, at least via rsync.
   printf "\n\t[DEBUG] rsynching eclipse platform archive to ${WORKSPACE}"
   printf "\n\t[DEBUG] rsync command: rsync ${access}${baseEclipseAccessDir}/${baseEclipseDirSegment}/${baseEclipse} ${WORKSPACE}"
   rsync "${access}${baseEclipseAccessDir}/${baseEclipseDirSegment}/${baseEclipse}" "${WORKSPACE}"
   RC=$?
-  if [[ $RC != 0 ]]
-  then
+  if [[ $RC != 0 ]]; then
     printf "[ERROR] rsync returned a non-zero return code: $RC"
     exit $RC
   fi
 
   tar -xf "${baseEclipse}" -C "${WORKSPACE}"
   RC=$?
-  if [[ $RC != 0 ]]
-  then
+  if [[ $RC != 0 ]]; then
     printf "[ERROR] Tar extraction returned a non-zero return code: $RC"
     exit $RC
   fi
@@ -122,8 +111,7 @@ do
   #printf "\n\t[DEBUG] repoListFilename: ${repoListFilename}"
   nice -n 10 ${WORKSPACE}/eclipse/eclipse -nosplash --launcher.suppressErrors -application org.eclipse.equinox.p2.director -repository "${repoAccess}${repo}" -list -vm /shared/common/jdk1.8.0_x64-latest/bin/java  1>"$WORKSPACE/${repoListFilename}"
   RC=$?
-  if [[ $RC != 0 ]]
-  then
+  if [[ $RC != 0 ]]; then
     printf "\n\t[ERROR] p2.director list returned a non-zero return code: $RC"
     exit $RC
   fi
@@ -134,8 +122,7 @@ do
   repoCount=$((repoCount - 4))
   printf "\n\tNumber of IUs in $repoShortName: $repoCount\n"
 
-  if [[ $repoCount -le 0 ]] 
-  then 
+  if [[ $repoCount -le 0 ]]; then 
     errorCount=$((errorCount + 1))
   fi
 
@@ -147,10 +134,8 @@ do
   printf "\t[INFO] Elapsed seconds for this repo: $(($RAW_DATE_END - $RAW_DATE_START))"
 
   # I guess for errorCount errors, I could continue with whole loop, but seems
-  # rare enough I will go ahead and "throw" error here, before finishing the 
-  # whole loop.
-  if [[ $errorCount > 0 ]] 
-  then
+  # rare enough I will go ahead and "throw" error here, before finishing the whole loop.
+  if [[ $errorCount > 0 ]]; then
     printf "\n\t[ERROR] $repoShortName has too few IUs reported. Perhaps a problem with p2.index files?\n"
     exit $errorCount
   fi
