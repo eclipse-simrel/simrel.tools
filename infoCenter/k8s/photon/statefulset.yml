@@ -10,26 +10,26 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   labels:
-    infocenter.version: "2019-09"
+    infocenter.version: "photon"
   namespace: "infocenter"
-  name: "infocenter-2019-09"
+  name: "infocenter-photon"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      infocenter.version: "2019-09"
-  serviceName: "infocenter-2019-09"
+      infocenter.version: "photon"
+  serviceName: "infocenter-photon"
   template:
     metadata:
       labels:
-        infocenter.version: "2019-09"
-      name: "infocenter-2019-09"
+        infocenter.version: "photon"
+      name: "infocenter-photon"
     spec:
-      serviceAccountName: "infocenter-2019-09"
+      serviceAccountName: "infocenter-photon"
       terminationGracePeriodSeconds: 1200
       containers:
-      - name: infocenter-2019-09
-        image: eclipsecbi/eclipse-infocenter:2019-09
+      - name: infocenter-photon
+        image: eclipsecbi/eclipse-infocenter:photon
         imagePullPolicy: IfNotPresent
         command:
           - /infocenter/startDockerInfoCenter.sh
@@ -74,4 +74,4 @@ spec:
         emptyDir: {}
       - name: nginx-config
         configMap:
-          name: nginx-config-2019-09
+          name: nginx-config-photon
