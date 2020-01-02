@@ -103,45 +103,39 @@ find_doc_jars() {
   done < $filename
 }
 
-fix_banner() {
+create_banner() {
   local version=$1
   local banner_jar=org.foundation.helpbanner2_2.0.0.jar
-  local jar_path=./${banner_jar}
-  local tmpdir=./banner_tmp_dir
-  local banner_path=${tmpdir}/banner.html
+  local banner_dir=./banner
+  local banner_path=${banner_dir}/banner.html
 
   local token="Eclipse Oxygen"
 
-  printf "Fixing banner...\n"
+  printf "Creating banner...\n"
 
-  # remove new jar
-  if [ -f ${jar_path}.new ]; then
-    rm ${jar_path}.new
-  fi
-
-  # extract files
-  unzip -q ${jar_path} -d ${tmpdir}
+  cp ${banner_path} ${banner_dir}/../banner.html.bak
 
   # replace version
   sed -i "s/${token}/Eclipse IDE ${version}/g" ${banner_path}
   
   if [[ ${past_release} == 'true' ]]; then
     sed -i "s/Current Release/Past Release/g" ${banner_path}
+    # add text  
+    sed -i '/<div class="right">/i   <div class="center">\n    <h3>Please note, this is an outdated version of the Eclipse IDE documentation.<br \/>\n    For the latest version, please visit: <a href="https://help.eclipse.org/latest/" target="_parent">https://help.eclipse.org/latest/</a>\n    </h3>\n  </div>' ${banner_path}
   fi
 
   # create jar
-  pushd ${tmpdir} > /dev/null
-  zip -rq ../${banner_jar}.new .
+  pushd ${banner_dir} > /dev/null
+  zip -rq ../${banner_jar} .
   popd > /dev/null
 
-  # remove tmp dir
-  if [ -d ${tmpdir} ]; then
-    rm -rf ${tmpdir}
-  fi
+  # reset banner.html
+  cp ${banner_dir}/../banner.html.bak ${banner_path}
+  rm ${banner_dir}/../banner.html.bak
 
   # Add custom banner
   echo "Add custom banner..."
-  cp ${banner_jar}.new ${workdir}/eclipse/dropins/plugins/${banner_jar}
+  #cp ${banner_jar} ${workdir}/eclipse/dropins/plugins/${banner_jar}
 }
 
 create_scripts() {
@@ -184,7 +178,7 @@ prepare
 help_base_version=$(find_base ${workdir})
 echo "Found base version ${help_base_version}."
 find_doc_jars
-fix_banner ${release_name} ${workdir}
+create_banner ${release_name} ${workdir}
 create_scripts ${workdir} ${help_base_version} ${info_center_port}
 create_archive ${workdir} ${release_name}
 
