@@ -134,8 +134,8 @@ create_banner() {
   rm ${banner_dir}/../banner.html.bak
 
   # Add custom banner
-  echo "Add custom banner..."
-  #cp ${banner_jar} ${workdir}/eclipse/dropins/plugins/${banner_jar}
+  echo "Adding custom banner..."
+  cp ${banner_jar} ${workdir}/eclipse/dropins/plugins/${banner_jar}
 }
 
 create_scripts() {
