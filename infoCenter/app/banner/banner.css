@@ -88,12 +88,12 @@ header #logo{
 
 .left{
 	float:left;
-	width:33%;
+	width: 5%;
 }
 
 .right{
 	float:right;
-	width:33%;
+	width:35%;
 }
 
 .center{
@@ -101,7 +101,7 @@ header #logo{
 	left: 0;
 	right: 0;
 	margin: auto;
-	width: 33%;
+	width: 65%;
 	text-align:center;
 }
 
