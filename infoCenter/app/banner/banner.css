@@ -123,3 +123,15 @@ header #logo{
 	font-size:13px;
 	font-weight: normal
 }
+
+@media (prefers-color-scheme: dark) {
+  header { 
+    color: #f0f0f0; 
+    background: #3d3d3d;
+  }
+
+  #logo {
+    filter: invert(1);
+
+  }
+}
