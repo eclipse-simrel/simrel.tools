@@ -31,7 +31,7 @@ tar xzf info-center-${release_name}-*.tar.gz --strip-components=2 -C ${tmp_dir}
 rm ${tmp_dir}/*InfoCenter.sh
 cat <<EOF > ${tmp_dir}/startDockerInfoCenter.sh
 #!/usr/bin/env bash
-./eclipse -nosplash -application org.eclipse.help.base.helpApplication -nl en -locales en -data workspace -plugincustomization plugin_customization.ini -vmargs -Xmx1024m -Dserver_port=8086
+./eclipse -nosplash -application org.eclipse.help.base.infocenterApplication -nl en -locales en -data workspace -plugincustomization plugin_customization.ini -vmargs -Xmx1024m -Dserver_port=8086
 EOF
 
 docker build -t ${dockerhub_repo}:${release_name} .
