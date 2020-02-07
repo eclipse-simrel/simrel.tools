@@ -94,14 +94,6 @@ spec:
     targetPort: 8080
   selector:
     infocenter.version: "${release_name}"
----
-apiVersion: "v1"
-kind: "ServiceAccount"
-metadata:
-  labels:
-    infocenter.version: "${release_name}"
-  namespace: "${namespace_name}"
-  name: "infocenter-${release_name}"
 EOF
 }
 
@@ -145,6 +137,10 @@ create_statefulset () {
   local release_name=${1:-}
   local namespace_name=${2:-}
   local file_name="${release_name}/statefulset.yml"
+  local sha256="$(docker inspect --format='{{index .RepoDigests 0}}' "${dockerhub_repo}:${release_name}" | sed -E 's/.*sha256:(.*)/\1/g')"
+  local infocenter_image=${dockerhub_repo}:${release_name}@sha256:${sha256}
+  echo "Image name: ${infocenter_image}"
+  
   create_license_header ${file_name}
   cat <<EOF >> ${file_name}
 apiVersion: apps/v1
@@ -166,11 +162,10 @@ spec:
         infocenter.version: "${release_name}"
       name: "infocenter-${release_name}"
     spec:
-      serviceAccountName: "infocenter-${release_name}"
       terminationGracePeriodSeconds: 1200
       containers:
       - name: infocenter-${release_name}
-        image: ${dockerhub_repo}:${release_name}
+        image: ${infocenter_image}
         imagePullPolicy: IfNotPresent
         command:
           - /infocenter/startDockerInfoCenter.sh
