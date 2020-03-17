@@ -21,11 +21,3 @@ spec:
     targetPort: 8080
   selector:
     infocenter.version: "photon"
----
-apiVersion: "v1"
-kind: "ServiceAccount"
-metadata:
-  labels:
-    infocenter.version: "photon"
-  namespace: "infocenter"
-  name: "infocenter-photon"

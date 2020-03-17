@@ -25,11 +25,10 @@ spec:
         infocenter.version: "photon"
       name: "infocenter-photon"
     spec:
-      serviceAccountName: "infocenter-photon"
       terminationGracePeriodSeconds: 1200
       containers:
       - name: infocenter-photon
-        image: eclipsecbi/eclipse-infocenter:photon
+        image: eclipsecbi/eclipse-infocenter:photon@sha256:828161f48e9b63149720814eada2cddd5e1ba3ed4394175b0bdfc5a6f33b4d9d
         imagePullPolicy: IfNotPresent
         command:
           - /infocenter/startDockerInfoCenter.sh

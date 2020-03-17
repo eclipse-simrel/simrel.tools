@@ -21,11 +21,3 @@ spec:
     targetPort: 8080
   selector:
     infocenter.version: "2018-09"
----
-apiVersion: "v1"
-kind: "ServiceAccount"
-metadata:
-  labels:
-    infocenter.version: "2018-09"
-  namespace: "infocenter"
-  name: "infocenter-2018-09"

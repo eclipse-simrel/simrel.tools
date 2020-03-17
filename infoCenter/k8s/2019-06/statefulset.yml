@@ -25,11 +25,10 @@ spec:
         infocenter.version: "2019-06"
       name: "infocenter-2019-06"
     spec:
-      serviceAccountName: "infocenter-2019-06"
       terminationGracePeriodSeconds: 1200
       containers:
       - name: infocenter-2019-06
-        image: eclipsecbi/eclipse-infocenter:2019-06
+        image: eclipsecbi/eclipse-infocenter:2019-06@sha256:9b97ecc095935f41481a61c08ce5747bef77c2dbdf42a0c17bdadf07a40ca9fd
         imagePullPolicy: IfNotPresent
         command:
           - /infocenter/startDockerInfoCenter.sh
