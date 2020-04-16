@@ -28,8 +28,7 @@
 # in composite, so in theory, they might have stale 'content' data that pointed to an old artifact that
 # was no longer in (the newly copied) 'artifacts' file.
 
-function usage ()
-{
+usage () {
   printf "\n\t%s" "This utility, ${0##*/}, is to copy the two composte*XX.jars to their final name of composite*.jar." >&2
   printf "\n\t\t%s\n" "Example: ${0##*/} 'trainName' 'checkpoint'" >&2
   printf "\n\t%s" "Both arguments are required." >&2
@@ -39,35 +38,28 @@ function usage ()
   printf "\n\t\t%s\n" "such as M4, RC1, etc. or simply R for final release." >&2
 }
 
-function changeNamesByCopy ()
-{
-
+changeNamesByCopy () {
   REPO_ROOT=$1
 
   # be paranoid with sanity checks
-  if [[ -z "${REPO_ROOT}"  ]]
-  then
+  if [[ -z "${REPO_ROOT}"  ]]; then
     printf "\n\t[ERROR] REPO_ROOT must be passed in to this function ${0##*/}\n"
     exit 1
-  elif [[ ! -e "${REPO_ROOT}" ]]
-  then
+  elif [[ ! -e "${REPO_ROOT}" ]]; then
     printf "\n\t[ERROR] REPO_ROOT did not exist!\n\tREPO_ROOT: ${REPO_ROOT}\n"
     exit 1
-  elif [[ ! -w "${REPO_ROOT}" ]]
-  then
+  elif [[ ! -w "${REPO_ROOT}" ]]; then
     printf "\n\t[ERROR] REPO_ROOT is not writable?!\n"
     exit 1
   else
     printf "\n\t[INFO] REPO_ROOT existed as expected:\n\tREPO_ROOT: ${REPO_ROOT}\n"
   fi
 
-  if [[ ! -e "${REPO_ROOT}/compositeArtifacts${CHECKPOINT}.jar" ]]
-  then
+  if [[ ! -e "${REPO_ROOT}/compositeArtifacts${CHECKPOINT}.jar" ]]; then
     printf "\n\t[ERROR] compositeArtifacts${CHECKPOINT}.jar did not exist in REPO_ROOT!\n"
     exit 1
   fi
-  if [[ ! -e "${REPO_ROOT}/compositeContent${CHECKPOINT}.jar" ]]
-  then
+  if [[ ! -e "${REPO_ROOT}/compositeContent${CHECKPOINT}.jar" ]]; then
     printf "\n\t[ERROR] compositeContent${CHECKPOINT}.jar did not exist in REPO_ROOT!\n"
     exit 1
   fi
@@ -76,27 +68,23 @@ function changeNamesByCopy ()
 
   rsync --group --verbose ${REPO_ROOT}/compositeArtifacts${CHECKPOINT}.jar ${REPO_ROOT}/compositeArtifacts.jar
   RC=$?
-  if [[ $RC != 0 ]]
-  then
+  if [[ $RC != 0 ]]; then
     printf "\n\t[ERROR] copy returned a non zero return code for compositeArtifacts${CHECKPOINT}.jar. RC: $RC\n"
     exit $RC
   fi
   rsync --group --verbose ${REPO_ROOT}/compositeContent${CHECKPOINT}.jar   ${REPO_ROOT}/compositeContent.jar
   RC=$?
-  if [[ $RC != 0 ]]
-  then
+  if [[ $RC != 0 ]]; then
     printf "\n\t[ERROR] copy returned a non zero return code for compositeContent${CHECKPOINT}.jar. RC: $RC\n"
     exit $RC
   fi
 
   # This HTML change is rarely used, and can probably
   # eliminate, if ever desired.?
-  if [[ -e ${REPO_ROOT}/index${CHECKPOINT}.html ]]
-  then
+  if [[ -e ${REPO_ROOT}/index${CHECKPOINT}.html ]]; then
     rsync --group --verbose ${REPO_ROOT}/index${CHECKPOINT}.html ${REPO_ROOT}/index.html
     RC=$?
-    if [[ $RC != 0 ]]
-    then
+    if [[ $RC != 0 ]]; then
       printf "\n\t[ERROR] copy returned a non zero return code for index${CHECKPOINT}.html. RC: $RC\n"
       exit $RC
     fi
@@ -108,8 +96,7 @@ function changeNamesByCopy ()
 # We require both arguments, since to provide a default could lead to
 # very bad errors if wrong value of "trainName" was used.
 
-if [[ ! $# = 2 ]]
-then
+if [[ ! $# = 2 ]]; then
   printf "\n\t[ERROR] Wrong number of arguments to ${0##*/}\n"
   usage
   exit 1
@@ -123,8 +110,7 @@ printf "\n\tArguments to utility were:"
 printf "\n\t\tTRAIN_NAME: ${TRAIN_NAME}"
 printf "\n\t\tCHECKPOINT: ${CHECKPOINT}\n"
 
-if [[ -z "${CHECKPOINT}" || -z "${TRAIN_NAME}" ]]
-then
+if [[ -z "${CHECKPOINT}" || -z "${TRAIN_NAME}" ]] ; then
   # This would be rare. Equates to something like ./makevisible.sh "" M2
   # But, just in case. Note that something like ./makevisible "   " M2
   # is still not handled well.
@@ -141,8 +127,7 @@ fi
 SIM_REPO_ROOT=${SIM_REPO_ROOT:-/home/data/httpd/download.eclipse.org/releases/${TRAIN_NAME}}
 changeNamesByCopy "${SIM_REPO_ROOT}"
 RC=$?
-if [[ $RC != 0 ]] 
-then
+if [[ $RC != 0 ]]; then
   printf "\n\t[ERROR] changeNamesByCopy returned a non-zero return code: $RC\n"
   exit $RC
 fi
