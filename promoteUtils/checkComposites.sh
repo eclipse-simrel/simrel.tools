@@ -43,11 +43,11 @@ fi
 # Also note: "staging" is a simple repo, at this time, but wouldn't hurt to get a listing, and see what was there?
 
 repoList="\
+  releases/2020-06/ \
   releases/2020-03/ \
   releases/2019-12/ \
   releases/2019-09/ \
   releases/2019-06/ \
-  releases/2019-03/ \
   "
 
 if [[ "$trainArg" == "all" ]]; then
