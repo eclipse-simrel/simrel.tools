@@ -15,11 +15,10 @@
 # can be retrieved as individual script with
 # wget --no-verbose --no-cache  -O checkComposites.sh http://git.eclipse.org/c/simrel/org.eclipse.simrel.tools.git/plain/promoteUtils/checkComposites.sh;
 #
-# and typically set chmod +x checkComposites.sh
-# and then executed in "bash script" build step.
+# and typically set chmod +x checkComposites.sh and then executed in "bash script" build step.
 RAW_OVERALL_DATE_START="$(date +%s )"
 baseEclipseAccessDir=/home/data/httpd/download.eclipse.org
-baseEclipseDirSegment=eclipse/downloads/drops4/R-4.14-201912100610
+baseEclipseDirSegment=eclipse/downloads/drops4/R-4.15-202003050155
 baseEclipse=eclipse-platform-4.14-linux-gtk-x86_64.tar.gz
 repoFileAccess=file:///home/data/httpd/download.eclipse.org/
 repoHttpAccess=https://download.eclipse.org
@@ -28,11 +27,9 @@ repoAccess=${repoFileAccess}
 declare -a namesArray
 declare -a countsArray
 
-# This script expects an argument similar to "trainname" but 
-# but in this case can be "all" (in which all repos in "repoList" are 
-# checked -- that is the "periodic use case".
-# Or, it can be just one, such as 'neon' or 'oxygen', in which case 
-# only that one repository is checked. 
+# This script expects an argument similar to "trainname" but but in this case can be "all" (in which all repos in "repoList" are 
+# checked -- that is the "periodic use case". 
+# Or, it can be just one, such as 'neon' or 'oxygen', in which case only that one repository is checked. 
 
 trainArg=$1
 
@@ -41,13 +38,12 @@ if [[ -z "$trainArg" ]]; then
   trainArg=all
 fi
 
-# Note, we may eventually want to use "locks" to prevent staging or other repo from
-# from changing in the middle of a run.
+# Note, we may eventually want to use "locks" to prevent staging or other repo from changing in the middle of a run.
 
-# Also note: "staging" is a simple repo, at this time, but wouldn't hurt to
-# get a listing, and see what was there?
+# Also note: "staging" is a simple repo, at this time, but wouldn't hurt to get a listing, and see what was there?
 
 repoList="\
+  releases/2020-03/ \
   releases/2019-12/ \
   releases/2019-09/ \
   releases/2019-06/ \
