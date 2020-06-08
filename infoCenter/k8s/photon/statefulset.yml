@@ -25,6 +25,16 @@ spec:
         infocenter.version: "photon"
       name: "infocenter-photon"
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: speed
+                operator: NotIn
+                values:
+                - fast
       terminationGracePeriodSeconds: 1200
       containers:
       - name: infocenter-photon

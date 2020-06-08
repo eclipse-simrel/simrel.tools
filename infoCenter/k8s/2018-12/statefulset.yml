@@ -25,6 +25,16 @@ spec:
         infocenter.version: "2018-12"
       name: "infocenter-2018-12"
     spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: speed
+                operator: NotIn
+                values:
+                - fast
       terminationGracePeriodSeconds: 1200
       containers:
       - name: infocenter-2018-12
