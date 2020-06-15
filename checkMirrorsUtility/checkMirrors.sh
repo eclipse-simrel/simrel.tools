@@ -162,6 +162,7 @@ then
     /releases/2019-09/201909181001/ \
     /releases/2019-12/201912181000/ \
     /releases/2020-03/202003181000/ \
+    /releases/2020-06/202006171000/ \
     /technology/epp/packages/neon/ \
     /technology/epp/packages/oxygen/ \
     /technology/epp/packages/photon/ \
@@ -170,6 +171,7 @@ then
     /technology/epp/packages/2019-09/ \
     /technology/epp/packages/2019-12/ \
     /technology/epp/packages/2020-03/ \
+    /technology/epp/packages/2020-06/ \
     /cbi/updates/aggregator/ide/4.8/ \
     /cbi/updates/aggregator/headless/4.8/ \
     /eclipse/updates/4.6/R-4.6-201606061100 \
