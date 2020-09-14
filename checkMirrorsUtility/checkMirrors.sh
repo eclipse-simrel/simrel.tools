@@ -17,8 +17,7 @@
 # Also, to be useful, most will want to change the list of default URLs to check, in your local copy.
 
 
-function usage()
-{
+function usage() {
   printf "\n\t%s\n" "Simple script to count number of mirrors available for a particular URL" >&2
   printf "\t%s\n"   "Usage: $(basename $0) [-h] | [-v] [-f] [-p] [-t number] [urls]"  >&2
   printf "\t\t%s\t%s\n" "-h" "help" >&2
@@ -32,26 +31,21 @@ function usage()
   printf "\n"
 }
 
-function checkMirrorsForURL()
-{
-
-  if [ -z $1 ]
-  then
+function checkMirrorsForURL() {
+  if [ -z $1 ]; then
     echo "Error: internal funtion requires mirror url parameter";
     exit 3;
   else
     mirrorURL=$1
   fi
-  if [ -z $2 ]
-  then
+  if [ -z $2 ]; then
     protocol=
     pword="http and ftp"
   else
     protocolarg="&protocol=$2"
     pword="$2"
   fi
-  if [[ $listMirrors -eq 1 ]]
-  then
+  if [[ $listMirrors -eq 1 ]]; then
     listOfMirrors=$(wget -q -O - "http://www.eclipse.org/downloads/download.php?file=${mirrorURL}&format=xml${protocolarg}")
     printf "\n\t%s\n\n%s\n\n" "${mirrorURL}" "${listOfMirrors}" >> mirrorsList.txt
   fi
@@ -62,19 +56,16 @@ function checkMirrorsForURL()
   echo $nMirrors
 }
 
-function minvalue()
-{
+function minvalue() {
   ref=$1
   comp=$2
   #echo "DEBUG: ref: $ref" >&2
   #echo "DEBUG: comp: $comp" >&2
   result=
-  if [ -z $comp ]
-  then
+  if [ -z $comp ]; then
     result=$ref
   else
-    if [ $ref -lt $comp ]
-    then
+    if [ $ref -lt $comp ]; then
       result=$ref
     else
       result=$comp
@@ -118,40 +109,32 @@ shift $(($OPTIND - 1))
 
 urls="$@"
 
-if [ $ftponly == 1 ]
-then
+if [ $ftponly == 1 ]; then
   protocol="ftp"
 fi
-if [ $httponly == 1 ]
-then
+if [ $httponly == 1 ]; then
   protocol="http"
 fi
-if [ $ftponly == 1 -a $httponly == 1 ]
-then
+if [ $ftponly == 1 -a $httponly == 1 ]; then
   protocol=
 fi
 
-if [ $verbose ]
-then
+if [ $verbose ]; then
   echo "ftponly: " $ftponly " httponly: " $httponly
   echo "protocol: " $protocol
   echo "urls on cmd line: " $urls
   echo "listMirrors: $listMirrors"
-  if [[ $listMirrors -eq 1 ]]
-  then
+  if [[ $listMirrors -eq 1 ]]; then
     echo "check for list of mirrors in mirrorsList.txt"
   fi
 fi
 
-if [[ $listMirrors -eq 1 ]]
-then
+if [[ $listMirrors -eq 1 ]]; then
   # remove any existing mirrorsList.txt files
   rm -f mirrorsList.txt
 fi
 
-if [ -z "${urls}" ]
-then
-
+if [ -z "${urls}" ]; then
   urls="\
     /tools/orbit/downloads/drops/R20160520211859/repository/ \
     /releases/oxygen/201803211000/ \
@@ -163,6 +146,7 @@ then
     /releases/2019-12/201912181000/ \
     /releases/2020-03/202003181000/ \
     /releases/2020-06/202006171000/ \
+    /releases/2020-09/202009161000/ \
     /technology/epp/packages/neon/ \
     /technology/epp/packages/oxygen/ \
     /technology/epp/packages/photon/ \
@@ -172,29 +156,26 @@ then
     /technology/epp/packages/2019-12/ \
     /technology/epp/packages/2020-03/ \
     /technology/epp/packages/2020-06/ \
+    /technology/epp/packages/2020-09/ \
     /cbi/updates/aggregator/ide/4.8/ \
     /cbi/updates/aggregator/headless/4.8/ \
     /eclipse/updates/4.6/R-4.6-201606061100 \
     /eclipse/updates/4.6/R-4.6.1-201609071200 \
     /eclipse/updates/4.6/R-4.6.2-201611241400 \
     /eclipse/updates/4.6/R-4.6.3-201703010400"
-
 fi
 
-if [ $verbose ]
-then
+if [ $verbose ]; then
   echo "\$HOSTNAME: " $HOSTNAME
 fi
 
 # if [ "davidw-hp-m10" == $HOSTNAME ]
-if [ "build" == $HOSTNAME ]
-then
+if [ "build" == $HOSTNAME ]; then
   printf "\n\t%s\n" "[WARNING] Remmember, when running on 'build.eclipse.org' 0 (zero) mirrors are expected"
 fi
 
 minimumMirrors=
-if [ "${urls}" ]
-then
+if [ "${urls}" ]; then
   #echo -e "\n[DEBUG] urls: $urls\n"
   for mirrorURL in ${urls}
   do
@@ -206,19 +187,15 @@ else
   usage
 fi
 
-if [ -z $testNumber ]
-then
-  if [ $verbose ]
-  then
+if [ -z $testNumber ]; then
+  if [ $verbose ]; then
     echo "no test mode"
   fi
   exit 0
 else
   fresult=$((testNumber - minimumMirrors))
-  if [ $fresult -le 0 ]
-  then
-    if [ $verbose ]
-    then
+  if [ $fresult -le 0 ]; then
+    if [ $verbose ]; then
       echo "minimum mirrors, $minimumMirrors, was greater than or equal to criteria, $testNumber"
     fi
     exit 0
