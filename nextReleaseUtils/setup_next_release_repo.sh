@@ -123,6 +123,6 @@ create_next_release_repo
 
 echo "SCPing to download server..."
 
-scp ${release_name} ${ssh_remote}:${releases_root_dir}/
+scp -r ${release_name} ${ssh_remote}:${releases_root_dir}/
 
 echo "Done."

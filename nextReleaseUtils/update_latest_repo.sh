@@ -106,6 +106,6 @@ create_latest_repo
 
 echo "SCPing to download server..."
 
-scp ${local_dir_name} ${ssh_remote}:${releases_root_dir}/
+scp -r ${local_dir_name} ${ssh_remote}:${releases_root_dir}/
 
 echo "Done."
