@@ -25,9 +25,11 @@ script_name="$(basename ${0})"
 release_name=${1:-}
 last_release_dir=${2:-}
 
-releases_root_dir=/home/data/httpd/download.eclipse.org/releases
-new_release_dir=${releases_root_dir}/${release_name}
+releases_root_dir="/home/data/httpd/download.eclipse.org/releases"
+new_release_dir="${releases_root_dir}/${release_name}"
 timestamp=$(date +%s%3N)
+
+ssh_remote="genie.simrel@projects-storage.eclipse.org"
 
 usage() {
   printf "Usage: %s release_name last_release_dir\n" "$script_name"
@@ -48,27 +50,27 @@ if [[ -z "${last_release_dir}" ]]; then
 fi
 
 #check if dir already exists
-if [ -d ${new_release_dir} ]; then
+if ssh ${ssh_remote} test -d ${new_release_dir}; then
   printf "ERROR: ${new_release_dir} already exists. Skipping...\n"
   exit 1
 fi
 
-#create dir
-mkdir -p ${new_release_dir}
+create_next_release_repo() {
+  #create dir locally
+  mkdir -p ${release_name}
 
-pushd ${new_release_dir}
+  pushd ${release_name}
 
-#create p2.index
-echo "Creating p2.index..."
-cat <<EOF > p2.index
+  echo "Creating p2.index..."
+  cat <<EOF > p2.index
 version=1
 metadata.repository.factory.order=compositeContent.xml
 artifact.repository.factory.order=compositeArtifacts.xml
 EOF
 
-echo "Creating metadata..."
-#create compositeArtifacts.xml
-cat <<EOG > compositeArtifacts.xml
+  echo "Creating metadata..."
+  #create compositeArtifacts.xml
+  cat <<EOG > compositeArtifacts.xml
 <?xml version='1.0' encoding='UTF-8'?>
 <?compositeArtifactRepository version='1.0.0'?>
 <repository name='Eclipse Repository'  type='org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository' version='1.0.0'>
@@ -84,8 +86,8 @@ cat <<EOG > compositeArtifacts.xml
 </repository>
 EOG
 
-#create compositeContent.xml
-cat <<EOH > compositeContent.xml
+  #create compositeContent.xml
+  cat <<EOH > compositeContent.xml
 <?xml version='1.0' encoding='UTF-8'?>
 <?compositeMetadataRepository version='1.0.0'?>
 <repository name='Eclipse Repository'  type='org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository' version='1.0.0'>
@@ -101,19 +103,26 @@ cat <<EOH > compositeContent.xml
 </repository>
 EOH
 
-echo "compositeArtifacts.xml"
-cat compositeArtifacts.xml
-echo "compositeContent.xml"
-cat compositeContent.xml
+  echo "compositeArtifacts.xml"
+  cat compositeArtifacts.xml
+  echo "compositeContent.xml"
+  cat compositeContent.xml
 
-echo "Creating jars..."
-zip compositeArtifacts.jar compositeArtifacts.xml
-zip compositeContent.jar compositeContent.xml
-rm *.xml
+  echo "Creating jars..."
+  zip compositeArtifacts.jar compositeArtifacts.xml
+  zip compositeContent.jar compositeContent.xml
+  rm *.xml
 
-echo "Check dir structure..."
-ls -al
+  echo "Check dir structure..."
+  ls -al
 
-popd
+  popd
+}
+
+create_next_release_repo
+
+echo "SCPing to download server..."
+
+scp ${release_name} ${ssh_remote}:${releases_root_dir}/
 
 echo "Done."

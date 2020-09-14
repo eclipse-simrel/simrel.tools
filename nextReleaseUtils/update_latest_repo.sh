@@ -22,9 +22,11 @@ script_name="$(basename ${0})"
 
 release_name=${1:-}
 
-releases_root_dir=/home/data/httpd/download.eclipse.org/releases
-release_dir=${releases_root_dir}/latest
+releases_root_dir="/home/data/httpd/download.eclipse.org/releases"
+local_dir_name="latest"
 timestamp=$(date +%s%3N)
+
+ssh_remote="genie.simrel@projects-storage.eclipse.org"
 
 usage() {
   printf "Usage: %s release_name\n" "$script_name"
@@ -37,22 +39,23 @@ if [[ -z "${release_name}" ]]; then
   exit 1
 fi
 
-#create dir
-mkdir -p ${release_dir}
 
-pushd ${release_dir}
+create_latest_repo() {
+  #create local dir
+  mkdir -p ${local_dir_name}
 
-#create p2.index
-echo "Creating p2.index..."
-cat <<EOF > p2.index
+  pushd ${local_dir_name}
+
+  echo "Creating p2.index..."
+  cat <<EOF > p2.index
 version=1
 metadata.repository.factory.order=compositeContent.xml
 artifact.repository.factory.order=compositeArtifacts.xml
 EOF
 
-echo "Creating metadata..."
-#create compositeArtifacts.xml
-cat <<EOG > compositeArtifacts.xml
+  echo "Creating metadata..."
+  #create compositeArtifacts.xml
+  cat <<EOG > compositeArtifacts.xml
 <?xml version='1.0' encoding='UTF-8'?>
 <?compositeArtifactRepository version='1.0.0'?>
 <repository name='Eclipse Repository'  type='org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository' version='1.0.0'>
@@ -67,8 +70,8 @@ cat <<EOG > compositeArtifacts.xml
 </repository>
 EOG
 
-#create compositeContent.xml
-cat <<EOH > compositeContent.xml
+  #create compositeContent.xml
+  cat <<EOH > compositeContent.xml
 <?xml version='1.0' encoding='UTF-8'?>
 <?compositeMetadataRepository version='1.0.0'?>
 <repository name='Eclipse Repository'  type='org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository' version='1.0.0'>
@@ -83,19 +86,26 @@ cat <<EOH > compositeContent.xml
 </repository>
 EOH
 
-echo "compositeArtifacts.xml"
-cat compositeArtifacts.xml
-echo "compositeContent.xml"
-cat compositeContent.xml
+  echo "compositeArtifacts.xml"
+  cat compositeArtifacts.xml
+  echo "compositeContent.xml"
+  cat compositeContent.xml
 
-echo "Creating jars..."
-zip compositeArtifacts.jar compositeArtifacts.xml
-zip compositeContent.jar compositeContent.xml
-rm *.xml
+  echo "Creating jars..."
+  zip compositeArtifacts.jar compositeArtifacts.xml
+  zip compositeContent.jar compositeContent.xml
+  rm *.xml
 
-echo "Check dir structure..."
-ls -al
+  echo "Check dir structure..."
+  ls -al
 
-popd
+  popd
+}
+
+create_latest_repo
+
+echo "SCPing to download server..."
+
+scp ${local_dir_name} ${ssh_remote}:${releases_root_dir}/
 
 echo "Done."
