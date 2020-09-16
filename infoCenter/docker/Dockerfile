@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-slim
+FROM openjdk:11-jdk-slim
 
 ### user name recognition at runtime w/ an arbitrary uid - for OpenShift deployments
 COPY uid_entrypoint /usr/local/bin/uid_entrypoint
