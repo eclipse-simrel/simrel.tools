@@ -10,20 +10,20 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   labels:
-    infocenter.version: "2018-09"
+    infocenter.version: "2020-09"
   namespace: "infocenter"
-  name: "infocenter-2018-09"
+  name: "infocenter-2020-09"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      infocenter.version: "2018-09"
-  serviceName: "infocenter-2018-09"
+      infocenter.version: "2020-09"
+  serviceName: "infocenter-2020-09"
   template:
     metadata:
       labels:
-        infocenter.version: "2018-09"
-      name: "infocenter-2018-09"
+        infocenter.version: "2020-09"
+      name: "infocenter-2020-09"
     spec:
       affinity:
         nodeAffinity:
@@ -37,8 +37,8 @@ spec:
                 - fast
       terminationGracePeriodSeconds: 1200
       containers:
-      - name: infocenter-2018-09
-        image: eclipsecbi/eclipse-infocenter:2018-09@sha256:8f1abee68c1db31f474647d142304545070b11b2c8609abcd2879b6bec3fbf9d
+      - name: infocenter-2020-09
+        image: eclipsecbi/eclipse-infocenter:2020-09@sha256:b2970022f685a7258feda536413f29ae1b10fe2033e7e4b70ab8a4f329d02204
         imagePullPolicy: IfNotPresent
         command:
           - /infocenter/startDockerInfoCenter.sh
@@ -83,4 +83,4 @@ spec:
         emptyDir: {}
       - name: nginx-config
         configMap:
-          name: nginx-config-2018-09
+          name: nginx-config-2020-09
