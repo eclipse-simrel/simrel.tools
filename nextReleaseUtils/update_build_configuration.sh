@@ -30,11 +30,13 @@ release_name=${1:-}
 reference_repo=${2:-}
 eclipse_repo_url=${3:-}
 
+eclipse_repo_base_url="https://download.eclipse.org/eclipse/updates"
+
 usage() {
   printf "Usage: %s release_name reference_repo eclipse_repo_url\n" "${script_name}"
-  printf "\t%-16s release name (e.g. 2020-09).\n" "project_name"
+  printf "\t%-16s release name (e.g. 2020-09).\n" "release_name"
   printf "\t%-16s reference repo (e.g. 'releases/2020-06/202006171000').\n" "reference_repo"
-  printf "\t%-16s Eclipse repo URL (e.g. 'https://download.eclipse.org/eclipse/updates/4.16/R-4.16-202006040540/').\n" "eclipse_repo_url"
+  printf "\t%-16s Eclipse repo URL (e.g. '4.16/R-4.16-202006040540/').\n" "eclipse_repo_url"
 }
 
 ## Verify inputs
@@ -54,7 +56,7 @@ if [ "${reference_repo}" == "" ]; then
 fi
 
 if [ "${eclipse_repo_url}" == "" ]; then
-  printf "ERROR: an Eclipse repo URL must be given (e.g. 'https://download.eclipse.org/eclipse/updates/4.16/R-4.16-202006040540/').\n"
+  printf "ERROR: an Eclipse repo URL must be given (e.g. '4.16/R-4.16-202006040540/').\n"
   usage
   exit 1
 fi
@@ -64,7 +66,8 @@ sed -i "s/TRAIN_NAME = \".*\"/TRAIN_NAME = \"${release_name}\"/g" ${jenkinsfile}
 
 # Update pom.xml
 # Unfortunately the namesspaces has to be defined for pom.xml files
-${xmlstarlet_bin} ed -L -N p="http://maven.apache.org/POM/4.0.0" -u /p:project/p:properties/p:trainName -v "${release_name}" ${pom_xml}
-${xmlstarlet_bin} ed -L -N p="http://maven.apache.org/POM/4.0.0" -u /p:project/p:properties/p:referenceRepo -v "${reference_repo}" ${pom_xml}
-${xmlstarlet_bin} ed -L -N p="http://maven.apache.org/POM/4.0.0" -u /p:project/p:properties/p:eclipse.repo.url -v "${eclipse_repo_url}" ${pom_xml}
+maven_namespace="http://maven.apache.org/POM/4.0.0"
+${xmlstarlet_bin} ed -L -N p=${maven_namespace} -u /p:project/p:properties/p:trainName -v "${release_name}" ${pom_xml}
+${xmlstarlet_bin} ed -L -N p=${maven_namespace} -u /p:project/p:properties/p:referenceRepo -v "${reference_repo}" ${pom_xml}
+${xmlstarlet_bin} ed -L -N p=${maven_namespace} -u /p:project/p:properties/p:eclipse.repo.url -v "${eclipse_repo_base_url}/${eclipse_repo_url}" ${pom_xml}
 
