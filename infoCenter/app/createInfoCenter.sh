@@ -10,20 +10,18 @@
 #*******************************************************************************
 
 # This script requires the following files to be present in the same dir:
-# * get_jars.sh
-# * find_jars.sh
 # * plugin_customization.ini
 
 # Bash strict-mode
 set -o errexit
-set -o nounset
+#set -o nounset #FIXME
 set -o pipefail
 
 # Parameters:
 # $1 = release name (e.g. 2019-09, 2019-12)
-# $2 = path to platform zip (e.g. M-4.6.2RC3-201611241400/eclipse-platform-4.6.2RC3-linux-gtk-x86_64.tar.gz)
+# $2 = subdir to platform zip (e.g. R-4.17-202009021800)
 release_name=${1:-}
-zip_path=${2:-}
+subdir=${2:-}
 p2_repo_dir=${3:-}
 past_release=${4:-'false'}
 
@@ -34,12 +32,14 @@ platform_dir=/home/data/httpd/download.eclipse.org/eclipse/downloads/drops4
 p2_base_dir=/home/data/httpd/download.eclipse.org
 script_name="$(basename ${0})"
 
+ssh_remote="genie.simrel@projects-storage.eclipse.org"
+
 info_center_port=8086
 
 usage() {
   printf "Usage %s [releaseName] [pathToArchive] [p2RepoDir] [pastRelease]\n" "${script_name}"
   printf "\t%-16s the release name (e.g. neon, neon1, oxygen, oxygen1)\n" "releaseName"
-  printf "\t%-16s the path to eclipse-platform archive (e.g. M-4.6.2RC3-201611241400/eclipse-platform-4.6.2RC3-linux-gtk-x86_64.tar.gz)\n" "pathToArchive"
+  printf "\t%-16s the subdir to eclipse-platform archive (e.g. R-4.17-202009021800)\n" "subDir"
   printf "\t%-16s the path to the P2 repo (e.g. releases/neon/201610111000) (optional)\n" "p2RepoDir"
   printf "\t%-16s set to 'true' to change banner to say 'Past release' (default is 'false') (optional)\n" "pastRelease"
 }
@@ -51,8 +51,8 @@ if [[ -z "${release_name}" && $# -lt 1 ]]; then
   exit 1
 fi
 
-if [[ -z "${zip_path}" && $# -lt 2 ]]; then
-  printf "ERROR: a path to the eclipse-platform archive must be given.\n"
+if [[ -z "${subdir}" && $# -lt 2 ]]; then
+  printf "ERROR: a subdir the eclipse-platform archive must be given.\n"
   usage
   exit 1
 fi
@@ -66,8 +66,8 @@ prepare() {
 
   # Copy/download eclipse-platform
   echo "Downloading eclipse-platform..."
-  if [ ! -f ${workdir}/eclipse-platform*.tar.gz ]; then
-    cp ${platform_dir}/${zip_path} .
+  if [ ! -f eclipse-platform*.tar.gz ]; then
+    scp "${ssh_remote}:/${platform_dir}/${subdir}/eclipse-platform-*-linux-gtk-x86_64.tar.gz" .
   fi
 
   # Extract eclipse-platform
@@ -93,14 +93,38 @@ find_base() {
 }
 
 find_doc_jars() {
-  # Find doc JARs
+  local p2_repo_dir="${p2_base_dir}/${p2_repo_dir}"
+  local plugins_file="doc_plugins.tar"
+  local remote_shell_script="find_doc_jars.sh"
+
   echo "Find doc JARs..."
-  echo "Executing find_jars.sh (p2_repo_dir: ${p2_base_dir}/${p2_repo_dir})..."
-  filename=doc_plugin_list.txt
-  ./find_jars.sh ${p2_base_dir}/${p2_repo_dir}
-  while read line; do
-    cp $line ${workdir}/eclipse/dropins/plugins
-  done < $filename
+
+  printf "  Looking up all JAR files that contain the string 'org.eclipse.help.toc'...\n"
+  printf "  Using the following P2 repository: ${p2_repo_dir} \n"
+
+  cat << 'EOF' > ${remote_shell_script}
+#!/usr/bin/env bash
+p2_repo_dir=$1
+jar_list=$(find ${p2_repo_dir}/plugins -name *.jar ! -name *source* -printf '%f\n')
+output_file="doc_plugins.tar"
+
+rm -f "${output_file}.*"
+
+for file in ${jar_list}
+do
+  if ( unzip -p "${p2_repo_dir}/plugins/${file}" plugin.xml 2>&1 | grep -q "org.eclipse.help.toc" ); then
+    tar rvf "${output_file}" -C "${p2_repo_dir}/plugins" "${file}"
+  fi
+done
+EOF
+
+  scp ${remote_shell_script} "${ssh_remote}:~/"
+  rm ${remote_shell_script} #remove local copy
+  ssh ${ssh_remote} "chmod +x ${remote_shell_script}; ./${remote_shell_script} ${p2_repo_dir}"
+  scp "${ssh_remote}:${plugins_file}" .
+  tar xf "${plugins_file}" -C "${workdir}/eclipse/dropins/plugins/"
+  no_of_files=$(find "${workdir}/eclipse/dropins/plugins/" -name *.jar | wc -l)
+  printf "  Found ${no_of_files} JAR files.\n" 
 }
 
 create_banner() {
@@ -117,7 +141,7 @@ create_banner() {
 
   # replace version
   sed -i "s/${token}/Eclipse IDE ${version}/g" ${banner_path}
-  
+
   if [[ ${past_release} == 'true' ]]; then
     sed -i "s/Current Release/Past Release/g" ${banner_path}
     # add text  
