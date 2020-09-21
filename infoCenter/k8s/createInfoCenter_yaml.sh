@@ -16,14 +16,20 @@ set -o pipefail
 
 # Parameters:
 release_name=${1:-}
+sha_256=${2:-}
 namespace="infocenter"
 hostname="help.eclipse.org"
 dockerhub_repo="eclipsecbi/eclipse-infocenter"
 nginx_image="eclipsefdn/nginx:stable-alpine"
 
 # Verify inputs
-if [[ -z "${release_name}" && $# -lt 1 ]]; then
+if [[ -z "${release_name}" ]]; then
   printf "ERROR: a release name must be given.\n"
+  exit 1
+fi
+
+if [[ -z "${sha_256}" && $# -lt 2 ]]; then
+  printf "ERROR: a sha_256 must be given.\n"
   exit 1
 fi
 
@@ -136,8 +142,9 @@ EOF
 create_statefulset () {
   local release_name=${1:-}
   local namespace_name=${2:-}
+  local sha256=${3:-}
+  #local sha256="$(docker inspect --format='{{index .RepoDigests 0}}' "${dockerhub_repo}:${release_name}" | sed -E 's/.*sha256:(.*)/\1/g')"
   local file_name="${release_name}/statefulset.yml"
-  local sha256="$(docker inspect --format='{{index .RepoDigests 0}}' "${dockerhub_repo}:${release_name}" | sed -E 's/.*sha256:(.*)/\1/g')"
   local infocenter_image=${dockerhub_repo}:${release_name}@sha256:${sha256}
   echo "Image name: ${infocenter_image}"
   
@@ -228,5 +235,5 @@ mkdir -p ${release_name}
 create_route ${release_name} ${namespace} ${hostname}
 create_service ${release_name} ${namespace}
 create_nginx_configmap ${release_name} ${namespace}
-create_statefulset ${release_name} ${namespace}
+create_statefulset ${release_name} ${namespace} ${sha_256}
 
