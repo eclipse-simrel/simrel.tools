@@ -28,6 +28,8 @@
 # in composite, so in theory, they might have stale 'content' data that pointed to an old artifact that
 # was no longer in (the newly copied) 'artifacts' file.
 
+SSH_REMOTE="genie.simrel@projects-storage.eclipse.org"
+
 usage () {
   printf "\n\t%s" "This utility, ${0##*/}, is to copy the two composte*XX.jars to their final name of composite*.jar." >&2
   printf "\n\t\t%s\n" "Example: ${0##*/} 'trainName' 'checkpoint'" >&2
@@ -66,13 +68,15 @@ changeNamesByCopy () {
 
   # The real work begins here
 
-  rsync --group --verbose ${REPO_ROOT}/compositeArtifacts${CHECKPOINT}.jar ${REPO_ROOT}/compositeArtifacts.jar
+  #rsync --group --verbose ${REPO_ROOT}/compositeArtifacts${CHECKPOINT}.jar ${REPO_ROOT}/compositeArtifacts.jar
+  scp -p -3 "${SSH_REMOTE}:${REPO_ROOT}/compositeArtifacts${CHECKPOINT}.jar" "${SSH_REMOTE}:${REPO_ROOT}/compositeArtifacts.jar"
   RC=$?
   if [[ $RC != 0 ]]; then
     printf "\n\t[ERROR] copy returned a non zero return code for compositeArtifacts${CHECKPOINT}.jar. RC: $RC\n"
     exit $RC
   fi
-  rsync --group --verbose ${REPO_ROOT}/compositeContent${CHECKPOINT}.jar   ${REPO_ROOT}/compositeContent.jar
+  #rsync --group --verbose ${REPO_ROOT}/compositeContent${CHECKPOINT}.jar   ${REPO_ROOT}/compositeContent.jar
+  scp -p -3 "${SSH_REMOTE}:${REPO_ROOT}/compositeContent${CHECKPOINT}.jar" "${SSH_REMOTE}:${REPO_ROOT}/compositeContent.jar"
   RC=$?
   if [[ $RC != 0 ]]; then
     printf "\n\t[ERROR] copy returned a non zero return code for compositeContent${CHECKPOINT}.jar. RC: $RC\n"
@@ -82,7 +86,8 @@ changeNamesByCopy () {
   # This HTML change is rarely used, and can probably
   # eliminate, if ever desired.?
   if [[ -e ${REPO_ROOT}/index${CHECKPOINT}.html ]]; then
-    rsync --group --verbose ${REPO_ROOT}/index${CHECKPOINT}.html ${REPO_ROOT}/index.html
+    #rsync --group --verbose ${REPO_ROOT}/index${CHECKPOINT}.html ${REPO_ROOT}/index.html
+    scp -p -3 "${SSH_REMOTE}:${REPO_ROOT}/index${CHECKPOINT}.html" "${SSH_REMOTE}:${REPO_ROOT}/index.html"
     RC=$?
     if [[ $RC != 0 ]]; then
       printf "\n\t[ERROR] copy returned a non zero return code for index${CHECKPOINT}.html. RC: $RC\n"
