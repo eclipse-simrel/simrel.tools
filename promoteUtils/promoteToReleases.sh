@@ -121,45 +121,39 @@ export toDirectory=${releaseDirectory}
 
 
 # make sure 'toDirectory' has been defined and is not zero length
-if [ -z "${toDirectory}" ]
-then
+if [ -z "${toDirectory}" ]; then
   printf "\n\t[ERROR] the variable toDirectory must be defined to run this script\n"
   exit 1
 fi
 
 # make sure 'dirdate' has been defined and is no zero length
-if [ -z "${dirdate}" ]
-then
+if [ -z "${dirdate}" ]; then
   printf "\n\t[ERROR] the variable dirdate must be defined to run this script.\n"
   exit 1
 fi
 
 # sanity check existence
-if [[ ! -e "${toDirectory}" ]]
-then
+if [[ ! -e "${toDirectory}" ]]; then
   printf "\n\t[ERROR] the 'toDirectory' does not exist\n\t\t${toDirectory}\n"
   exit 1
 fi
 
 # sanity check that we have write access to "toDirectory"
-if [[ ! -w "${toDirectory}" ]]
-then
+if [[ ! -w "${toDirectory}" ]]; then
   printf "\n\t[ERROR] No write access to ${toDirectory}\n"
   exit 1
 fi
 
 toSubDir=${toDirectory}/${dirdate}
 
-if [[ -z "${DRYRUN}" ]]
-then
+if [[ -z "${DRYRUN}" ]]; then
   printf "\n\tCopying new plugins and features "
   printf "\n\t\tfrom  ${fromDirectory}"
   printf "\n\t\tto  ${toSubDir}\n"
 
   mkdir -p ${toSubDir}
   RC=$?
-  if [[ $RC != 0 ]]
-  then
+  if [[ $RC != 0 ]]; then
     printf "\n\t[ERROR] Could not make the directory ${toSubDir}. RC: $RC\n"
     exit $RC
   fi
@@ -173,40 +167,34 @@ fi
 # plugins and features
 rsync ${DRYRUN}  -rp ${fromDirectory}/* ${toSubDir}/
 RC=$?
-if [[ "$RC" != "0" ]]
-then
+if [[ "$RC" != "0" ]]; then
   printf "\n\t[ERROR] could not copy files as expected"
   exit $RC
 fi
 
 "${BUILD_TOOLS_DIR}/promoteUtils/installEclipseAndTools.sh"
 RC=$?
-if [[ $RC != 0 ]]
-then
+if [[ $RC != 0 ]]; then
   printf "\n\t[ERROR] installEclipseAndTools.sh returned non zero return code: $RC\n"
   exit $RC
 fi
 
-if [[ -z "${DRYRUN}" ]]
-then
+if [[ -z "${DRYRUN}" ]]; then
   "${BUILD_TOOLS_DIR}/promoteUtils/addRepoProperties-release.sh" ${release} ${dirdate}
   RC=$?
-  if [[ "$RC" != "0" ]]
-  then
+  if [[ "$RC" != "0" ]]; then
     printf "\n\t[ERROR] repo properties could not be updated as expected. RC: $RC"
     exit $RC
   fi
-  if [[ -e "${toSubDir}/p2.index" ]]
-  then
+  if [[ -e "${toSubDir}/p2.index" ]]; then
     # remove p2.index, if exists, since convertxz will recreate, and
     # convertxz (may) not recreate xz files, after modifications made in
     # previous step, if p2.index already exists and appears correct.
     rm "${toSubDir}/p2.index"
   fi
-  "${BUILD_TOOLS_DIR}/promoteUtils/convertxz.sh" "${toSubDir}"
+  "${BUILD_TOOLS_DIR}/convertxz.sh" "${toSubDir}"
   RC=$?
-  if [[ "$RC" != "0" ]]
-  then
+  if [[ "$RC" != "0" ]]; then
     printf "\n\t[ERROR] convertxz.sh did not complete as expected. RC: $RC\n"
   fi
   exit $RC
