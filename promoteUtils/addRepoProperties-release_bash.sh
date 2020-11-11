@@ -66,7 +66,7 @@ timestamp="$(date +%s%3N)" #Attention: date +%N does not work on macOS!
 echo "Editing artifacts.xml..."
 
 # edit values and write new xml file (replace double quotes with single quotes)
-"${xmlstarlet_bin}" ed -u "//repository/@name" -v "${p2ArtifactRepositoryName}" \
+${xmlstarlet_bin} ed -u "//repository/@name" -v "${p2ArtifactRepositoryName}" \
               -u "//repository/@version" -v "1.0.0" \
               -u "//repository/properties/@size" -v "5" \
               -u "//repository/properties/property[@name='p2.timestamp']/@value" -v "${timestamp}" \
