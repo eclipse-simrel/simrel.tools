@@ -44,9 +44,11 @@ printf "\n\tCopying new plugins and features "
 printf "\n\t\tfrom  %s" "${stagingDirectory}"
 printf "\n\t\tto  %s\n" "${releaseSubDir}"
 
+# Create ../releases/<release>/<dirdate> dir if it does not exist yet
 ssh "${SSH_REMOTE}" mkdir -p "${releaseSubDir}"
+#TODO: use rsync instead of cp
 ssh "${SSH_REMOTE}" cp -rp "${stagingDirectory}/*" "${releaseSubDir}/"
 
 scp "${BUILD_TOOLS_DIR}/addRepoProperties-release_bash.sh" "${SSH_REMOTE}:~/"
-ssh "${SSH_REMOTE}" "addRepoProperties-release_bash.sh" "${release}" "${dirdate}"
+ssh "${SSH_REMOTE}" "~/addRepoProperties-release_bash.sh" "${release}" "${dirdate}"
 
