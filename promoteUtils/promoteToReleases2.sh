@@ -49,6 +49,6 @@ ssh "${SSH_REMOTE}" mkdir -p "${releaseSubDir}"
 #TODO: use rsync instead of cp
 ssh "${SSH_REMOTE}" cp -rp "${stagingDirectory}/*" "${releaseSubDir}/"
 
-scp "${BUILD_TOOLS_DIR}/addRepoProperties-release_bash.sh" "${SSH_REMOTE}:~/"
+scp "${BUILD_TOOLS_DIR}/promoteUtils/addRepoProperties-release_bash.sh" "${SSH_REMOTE}:~/"
 ssh "${SSH_REMOTE}" "~/addRepoProperties-release_bash.sh" "${release}" "${dirdate}"
 
