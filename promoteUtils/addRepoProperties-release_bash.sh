@@ -38,9 +38,9 @@ else
 fi
 
 # try different executable names
-xmlstarlet_bin=$(which xmlstarlet)
+xmlstarlet_bin=$(which xmlstarlet 2> /dev/null)
 if [[ $? != 0 || -z "${xmlstarlet_bin}" ]]; then
-  xmlstarlet_bin=$(which xml)
+  xmlstarlet_bin=$(which xml 2> /dev/null)
   if [[ $? != 0 || -z "${xmlstarlet_bin}" ]]; then
     echo "ERROR: xmlstarlet executable not found (tried 'xmlstarlet' and 'xml'). Please install xmlstarlet.";
     exit 1
@@ -64,6 +64,9 @@ unzip -q "${stagingDirectory}/artifacts.jar" -d "${stagingDirectory}"
 timestamp="$(date +%s%3N)" #Attention: date +%N does not work on macOS!
 
 echo "Editing artifacts.xml..."
+
+# make sure the target directory exists?
+mkdir -p "${releaseDirectory}"
 
 # edit values and write new xml file (replace double quotes with single quotes)
 ${xmlstarlet_bin} ed -u "//repository/@name" -v "${p2ArtifactRepositoryName}" \
