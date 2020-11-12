@@ -63,23 +63,28 @@ unzip -q "${stagingDirectory}/artifacts.jar" -d "${stagingDirectory}"
 # get epoch with milliseconds
 timestamp="$(date +%s%3N)" #Attention: date +%N does not work on macOS!
 
-echo "Editing artifacts.xml..."
-
-# make sure the target directory exists?
-mkdir -p "${releaseDirectory}"
+printf "Editing artifacts.xml..."
 
 # edit values and write new xml file (replace double quotes with single quotes)
+# workarounds are required for old xmlstarlet version on build.eclipse.org
+# xml elements can not be generated without a text value, but the text value can be deleted in a subsequent step
+# -s "//repository/properties" -t "elem" -n "property" -v "temp" \
+# -d "//repository/properties/property[@name='p2.statsURI']/text()" \
 ${xmlstarlet_bin} ed -u "//repository/@name" -v "${p2ArtifactRepositoryName}" \
               -u "//repository/@version" -v "1.0.0" \
               -u "//repository/properties/@size" -v "5" \
               -u "//repository/properties/property[@name='p2.timestamp']/@value" -v "${timestamp}" \
-              -s "//repository/properties" -t "elem" -n "property" \
+              -s "//repository/properties" -t "elem" -n "property" -v "temp" \
               -i "//repository/properties/property[not(@name)]" -t "attr" -n "name" -v "p2.mirrorsURL" \
+              -d "//repository/properties/property[@name='p2.mirrorsURL']/text()" \
               -i "//repository/properties/property[@name='p2.mirrorsURL']" -t "attr" -n "value" -v "${p2MirrorsURL}" \
-              -s "//repository/properties" -t "elem" -n "property" \
+              -s "//repository/properties" -t "elem" -n "property" -v "temp" \
               -i "//repository/properties/property[not(@name)]" -t "attr" -n "name" -v "p2.statsURI" \
+              -d "//repository/properties/property[@name='p2.statsURI']/text()" \
               -i "//repository/properties/property[@name='p2.statsURI']" -t "attr" -n "value" -v "${p2StatsURI}" \
               "${stagingDirectory}/artifacts.xml" | tr '"' "'" > "${releaseDirectory}/artifacts.xml"
+
+printf "Done.\n"
 
 # compress with zip to artifacts.jar file
 rm -f "${releaseDirectory}/artifacts.jar"
@@ -96,21 +101,22 @@ if [[ $? != 0 || -z "${XZ_EXE}" ]]; then
   exit 1
 fi
 
-echo "Compressing artifacts.xml and content.xml with xz..."
-
+printf "Compressing artifacts.xml and content.xml with xz..."
 ${XZ_EXE} -e --force "${releaseDirectory}/artifacts.xml"
 ${XZ_EXE} -e --verbose --force "${releaseDirectory}/content.xml"
+printf "Done.\n"
 
 # remove *.xml
 rm -f "${releaseDirectory}/artifacts.xml" "${releaseDirectory}/content.xml"
 
-echo "Creating p2.info..."
+printf "Creating p2.info..."
 # write p2.info
 cat <<EOF > "${releaseDirectory}/p2.index"
 version=1
 metadata.repository.factory.order=content.xml.xz,content.xml,!
 artifact.repository.factory.order=artifacts.xml.xz,artifacts.xml,!
 EOF
+printf "Done.\n"
 
 # remove staging artifacts.xml
 rm -f "${stagingDirectory}/artifacts.xml"
