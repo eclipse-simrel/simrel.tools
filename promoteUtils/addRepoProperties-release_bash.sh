@@ -63,7 +63,7 @@ unzip -q "${stagingDirectory}/artifacts.jar" -d "${stagingDirectory}"
 # get epoch with milliseconds
 timestamp="$(date +%s%3N)" #Attention: date +%N does not work on macOS!
 
-printf "Editing artifacts.xml..."
+echo "Editing artifacts.xml..."
 
 # edit values and write new xml file (replace double quotes with single quotes)
 # workarounds are required for old xmlstarlet version on build.eclipse.org
@@ -84,8 +84,6 @@ ${xmlstarlet_bin} ed -u "//repository/@name" -v "${p2ArtifactRepositoryName}" \
               -i "//repository/properties/property[@name='p2.statsURI']" -t "attr" -n "value" -v "${p2StatsURI}" \
               "${stagingDirectory}/artifacts.xml" | tr '"' "'" > "${releaseDirectory}/artifacts.xml"
 
-printf "Done.\n"
-
 # compress with zip to artifacts.jar file
 rm -f "${releaseDirectory}/artifacts.jar"
 zip -qj "${releaseDirectory}/artifacts.jar" "${releaseDirectory}/artifacts.xml"
@@ -101,24 +99,23 @@ if [[ $? != 0 || -z "${XZ_EXE}" ]]; then
   exit 1
 fi
 
-printf "Compressing artifacts.xml and content.xml with xz..."
+echo "Compressing artifacts.xml and content.xml with xz..."
 ${XZ_EXE} -e --force "${releaseDirectory}/artifacts.xml"
 ${XZ_EXE} -e --verbose --force "${releaseDirectory}/content.xml"
-printf "Done.\n"
 
 # remove *.xml
 rm -f "${releaseDirectory}/artifacts.xml" "${releaseDirectory}/content.xml"
 
-printf "Creating p2.info..."
+echo "Creating p2.info..."
 # write p2.info
 cat <<EOF > "${releaseDirectory}/p2.index"
 version=1
 metadata.repository.factory.order=content.xml.xz,content.xml,!
 artifact.repository.factory.order=artifacts.xml.xz,artifacts.xml,!
 EOF
-printf "Done.\n"
 
 # remove staging artifacts.xml
 rm -f "${stagingDirectory}/artifacts.xml"
 
+echo "Done."
 
