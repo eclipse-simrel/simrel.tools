@@ -40,9 +40,9 @@ stagingDirectory="${REPO_ROOT}/staging/${release}"
 releaseDirectory="${REPO_ROOT}/releases/${release}"
 releaseSubDir="${releaseDirectory}/${dirdate}"
 
-printf "\n\tCopying new plugins and features "
-printf "\n\t\tfrom  %s" "${stagingDirectory}"
-printf "\n\t\tto  %s\n" "${releaseSubDir}"
+printf "\nCopying new plugins and features "
+printf "\n\tfrom  %s" "${stagingDirectory}"
+printf "\n\tto  %s\n" "${releaseSubDir}"
 
 # Create ../releases/<release>/<dirdate> dir if it does not exist yet
 ssh "${SSH_REMOTE}" mkdir -p "${releaseSubDir}"
