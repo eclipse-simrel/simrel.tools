@@ -26,7 +26,7 @@ fi
 
 ssh_remote="genie.simrel@projects-storage.eclipse.org"
 
-releaseRepoRoot="/home/data/httpd/download.eclipse.org/releases/${release}"
+releaseRepoRoot="${RELEASE_REPO_ROOT:-/home/data/httpd/download.eclipse.org/releases/${release}}"
 # For testing: if WORKSPACE is not defined, the current directory is used.
 WORKSPACE="${WORKSPACE:-${PWD}}"
 
@@ -37,7 +37,8 @@ write_header() {
   local type="$2"
   local name="$3"
   # get epoch with milliseconds
-  local timestamp="$(date +%s%3N)" #Attention: date +%N does not work on macOS!
+  local timestamp
+  timestamp="$(date +%s%3N)" #Attention: date +%N does not work on macOS!
   cat > "${outfile}" <<EOL
 <?xml version='1.0' encoding='UTF-8'?>
 <?compositeMetadataRepository version='1.0.0'?>
@@ -77,15 +78,15 @@ write_composite_repo() {
 
   write_header "${outfile}" "${type}" "${repo_name}"
 
-  children=$(printf "${dirs}\n" | head -n ${maxChildren})
+  local children=$(printf "%s\n" "${dirs}" | head -n "${maxChildren}")
 
-  nChildren=$(echo -e "${children}" | wc -l)
-  nChildren=$(($nChildren + 1)) # add one for epp entry
+  local nChildren=$(echo -e "${children}" | wc -l)
+  nChildren=$((nChildren + 1)) # add one for epp entry
   echo "  <children size='${nChildren}'>" >> "${outfile}"
   echo "    <child location='../../technology/epp/packages/${release}/'/>" >> "${outfile}"
   for child in ${children}
   do
-    printf "%s%s%s\n" "    <child location='" ${child} "' />" >> "${outfile}"
+    printf "%s%s%s\n" "    <child location='" "${child}" "' />" >> "${outfile}"
   done
 
   write_footer "${outfile}"
@@ -100,24 +101,25 @@ create_composite_repo() {
   local contentCompositeName="compositeContent"
   local contentCompositeFile="${templocation}/${contentCompositeName}.xml"
   local contentCompositeJar="${templocation}/${contentCompositeName}${checkpoint}.jar"
+  local numberOfChildren
 
   # NOTE: we always take the "3 most recent builds" EXCEPT when we are doing a "final release". 
   # We assume that RC2 will be the final release, in case of a respin we assume RC2a, RC2b, etc
   # We use "20" as a prefix to match for all our child repo directories 
   if [[ ${checkpoint} =~ ^RC2[a-z]*$ ]]; then
-    nChildren=1
+    numberOfChildren=1
     echo -e "\n[INFO] Checkpoint, ${checkpoint}, was found to be a final release."
   else
-    nChildren=3
+    numberOfChildren=3
     echo -e "\n[INFO] Checkpoint, ${checkpoint}, was NOT found to be a final release."
   fi
 
   # xargs -d works on projects-storage.eclipse.org, but not on default jnlp agent!
-  dirs=$(ssh ${ssh_remote} "ls -1rd ${releaseRepoRoot}/20* | xargs -d '\n' -n 1 basename")
+  local dirs=$(ssh ${ssh_remote} "ls -1rd ${releaseRepoRoot}/20* | xargs -d '\n' -n 1 basename")
 
   # write files to temp location
-  write_composite_repo "${artifactsCompositeFile}" "${dirs}" "CompositeArtifactRepository" "${nChildren}" "${release}"
-  write_composite_repo "${contentCompositeFile}" "${dirs}" "CompositeMetadataRepository" "${nChildren}" "${release}"
+  write_composite_repo "${artifactsCompositeFile}" "${dirs}" "CompositeArtifactRepository" "${numberOfChildren}" "${release}"
+  write_composite_repo "${contentCompositeFile}" "${dirs}" "CompositeMetadataRepository" "${numberOfChildren}" "${release}"
   write_composite_P2Index "${templocation}/p2.index"
 
   # create jar files
@@ -125,8 +127,12 @@ create_composite_repo() {
   zip -q --junk-paths "${contentCompositeJar}" "${contentCompositeFile}"
 
   # debug
+  printf "\ncompositeArtifacts.xml:\n"
+  cat "${artifactsCompositeFile}"
+  printf "\n"
+
   printf "\ncompositeContent.xml:\n"
-  cat ${contentCompositeFile}
+  cat "${contentCompositeFile}"
   printf "\n"
 
   # upload files
