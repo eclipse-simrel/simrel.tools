@@ -46,7 +46,8 @@ printf "\n\tto  %s\n" "${releaseSubDir}"
 
 # Create ../releases/<release>/<dirdate> dir if it does not exist yet
 ssh "${SSH_REMOTE}" mkdir -p "${releaseSubDir}"
-ssh "${SSH_REMOTE}" rsync -ahr "${stagingDirectory}/*" "${releaseSubDir}/"
+# use -w and --no-compress, since it's a local copy on the same drive
+ssh "${SSH_REMOTE}" rsync -ahW --no-compress "${stagingDirectory}/*" "${releaseSubDir}/"
 
 scp "${BUILD_TOOLS_DIR}/promoteUtils/addRepoProperties-release_bash.sh" "${SSH_REMOTE}:~/"
 ssh "${SSH_REMOTE}" "~/addRepoProperties-release_bash.sh" "${release}" "${dirdate}"
