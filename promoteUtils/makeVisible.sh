@@ -47,21 +47,21 @@ changeNamesByCopy () {
   if [[ -z "${REPO_ROOT}"  ]]; then
     printf "\n\t[ERROR] REPO_ROOT must be passed in to this function ${0##*/}\n"
     exit 1
-  elif [[ ! ssh ${SSH_REMOTE} test -d "${REPO_ROOT}" ]]; then
+  elif ! ssh "${SSH_REMOTE}" test -d "${REPO_ROOT}"; then
     printf "\n\t[ERROR] REPO_ROOT did not exist!\n\tREPO_ROOT: ${REPO_ROOT}\n"
     exit 1
-  elif [[ ! ssh ${SSH_REMOTE} test -w "${REPO_ROOT}" ]]; then
+  elif ! ssh "${SSH_REMOTE}" test -w "${REPO_ROOT}"; then
     printf "\n\t[ERROR] REPO_ROOT is not writable?!\n"
     exit 1
   else
     printf "\n\t[INFO] REPO_ROOT existed as expected:\n\tREPO_ROOT: ${REPO_ROOT}\n"
   fi
 
-  if [[ ! ssh ${SSH_REMOTE} test -e "${REPO_ROOT}/compositeArtifacts${CHECKPOINT}.jar" ]]; then
+  if ! ssh "${SSH_REMOTE}" test -e "${REPO_ROOT}/compositeArtifacts${CHECKPOINT}.jar"; then
     printf "\n\t[ERROR] compositeArtifacts${CHECKPOINT}.jar did not exist in REPO_ROOT!\n"
     exit 1
   fi
-  if [[ ! ssh ${SSH_REMOTE} test -e "${REPO_ROOT}/compositeContent${CHECKPOINT}.jar" ]]; then
+  if ! ssh "${SSH_REMOTE}" test -e "${REPO_ROOT}/compositeContent${CHECKPOINT}.jar"; then
     printf "\n\t[ERROR] compositeContent${CHECKPOINT}.jar did not exist in REPO_ROOT!\n"
     exit 1
   fi
