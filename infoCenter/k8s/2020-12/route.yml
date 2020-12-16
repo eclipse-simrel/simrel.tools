@@ -6,18 +6,24 @@
 # or the MIT License which is available at https://opensource.org/licenses/MIT.
 # SPDX-License-Identifier: EPL-2.0 OR MIT
 #*******************************************************************************
-apiVersion: "v1"
-kind: "Service"
+apiVersion: "route.openshift.io/v1"
+kind: "Route"
 metadata:
   labels:
-    infocenter.version: "2018-12"
+    infocenter.version: "2020-12"
   namespace: "infocenter"
-  name: "infocenter-2018-12"
+  annotations:
+    haproxy.router.openshift.io/timeout: 60s
+  name: "infocenter-2020-12"
 spec:
-  ports:
-  - name: "http"
-    port: 80
-    protocol: "TCP"
-    targetPort: 8080
-  selector:
-    infocenter.version: "2018-12"
+  host: "help.eclipse.org"
+  path: "/2020-12"
+  port:
+    targetPort: "http"
+  tls:
+    insecureEdgeTerminationPolicy: "Redirect"
+    termination: "edge"
+  to:
+    kind: "Service"
+    name: "infocenter-2020-12"
+    weight: 100

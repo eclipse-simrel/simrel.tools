@@ -108,7 +108,7 @@ p2_repo_dir=$1
 jar_list=$(find ${p2_repo_dir}/plugins -name *.jar ! -name *source* -printf '%f\n')
 output_file="doc_plugins.tar"
 
-rm -f "${output_file}.*"
+rm -f "${output_file}*"
 
 for file in ${jar_list}
 do

@@ -10,9 +10,9 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    infocenter.version: "2018-12"
+    infocenter.version: "2020-12"
   namespace: "infocenter"
-  name: nginx-config-2018-12
+  name: nginx-config-2020-12
 data:
   nginx.conf: |-
     worker_processes  1;
@@ -28,7 +28,7 @@ data:
       keepalive_timeout  65;
       server {
         listen 8080;
-        location /2018-12/ {
+        location /2020-12/ {
           proxy_pass           http://127.0.0.1:8086/help/;
         }
       }
