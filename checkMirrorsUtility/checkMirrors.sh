@@ -134,30 +134,50 @@ if [[ $listMirrors -eq 1 ]]; then
   rm -f mirrorsList.txt
 fi
 
+get_dir_list() {
+  local url="$1"
+  # get html, only extract the dirlist, remove the dirlist title (<h2>), fix the html, select the div,
+  # get rid of all empty lines, grep for "20"
+  curl -s -L -H 'X-Cache-Bypass: true' "${url}" | \
+  sed -n "/<div id='dirlist'>/,/<\/div>/p" | \
+  sed "s/<h2>.*<\/h2>//" | \
+  xmlstarlet fo -R --noindent 2>/dev/null | \
+  xmlstarlet sel -t -v "//div" | \
+  sed '/^[[:space:]]*$/d'| \
+  grep "20"
+}
+
+get_epp_releases() {
+  for release in $(get_dir_list "https://download.eclipse.org/technology/epp/packages")
+  do
+    echo "/technology/epp/packages/${release}"
+  done 
+}
+
+get_simrel_releases() {
+  local releases_url="https://download.eclipse.org/releases"
+  for release in $(get_dir_list "${releases_url}")
+  do
+    # get list of release subdirs, take the last one, trim string
+    subdir=$(get_dir_list "${releases_url}/${release}" | tail -n 1 | sed -e 's/^[[:space:]]*//')
+    if [[ ! -z "${subdir}" ]]; then
+      echo "/releases/${release}/${subdir}"
+    fi
+  done 
+}
+
 if [ -z "${urls}" ]; then
-  urls="\
-    /tools/orbit/downloads/drops/R20160520211859/repository/ \
-    /releases/2019-03/201903201000/ \
-    /releases/2019-06/201906191000/ \
-    /releases/2019-09/201909181001/ \
-    /releases/2019-12/201912181000/ \
-    /releases/2020-03/202003181000/ \
-    /releases/2020-06/202006171000/ \
-    /releases/2020-09/202009161000/ \
-    /releases/2020-12/202012161000/ \
-    /technology/epp/packages/2019-03/ \
-    /technology/epp/packages/2019-09/ \
-    /technology/epp/packages/2019-12/ \
-    /technology/epp/packages/2020-03/ \
-    /technology/epp/packages/2020-06/ \
-    /technology/epp/packages/2020-09/ \
-    /technology/epp/packages/2020-12/ \
-    /cbi/updates/aggregator/ide/4.8/ \
-    /cbi/updates/aggregator/headless/4.8/ \
-    /eclipse/updates/4.6/R-4.6-201606061100 \
-    /eclipse/updates/4.6/R-4.6.1-201609071200 \
-    /eclipse/updates/4.6/R-4.6.2-201611241400 \
-    /eclipse/updates/4.6/R-4.6.3-201703010400"
+   # line breaks are not really handled nicely here, but it still works
+   urls="\
+     /tools/orbit/downloads/drops/R20160520211859/repository/ \
+     /cbi/updates/aggregator/ide/4.8/ \
+     /cbi/updates/aggregator/headless/4.8/ \
+     /eclipse/updates/4.6/R-4.6-201606061100 \
+     /eclipse/updates/4.6/R-4.6.1-201609071200 \
+     /eclipse/updates/4.6/R-4.6.2-201611241400 \
+     /eclipse/updates/4.6/R-4.6.3-201703010400 \
+     $(get_epp_releases) \
+     $(get_simrel_releases)"
 fi
 
 if [ $verbose ]; then
