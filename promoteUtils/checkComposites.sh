@@ -16,84 +16,65 @@
 # wget --no-verbose --no-cache  -O checkComposites.sh http://git.eclipse.org/c/simrel/org.eclipse.simrel.tools.git/plain/promoteUtils/checkComposites.sh;
 #
 # and typically set chmod +x checkComposites.sh and then executed in "bash script" build step.
+
+# Bash strict-mode
+set -o errexit
+set -o nounset
+set -o pipefail
+
+IFS=$'\n\t'
+
 RAW_OVERALL_DATE_START="$(date +%s )"
-baseEclipseAccessDir=/home/data/httpd/download.eclipse.org
-baseEclipseDirSegment=eclipse/downloads/drops4/R-4.15-202003050155
-baseEclipse=eclipse-platform-4.15-linux-gtk-x86_64.tar.gz
-repoFileAccess=file:///home/data/httpd/download.eclipse.org/
-repoHttpAccess=https://download.eclipse.org
-repoAccess=${repoFileAccess}
+baseEclipseAccessDir="/home/data/httpd/download.eclipse.org"
+baseEclipseDirSegment="eclipse/downloads/drops4/R-4.18-202012021800"
+baseEclipse="eclipse-platform-4.18-linux-gtk-x86_64.tar.gz"
+repoFileAccess="file:///home/data/httpd/download.eclipse.org/"
+repoHttpAccess="https://download.eclipse.org"
+
+# direct file access is discouraged and not necessary, but if there is a good reason to still use it set repoAccess="${repoFileAccess}"
+repoAccess="${repoHttpAccess}"
+
+SSH_REMOTE="genie.simrel@projects-storage.eclipse.org"
 
 declare -a namesArray
 declare -a countsArray
 
-# This script expects an argument similar to "trainname" but but in this case can be "all" (in which all repos in "repoList" are 
-# checked -- that is the "periodic use case". 
-# Or, it can be just one, such as 'neon' or 'oxygen', in which case only that one repository is checked. 
+# This script expects an argument similar to "trainname" but in this case can be "all" (in which the last 5 repos in /home/data/httpd/download.eclipse.org/releases" are checked) 
+# Or, it can be just one, such as '2020-12', in which case only that one repository is checked. 
 
-trainArg=$1
-
-if [[ -z "$trainArg" ]]; then
-  printf "[INFO] No argument was passed to ${0##*/} so assuming \"all\".\n"
-  trainArg=all
-fi
+trainArg="${1:-}"
 
 # Note, we may eventually want to use "locks" to prevent staging or other repo from changing in the middle of a run.
-
 # Also note: "staging" is a simple repo, at this time, but wouldn't hurt to get a listing, and see what was there?
 
-repoList="\
-  releases/2020-06/ \
-  releases/2020-03/ \
-  releases/2019-12/ \
-  releases/2019-09/ \
-  releases/2019-06/ \
-  "
-
-if [[ "$trainArg" == "all" ]]; then
-  reposToCheck=${repoList}
+if [[ -z "$trainArg" ]]; then
+  printf "[INFO] No argument was passed to %s so assuming \"all\".\n" "${0##*/}"
+  # get last 5 releases from /home/data/httpd/download.eclipse.org/releases
+  reposToCheck=$(ssh ${SSH_REMOTE} "cd ${baseEclipseAccessDir} ; ls -1d releases/* | grep '20' | tail -n 5")
 else
   reposToCheck="releases/$trainArg"
 fi
 
-# WORKSPACE will be defined in CI instance. For convenience of local, remote, testing we will make several assumptions if it is not defined.
-if [[ -z "${WORKSPACE}" ]]; then
-  echo -e "\n\t[INFO] WORKSPACE not defined. Assuming local, remote test."
-  WORKSPACE="$PWD"
-  #printf "\n\tWORKSPACE: $WORKSPACE\n"
-  # access can remain undefined if we have direct access, such as on CI instance.
-  # The value used here will depend on local users .ssh/config
-  access="build:"
-  repoAccess="${repoHttpAccess}"
-fi
+# WORKSPACE will be defined in CI instance, otherwise $PWD
+WORKSPACE="${WORKSPACE:-$PWD}"
 
 # Confirm that Eclipse Platform has already been installed, if not, install it
+# If you want to run this script locally, download and extract a Eclipse platform to the working directory
 if [[ ! -d "${WORKSPACE}/eclipse" ]]; then
-  # We assume we have file access to 'downloads'. If not direct, at least via rsync.
-  printf "\n\t[DEBUG] rsynching eclipse platform archive to ${WORKSPACE}"
-  printf "\n\t[DEBUG] rsync command: rsync ${access}${baseEclipseAccessDir}/${baseEclipseDirSegment}/${baseEclipse} ${WORKSPACE}"
-  rsync "${access}${baseEclipseAccessDir}/${baseEclipseDirSegment}/${baseEclipse}" "${WORKSPACE}"
-  RC=$?
-  if [[ $RC != 0 ]]; then
-    printf "[ERROR] rsync returned a non-zero return code: $RC"
-    exit $RC
-  fi
-
-  tar -xf "${baseEclipse}" -C "${WORKSPACE}"
-  RC=$?
-  if [[ $RC != 0 ]]; then
-    printf "[ERROR] Tar extraction returned a non-zero return code: $RC"
-    exit $RC
-  fi
+  # We assume we have scp access to 'downloads'. If not direct, at least via rsync.
+  printf "Copying Eclipse platform archive via SCP..."
+  scp "${SSH_REMOTE}:${baseEclipseAccessDir}/${baseEclipseDirSegment}/${baseEclipse}" .
+  tar -xzf "${baseEclipse}" -C "${WORKSPACE}"
 fi
-printf "\n\n\tNote: see workspace for files of IU listings"
+
+printf "\n\tNote: see workspace for files of IU listings"
 #printf "\n\t[DEBUG] reposToCheck: ${reposToCheck}"
 loopCount=0
 errorCount=0
 for repo in ${reposToCheck}
 do
   RAW_DATE_START="$(date +%s )"
-  printf "\n\n\tChecking repo:\n\t${repoAccess}${repo}\n\n"
+  printf "\n\n\tChecking repo:\n\t%s%s\n\n" "${repoAccess}" "${repo}"
   # first remove trailing slash, if there is one
   repoShortName=${repo%/}
   # then leading slash, if one
@@ -105,44 +86,44 @@ do
   repoListFilename="${repoShortName}-Listing.txt"
   #printf "\n\t[DEBUG] repoShortName: ${repoShortName}"
   #printf "\n\t[DEBUG] repoListFilename: ${repoListFilename}"
-  nice -n 10 ${WORKSPACE}/eclipse/eclipse -nosplash --launcher.suppressErrors -application org.eclipse.equinox.p2.director -repository "${repoAccess}${repo}" -list -vm /shared/common/jdk1.8.0_x64-latest/bin/java  1>"$WORKSPACE/${repoListFilename}"
+  nice -n 10 ${WORKSPACE}/eclipse/eclipse -nosplash --launcher.suppressErrors -application org.eclipse.equinox.p2.director -repository "${repoAccess}/${repo}" -list 1>"${WORKSPACE}/${repoListFilename}"
   RC=$?
   if [[ $RC != 0 ]]; then
-    printf "\n\t[ERROR] p2.director list returned a non-zero return code: $RC"
+    printf "\n\t[ERROR] p2.director list returned a non-zero return code: %s" "$RC"
     exit $RC
   fi
 
-  repoCount=$(cat "$WORKSPACE/${repoListFilename}" | wc -l)
+  repoCount=$(cat "${WORKSPACE}/${repoListFilename}" | wc -l)
   # there are always 4 lines of ouput, even if "0" IUs returned (see bug 502080) 
   # so we simply deduct 4 it be more accurate and provide a better test. 
   repoCount=$((repoCount - 4))
-  printf "\n\tNumber of IUs in $repoShortName: $repoCount\n"
+  printf "\n\tNumber of IUs in %s: %s\n" "$repoShortName" "$repoCount"
 
-  if [[ $repoCount -le 0 ]]; then 
+  if [[ ${repoCount} -le 0 ]]; then 
     errorCount=$((errorCount + 1))
   fi
 
-  namesArray[$loopCount]=$repoShortName
-  countsArray[$loopCount]=$repoCount
+  namesArray[$loopCount]="${repoShortName}"
+  countsArray[$loopCount]="${repoCount}"
   loopCount=$((loopCount + 1))
   #printf "\n\t[DEBUG] loopCount: $loopCount\n"
   RAW_DATE_END="$(date +%s )"
-  printf "\t[INFO] Elapsed seconds for this repo: $(($RAW_DATE_END - $RAW_DATE_START))"
+  printf "\t[INFO] Elapsed seconds for this repo: %s" "$((RAW_DATE_END - RAW_DATE_START))"
 
   # I guess for errorCount errors, I could continue with whole loop, but seems
   # rare enough I will go ahead and "throw" error here, before finishing the whole loop.
-  if [[ $errorCount > 0 ]]; then
-    printf "\n\t[ERROR] $repoShortName has too few IUs reported. Perhaps a problem with p2.index files?\n"
-    exit $errorCount
+  if [[ ${errorCount} -gt 0 ]]; then
+    printf "\n\t[ERROR] %s has too few IUs reported. Perhaps a problem with p2.index files?\n" "$repoShortName"
+    exit ${errorCount}
   fi
 done
 #printf "\t[DEBUG] names array: ${namesArray[*]}\n"
 printf "\n\n\tRepository\t Number of IUs"
 for arrayCount in "${!namesArray[@]}"
 do
-  printf "\n\t${namesArray[$arrayCount]}\t ${countsArray[$arrayCount]}"
+  printf "\n\t%s\t %s" "${namesArray[$arrayCount]}""${countsArray[$arrayCount]}"
 done
 printf "\n\n"
 RAW_OVERALL_DATE_END="$(date +%s )"
-printf "\t[INFO] Elapsed seconds for this script: $(($RAW_OVERALL_DATE_END - $RAW_OVERALL_DATE_START))"
+printf "\t[INFO] Elapsed seconds for this script: %s" "$((RAW_OVERALL_DATE_END - RAW_OVERALL_DATE_START))"
 printf "\n\n"
