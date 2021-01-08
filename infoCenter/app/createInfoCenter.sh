@@ -38,9 +38,9 @@ info_center_port=8086
 
 usage() {
   printf "Usage %s [releaseName] [pathToArchive] [p2RepoDir] [pastRelease]\n" "${script_name}"
-  printf "\t%-16s the release name (e.g. neon, neon1, oxygen, oxygen1)\n" "releaseName"
+  printf "\t%-16s the release name (e.g. 2020-12, 2021-03, etc)\n" "releaseName"
   printf "\t%-16s the subdir to eclipse-platform archive (e.g. R-4.17-202009021800)\n" "subDir"
-  printf "\t%-16s the path to the P2 repo (e.g. releases/neon/201610111000) (optional)\n" "p2RepoDir"
+  printf "\t%-16s the path to the P2 repo (e.g. releases/2020-12/202012161000) (optional)\n" "p2RepoDir"
   printf "\t%-16s set to 'true' to change banner to say 'Past release' (default is 'false') (optional)\n" "pastRelease"
 }
 
@@ -59,7 +59,7 @@ fi
 
 prepare() {
   # Create new sub directory for info center
-  echo "Create sub directory for new info center..."
+  echo "Create sub directory for new info center ${release_name}..."
   mkdir -p ${workdir}
 
   # TODO: exit when sub directory already exists?
@@ -104,11 +104,16 @@ find_doc_jars() {
 
   cat << 'EOF' > ${remote_shell_script}
 #!/usr/bin/env bash
-p2_repo_dir=$1
-jar_list=$(find ${p2_repo_dir}/plugins -name *.jar ! -name *source* -printf '%f\n')
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+p2_repo_dir=${1:}
+jar_list=$(find "${p2_repo_dir}/plugins" -name '*.jar' ! -name '*source*' -printf '%f\n')
 output_file="doc_plugins.tar"
 
-rm -f "${output_file}*"
+rm -f ${output_file}*
 
 for file in ${jar_list}
 do
