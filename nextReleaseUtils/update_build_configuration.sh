@@ -34,9 +34,9 @@ eclipse_repo_base_url="https://download.eclipse.org/eclipse/updates"
 
 usage() {
   printf "Usage: %s release_name reference_repo eclipse_repo_url\n" "${script_name}"
-  printf "\t%-16s release name (e.g. 2020-09).\n" "release_name"
+  printf "\t%-16s next release name (e.g. 2020-09).\n" "release_name"
   printf "\t%-16s reference repo (e.g. 'releases/2020-06/202006171000').\n" "reference_repo"
-  printf "\t%-16s Eclipse repo URL (e.g. '4.16/R-4.16-202006040540/').\n" "eclipse_repo_url"
+  printf "\t%-16s Eclipse repo URL (e.g. '4.16/R-4.16-202006040540/'), check https://download.eclipse.org/eclipse/updates.\n" "eclipse_repo_url"
 }
 
 ## Verify inputs
