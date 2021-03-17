@@ -15,17 +15,17 @@ set -o nounset
 set -o pipefail
 
 # Parameters:
-release_name=${1:-}
+release_name="${1:-}"
 
 # scale down and delete statefulset
-oc scale statefulset infocenter-${release_name} -n=infocenter --replicas=0
+oc scale statefulset "infocenter-${release_name}" -n=infocenter --replicas=0
 sleep 5
-oc get statefulset infocenter-${release_name} -n=infocenter
-oc delete pod infocenter-${release_name}-0 -n=infocenter --force --grace-period=0
+oc get statefulset "infocenter-${release_name}" -n=infocenter
+oc delete pod "infocenter-${release_name}-0" -n=infocenter --force --grace-period=0
 sleep 5
 oc get pods -n=infocenter
-oc delete statefulset infocenter-${release_name} -n=infocenter
+oc delete statefulset "infocenter-${release_name}" -n=infocenter
 sleep 5
 oc get statefulset -n=infocenter
 # apply statefulset
-oc apply -f ${release_name}/statefulset.yml
+oc apply -f "${release_name}/statefulset.yml"

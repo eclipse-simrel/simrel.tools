@@ -15,8 +15,8 @@ set -o nounset
 set -o pipefail
 
 # Parameters:
-release_name=${1:-}
-sha_256=${2:-}
+release_name="${1:-}"
+sha_256="${2:-}"
 namespace="infocenter"
 hostname="help.eclipse.org"
 dockerhub_repo="eclipsecbi/eclipse-infocenter"
@@ -34,7 +34,7 @@ if [[ -z "${sha_256}" && $# -lt 2 ]]; then
 fi
 
 create_license_header() {
-  local file=${1:-}
+  local file="${1:-}"
   local year="2019"
   cat <<EOF > ${file}
 #*******************************************************************************
@@ -49,11 +49,11 @@ EOF
 }
 
 create_route () {
-  local release_name=${1:-}
-  local namespace_name=${2:-}
-  local host_name=${3:-}
+  local release_name="${1:-}"
+  local namespace_name="${2:-}"
+  local host_name="${3:-}"
   local file_name="${release_name}/route.yml"
-  create_license_header ${file_name}
+  create_license_header "${file_name}"
   cat <<EOF >> ${file_name}
 apiVersion: "route.openshift.io/v1"
 kind: "Route"
@@ -80,10 +80,10 @@ EOF
 }
 
 create_service () {
-  local release_name=${1:-}
-  local namespace_name=${2:-}
+  local release_name="${1:-}"
+  local namespace_name="${2:-}"
   local file_name="${release_name}/service.yml"
-  create_license_header ${file_name}
+  create_license_header "${file_name}"
   cat <<EOF >> ${file_name}
 apiVersion: "v1"
 kind: "Service"
@@ -104,10 +104,10 @@ EOF
 }
 
 create_nginx_configmap () {
-  local release_name=${1:-}
-  local namespace_name=${2:-}
+  local release_name="${1:-}"
+  local namespace_name="${2:-}"
   local file_name="${release_name}/nginx-configmap.yml"
-  create_license_header ${file_name}
+  create_license_header "${file_name}"
   cat <<EOF >> ${file_name}
 apiVersion: v1
 kind: ConfigMap
@@ -140,15 +140,15 @@ EOF
 }
 
 create_statefulset () {
-  local release_name=${1:-}
-  local namespace_name=${2:-}
-  local sha256=${3:-}
+  local release_name="${1:-}"
+  local namespace_name="${2:-}"
+  local sha256="${3:-}"
   #local sha256="$(docker inspect --format='{{index .RepoDigests 0}}' "${dockerhub_repo}:${release_name}" | sed -E 's/.*sha256:(.*)/\1/g')"
   local file_name="${release_name}/statefulset.yml"
-  local infocenter_image=${dockerhub_repo}:${release_name}@sha256:${sha256}
+  local infocenter_image="${dockerhub_repo}:${release_name}@sha256:${sha256}"
   echo "Image name: ${infocenter_image}"
   
-  create_license_header ${file_name}
+  create_license_header "${file_name}"
   cat <<EOF >> ${file_name}
 apiVersion: apps/v1
 kind: StatefulSet
@@ -231,9 +231,9 @@ spec:
 EOF
 }
 
-mkdir -p ${release_name}
-create_route ${release_name} ${namespace} ${hostname}
-create_service ${release_name} ${namespace}
-create_nginx_configmap ${release_name} ${namespace}
-create_statefulset ${release_name} ${namespace} ${sha_256}
+mkdir -p "${release_name}"
+create_route "${release_name}" "${namespace}" "${hostname}"
+create_service "${release_name}" "${namespace}"
+create_nginx_configmap "${release_name}" "${namespace}"
+create_statefulset "${release_name}" "${namespace}" "${sha_256}"
 
