@@ -7,23 +7,23 @@
 # SPDX-License-Identifier: EPL-2.0 OR MIT
 #*******************************************************************************
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   labels:
-    infocenter.version: "2020-09"
+    infocenter.version: "2020-06"
   namespace: "infocenter"
-  name: "infocenter-2020-09"
+  name: "infocenter-2020-06"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      infocenter.version: "2020-09"
-  serviceName: "infocenter-2020-09"
+      infocenter.version: "2020-06"
+  serviceName: "infocenter-2020-06"
   template:
     metadata:
+      name: "infocenter-2020-06"
       labels:
-        infocenter.version: "2020-09"
-      name: "infocenter-2020-09"
+        infocenter.version: "2020-06"
     spec:
       affinity:
         nodeAffinity:
@@ -35,10 +35,10 @@ spec:
                 operator: NotIn
                 values:
                 - fast
-      terminationGracePeriodSeconds: 1200
+      terminationGracePeriodSeconds: 180
       containers:
-      - name: infocenter-2020-09
-        image: eclipsecbi/eclipse-infocenter:2020-09@sha256:a65a4e6418a92ded306c14d077d0f10c492164f23a8cc65cc7fd71666407f7b7
+      - name: infocenter-2020-06
+        image: eclipsecbi/eclipse-infocenter:2020-06@sha256:46b41397bcda62473298a01ca876b51ac97999290a855bfcfe6773c72d1b1076
         imagePullPolicy: IfNotPresent
         command:
           - /infocenter/startDockerInfoCenter.sh
@@ -83,4 +83,4 @@ spec:
         emptyDir: {}
       - name: nginx-config
         configMap:
-          name: nginx-config-2020-09
+          name: nginx-config-2020-06

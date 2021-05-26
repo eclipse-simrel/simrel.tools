@@ -26,6 +26,6 @@ fi
 oc apply -f "${release_name}/route.yml"
 oc apply -f "${release_name}/service.yml"
 oc apply -f "${release_name}/nginx-configmap.yml"
-oc apply -f "${release_name}/statefulset.yml"
+oc apply -f "${release_name}/deployment.yml"
 oc delete pod "infocenter-${release_name}-0" -n infocenter --force --grace-period=0
 

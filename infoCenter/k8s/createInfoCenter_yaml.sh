@@ -28,7 +28,7 @@ if [[ -z "${release_name}" ]]; then
   exit 1
 fi
 
-if [[ -z "${sha_256}" && $# -lt 2 ]]; then
+if [[ -z "${sha_256}" ]]; then
   printf "ERROR: a sha_256 must be given.\n"
   exit 1
 fi
@@ -139,19 +139,19 @@ data:
 EOF
 }
 
-create_statefulset () {
+create_deployment () {
   local release_name="${1:-}"
   local namespace_name="${2:-}"
   local sha256="${3:-}"
   #local sha256="$(docker inspect --format='{{index .RepoDigests 0}}' "${dockerhub_repo}:${release_name}" | sed -E 's/.*sha256:(.*)/\1/g')"
-  local file_name="${release_name}/statefulset.yml"
+  local file_name="${release_name}/deployment.yml"
   local infocenter_image="${dockerhub_repo}:${release_name}@sha256:${sha256}"
   echo "Image name: ${infocenter_image}"
   
   create_license_header "${file_name}"
   cat <<EOF >> ${file_name}
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   labels:
     infocenter.version: "${release_name}"
@@ -165,9 +165,9 @@ spec:
   serviceName: "infocenter-${release_name}"
   template:
     metadata:
+      name: "infocenter-${release_name}"
       labels:
         infocenter.version: "${release_name}"
-      name: "infocenter-${release_name}"
     spec:
       affinity:
         nodeAffinity:
@@ -179,7 +179,7 @@ spec:
                 operator: NotIn
                 values:
                 - fast
-      terminationGracePeriodSeconds: 1200
+      terminationGracePeriodSeconds: 180
       containers:
       - name: infocenter-${release_name}
         image: ${infocenter_image}
@@ -235,5 +235,5 @@ mkdir -p "${release_name}"
 create_route "${release_name}" "${namespace}" "${hostname}"
 create_service "${release_name}" "${namespace}"
 create_nginx_configmap "${release_name}" "${namespace}"
-create_statefulset "${release_name}" "${namespace}" "${sha_256}"
+create_deployment "${release_name}" "${namespace}" "${sha_256}"
 
