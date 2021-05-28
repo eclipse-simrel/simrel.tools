@@ -19,8 +19,6 @@ release_name="${1:-}"
 sha_256="${2:-}"
 namespace="infocenter"
 hostname="help.eclipse.org"
-dockerhub_repo="eclipsecbi/eclipse-infocenter"
-nginx_image="eclipsefdn/nginx:stable-alpine"
 
 # Verify inputs
 if [[ -z "${release_name}" ]]; then
@@ -35,7 +33,7 @@ fi
 
 create_license_header() {
   local file="${1:-}"
-  local year="2019"
+  local year="2021"
   cat <<EOF > ${file}
 #*******************************************************************************
 # Copyright (c) ${year} Eclipse Foundation and others.
@@ -63,6 +61,7 @@ metadata:
   namespace: "${namespace_name}"
   annotations:
     haproxy.router.openshift.io/timeout: 60s
+    haproxy.router.openshift.io/rewrite-target: /help
   name: "infocenter-${release_name}"
 spec:
   host: "${host_name}"
@@ -97,45 +96,9 @@ spec:
   - name: "http"
     port: 80
     protocol: "TCP"
-    targetPort: 8080
+    targetPort: 8086
   selector:
     infocenter.version: "${release_name}"
-EOF
-}
-
-create_nginx_configmap () {
-  local release_name="${1:-}"
-  local namespace_name="${2:-}"
-  local file_name="${release_name}/nginx-configmap.yml"
-  create_license_header "${file_name}"
-  cat <<EOF >> ${file_name}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    infocenter.version: "${release_name}"
-  namespace: "${namespace_name}"
-  name: nginx-config-${release_name}
-data:
-  nginx.conf: |-
-    worker_processes  1;
-    error_log  /var/log/nginx/error.log warn;
-    pid        /var/run/nginx.pid;
-    events {
-      worker_connections  1024;
-    }
-    http {
-      include       /etc/nginx/mime.types;
-      default_type  application/octet-stream;
-      sendfile        on;
-      keepalive_timeout  65;
-      server {
-        listen 8080;
-        location /${release_name}/ {
-          proxy_pass           http://127.0.0.1:8086/help/;
-        }
-      }
-    }
 EOF
 }
 
@@ -145,6 +108,7 @@ create_deployment () {
   local sha256="${3:-}"
   #local sha256="$(docker inspect --format='{{index .RepoDigests 0}}' "${dockerhub_repo}:${release_name}" | sed -E 's/.*sha256:(.*)/\1/g')"
   local file_name="${release_name}/deployment.yml"
+  local dockerhub_repo="eclipsecbi/eclipse-infocenter"
   local infocenter_image="${dockerhub_repo}:${release_name}@sha256:${sha256}"
   echo "Image name: ${infocenter_image}"
   
@@ -214,26 +178,14 @@ spec:
         volumeMounts:
         - name: workspace
           mountPath: "/infocenter/workspace"
-      - name: nginx
-        image: ${nginx_image}
-        ports:
-        - containerPort: 8080
-        volumeMounts:
-        - name: nginx-config
-          mountPath: /etc/nginx/nginx.conf
-          subPath: nginx.conf
       volumes:
       - name: workspace
         emptyDir: {}
-      - name: nginx-config
-        configMap:
-          name: nginx-config-${release_name}
 EOF
 }
 
 mkdir -p "${release_name}"
 create_route "${release_name}" "${namespace}" "${hostname}"
 create_service "${release_name}" "${namespace}"
-create_nginx_configmap "${release_name}" "${namespace}"
 create_deployment "${release_name}" "${namespace}" "${sha_256}"
 
