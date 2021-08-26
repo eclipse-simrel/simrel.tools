@@ -776,7 +776,7 @@ Useful properties
       hudson machines -->
     <property
       name="hostForURL"
-      value="https://hudson.eclipse.org" />
+      value="https://ci.eclipse.org" />
 
     <!-- TODO: this will not be correct for local builds, probably. Could
       do

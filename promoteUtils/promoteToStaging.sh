@@ -79,7 +79,7 @@ then
     exit 1
 fi
 
-${CURL_EXE} https://hudson.eclipse.org/packaging/job/${TRAIN_NAME}.epp-tycho-build/buildWithParameters?token=Yah6CohtYwO6b?6P
+${CURL_EXE} https://ci.eclipse.org/packaging/job/${TRAIN_NAME}.epp-tycho-build/buildWithParameters?token=Yah6CohtYwO6b?6P
 RC=$?
 if [[ $RC != 0 ]]
 then 
