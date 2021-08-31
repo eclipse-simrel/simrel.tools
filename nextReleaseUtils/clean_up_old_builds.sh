@@ -54,10 +54,9 @@ for dir in \$(find ${release_dir}/* -maxdepth 1 -type d -name '20*' | sort | hea
 done
 
 # remove milestone and release candidate composite jars
-for rel in M1 M2 M3 RC1 RC2; do
- echo "Removing composite jars for \${rel}..."
- rm -f "${release_dir}/compositeArtifacts\${rel}.jar"
- rm -f "${release_dir}/compositeContent\${rel}.jar"
+for path in "${release_dir}/composite*M*.jar" "${release_dir}/composite*RC*.jar"; do
+  echo "Removing composite jar \${path}..."
+  rm -f "\${path}
 done
 EOF
 
