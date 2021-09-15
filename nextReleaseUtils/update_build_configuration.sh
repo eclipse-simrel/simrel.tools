@@ -19,16 +19,19 @@ set -o nounset
 set -o pipefail
 
 IFS=$'\n\t'
-script_name="$(basename ${0})"
+script_name="$(basename "${0}")"
 
-xmlstarlet_bin=xmlstarlet
+xmlstarlet_bin="xmlstarlet"
 
-jenkinsfile=../../org.eclipse.simrel.build/Jenkinsfile
-pom_xml=../../org.eclipse.simrel.build/pom.xml
+path_to_simrel_build_repo="../../org.eclipse.simrel.build"
 
-release_name=${1:-}
-reference_repo=${2:-}
-eclipse_repo_url=${3:-}
+jenkinsfile="Jenkinsfile"
+pom_xml="pom.xml"
+simrel_aggr="simrel.aggr"
+
+release_name="${1:-}"
+reference_repo="${2:-}"
+eclipse_repo_url="${3:-}"
 
 eclipse_repo_base_url="https://download.eclipse.org/eclipse/updates"
 
@@ -62,12 +65,21 @@ if [ "${eclipse_repo_url}" == "" ]; then
 fi
 
 # Update TRAIN_NAME in Jenkinsfile
-sed -i "s/TRAIN_NAME = \".*\"/TRAIN_NAME = \"${release_name}\"/g" ${jenkinsfile}
+sed -i "s/TRAIN_NAME = \".*\"/TRAIN_NAME = \"${release_name}\"/g" "${path_to_simrel_build_repo}/${jenkinsfile}"
 
 # Update pom.xml
 # Unfortunately the namesspaces has to be defined for pom.xml files
 maven_namespace="http://maven.apache.org/POM/4.0.0"
-${xmlstarlet_bin} ed -L -N p=${maven_namespace} -u /p:project/p:properties/p:trainName -v "${release_name}" ${pom_xml}
-${xmlstarlet_bin} ed -L -N p=${maven_namespace} -u /p:project/p:properties/p:referenceRepo -v "${reference_repo}" ${pom_xml}
-${xmlstarlet_bin} ed -L -N p=${maven_namespace} -u /p:project/p:properties/p:eclipse.repo.url -v "${eclipse_repo_base_url}/${eclipse_repo_url}" ${pom_xml}
+${xmlstarlet_bin} ed -L -N p="${maven_namespace}" -u /p:project/p:properties/p:trainName -v "${release_name}" "${path_to_simrel_build_repo}/${pom_xml}"
+${xmlstarlet_bin} ed -L -N p="${maven_namespace}" -u /p:project/p:properties/p:referenceRepo -v "${reference_repo}" "${path_to_simrel_build_repo}/${pom_xml}"
+${xmlstarlet_bin} ed -L -N p="${maven_namespace}" -u /p:project/p:properties/p:eclipse.repo.url -v "${eclipse_repo_base_url}/${eclipse_repo_url}" "${path_to_simrel_build_repo}/${pom_xml}"
 
+# Fix label in simrel.aggr
+sed -i -E "s/label=\"[0-9]{4}-[0-9]{2}\"/label=\"${release_name}\"/" "${path_to_simrel_build_repo}/${simrel_aggr}"
+
+pushd "${path_to_simrel_build_repo}"
+git add "${jenkinsfile}" "${pom_xml}" "${simrel_aggr}"
+popd
+
+echo "Do not forget to commit the changes!"
+echo "Commit message example: 'Update build configuration for next release cycle (2021-12)'"
