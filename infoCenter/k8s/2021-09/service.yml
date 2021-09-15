@@ -10,9 +10,9 @@ apiVersion: "v1"
 kind: "Service"
 metadata:
   labels:
-    infocenter.version: "2019-09"
+    infocenter.version: "2021-09"
   namespace: "infocenter"
-  name: "infocenter-2019-09"
+  name: "infocenter-2021-09"
 spec:
   ports:
   - name: "http"
@@ -20,4 +20,4 @@ spec:
     protocol: "TCP"
     targetPort: 8086
   selector:
-    infocenter.version: "2019-09"
+    infocenter.version: "2021-09"
