@@ -19,7 +19,7 @@ buildOutput=${BUILD_HOME}/buildoutput$( date +%Y%m%d-%H%M).log.txt
 getTools=${getTools:-"true"}
 if [[ ${getTools} == "true" ]]
 then
-  wget --no-verbose -O ${BUILD_HOME}/getSimRelTools.sh http://git.eclipse.org/c/simrel/org.eclipse.simrel.tools.git/plain/bootstrapScript/getSimRelTools.sh 2>&1
+  wget --no-verbose -O ${BUILD_HOME}/getSimRelTools.sh https://git.eclipse.org/c/simrel/org.eclipse.simrel.tools.git/plain/bootstrapScript/getSimRelTools.sh 2>&1
   RC=$?
   if [[ $RC != 0 ]]
   then

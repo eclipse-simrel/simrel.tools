@@ -13,7 +13,7 @@
 # Utility to run on CI server, to periodically confirm that our atomic composite repositories are valid.
 
 # can be retrieved as individual script with
-# wget --no-verbose --no-cache  -O checkComposites.sh http://git.eclipse.org/c/simrel/org.eclipse.simrel.tools.git/plain/promoteUtils/checkComposites.sh;
+# wget --no-verbose --no-cache  -O checkComposites.sh https://git.eclipse.org/c/simrel/org.eclipse.simrel.tools.git/plain/promoteUtils/checkComposites.sh;
 #
 # and typically set chmod +x checkComposites.sh and then executed in "bash script" build step.
 

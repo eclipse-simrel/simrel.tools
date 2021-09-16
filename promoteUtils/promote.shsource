@@ -40,7 +40,7 @@ export JAVA_EXEC_DIR=${JAVA_HOME}/jre/bin
 export JAVA_CMD=${JAVA_EXEC_DIR}/java
 
 # remember, the '&' should be uescaped here ... the p2 api (or underlying xml) will escape it.
-export devArgs="-Djava.io.tmpdir=${BUILD_HOME}/tmp -Dp2MirrorsURL=http://www.eclipse.org/downloads/download.php?format=xml&file=/releases/${release}/${dirdate} -DartifactRepoDirectory=${REPO_ROOT}/releases/${release}/${dirdate} -Dp2StatsURI=https://download.eclipse.org/stats/releases/${release} -Dp2ArtifactRepositoryName=${release}/${dirdate}"
+export devArgs="-Djava.io.tmpdir=${BUILD_HOME}/tmp -Dp2MirrorsURL=https://www.eclipse.org/downloads/download.php?format=xml&file=/releases/${release}/${dirdate} -DartifactRepoDirectory=${REPO_ROOT}/releases/${release}/${dirdate} -Dp2StatsURI=https://download.eclipse.org/stats/releases/${release} -Dp2ArtifactRepositoryName=${release}/${dirdate}"
 
 mkdir -p ${BUILD_HOME}/tmp
 

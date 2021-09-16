@@ -46,10 +46,10 @@ function checkMirrorsForURL() {
     pword="$2"
   fi
   if [[ $listMirrors -eq 1 ]]; then
-    listOfMirrors=$(wget -q -O - "http://www.eclipse.org/downloads/download.php?file=${mirrorURL}&format=xml${protocolarg}")
+    listOfMirrors=$(wget -q -O - "https://www.eclipse.org/downloads/download.php?file=${mirrorURL}&format=xml${protocolarg}")
     printf "\n\t%s\n\n%s\n\n" "${mirrorURL}" "${listOfMirrors}" >> mirrorsList.txt
   fi
-  nMirrors=$(wget -q -O - "http://www.eclipse.org/downloads/download.php?file=${mirrorURL}&format=xml${protocolarg}" | grep "<mirror\ " | wc -l)
+  nMirrors=$(wget -q -O - "https://www.eclipse.org/downloads/download.php?file=${mirrorURL}&format=xml${protocolarg}" | grep "<mirror\ " | wc -l)
   #printf "\t%s%4d%s\n" "number of ${pword} mirrors: " ${nMirrors} "  for ${mirrorURL}" >&2
   printf "%s%4d%s\n" "number of mirrors:" ${nMirrors} " for ${mirrorURL}" >&2
   # echo to get nMirrors "returned" to caller
