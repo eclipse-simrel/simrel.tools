@@ -54,7 +54,7 @@ stagingDirectory="${REPO_ROOT}/staging/${release}"
 releaseDirectory="${REPO_ROOT}/releases/${release}/${dirdate}"
 
 p2ArtifactRepositoryName="${release}/${dirdate}"
-p2MirrorsURL="http://www.eclipse.org/downloads/download.php?format=xml&file=/releases/${release}/${dirdate}"
+p2MirrorsURL="https://www.eclipse.org/downloads/download.php?format=xml&file=/releases/${release}/${dirdate}"
 p2StatsURI="https://download.eclipse.org/stats/releases/${release}"
 
 # extract artifacts.jar
