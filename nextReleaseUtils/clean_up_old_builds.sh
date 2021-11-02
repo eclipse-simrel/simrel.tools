@@ -56,7 +56,7 @@ done
 # remove milestone and release candidate composite jars
 for path in "${release_dir}/composite*M*.jar" "${release_dir}/composite*RC*.jar"; do
   echo "Removing composite jar \${path}..."
-  rm -f "\${path}
+  rm -f "\${path}"
 done
 EOF
 
