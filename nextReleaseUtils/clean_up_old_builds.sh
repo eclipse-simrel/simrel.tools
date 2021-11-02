@@ -50,13 +50,13 @@ ssh ${ssh_remote} /bin/bash << EOF
 # find and delete all release dirs EXCEPT the last one
 for dir in \$(find ${release_dir}/* -maxdepth 1 -type d -name '20*' | sort | head -n -1); do
   echo "Removing \${dir}..."
-  rm -rf "\${dir}"
+  rm -rf -v "\${dir}"
 done
 
 # remove milestone and release candidate composite jars
 for path in "${release_dir}/composite*M*.jar" "${release_dir}/composite*RC*.jar"; do
   echo "Removing composite jar \${path}..."
-  rm -f "\${path}"
+  rm -f -v "\${path}"
 done
 EOF
 
