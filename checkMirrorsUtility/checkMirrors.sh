@@ -138,13 +138,14 @@ get_dir_list() {
   local url="$1"
   # get html, only extract the dirlist, remove the dirlist title (<h2>), fix the html, select the div,
   # get rid of all empty lines, grep for "20"
+  # TODO: improve grep rexep
   curl -s -L -H 'X-Cache-Bypass: true' "${url}" | \
   sed -n "/<div id='dirlist'>/,/<\/div>/p" | \
   sed "s/<h2>.*<\/h2>//" | \
   xmlstarlet fo -R --noindent 2>/dev/null | \
   xmlstarlet sel -t -v "//div" | \
   sed '/^[[:space:]]*$/d'| \
-  grep "20"
+  grep "^ 20" | tr -d ' '
 }
 
 get_epp_releases() {
@@ -159,7 +160,8 @@ get_simrel_releases() {
   for release in $(get_dir_list "${releases_url}")
   do
     # get list of release subdirs, take the last one, trim string
-    subdir=$(get_dir_list "${releases_url}/${release}" | tail -n 1 | sed -e 's/^[[:space:]]*//')
+    # TODO: improve grep rexep
+    subdir=$(get_dir_list "${releases_url}/${release}" | grep -E "20[0-9]{10}.*" |  tr -d ' ' | tail -n 1 | sed -e 's/^[[:space:]]*//')
     if [[ ! -z "${subdir}" ]]; then
       echo "/releases/${release}/${subdir}"
     fi
