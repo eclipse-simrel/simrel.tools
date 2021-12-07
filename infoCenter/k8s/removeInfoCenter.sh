@@ -16,6 +16,7 @@ set -o pipefail
 
 # Parameters:
 release_name=${1:-}
+namespace="infocenter"
 
 # Verify inputs
 if [[ -z "${release_name}" ]]; then
@@ -23,10 +24,10 @@ if [[ -z "${release_name}" ]]; then
   exit 1
 fi
 
-oc delete pod infocenter-${release_name}-0 -n infocenter --force --grace-period=0
-oc delete sts infocenter-${release_name} -n infocenter
-oc delete service infocenter-${release_name} -n infocenter
-oc delete route infocenter-${release_name} -n infocenter
+oc scale deployment infocenter-${release_name} -n="${namespace}" --replicas=0
+oc delete deployment infocenter-${release_name} -n "${namespace}"
+oc delete service infocenter-${release_name} -n "${namespace}"
+oc delete route infocenter-${release_name} -n "${namespace}"
 
 remove_question() {
   read -p "Do you want to remove the folder for ${release_name}? (Y)es, (N)o, E(x)it: " yn
