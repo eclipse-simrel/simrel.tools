@@ -26,6 +26,7 @@ xmlstarlet_bin="xmlstarlet"
 path_to_simrel_build_repo="../../org.eclipse.simrel.build"
 
 jenkinsfile="Jenkinsfile"
+jenkinsfile_reporeport="Jenkinsfile-reporeport"
 pom_xml="pom.xml"
 simrel_aggr="simrel.aggr"
 
@@ -64,8 +65,9 @@ if [ "${eclipse_repo_url}" == "" ]; then
   exit 1
 fi
 
-# Update TRAIN_NAME in Jenkinsfile
+# Update TRAIN_NAME in Jenkinsfiles
 sed -i "s/TRAIN_NAME = \".*\"/TRAIN_NAME = \"${release_name}\"/g" "${path_to_simrel_build_repo}/${jenkinsfile}"
+sed -i "s/TRAIN_NAME = \".*\"/TRAIN_NAME = \"${release_name}\"/g" "${path_to_simrel_build_repo}/${jenkinsfile_reporeport}"
 
 # Update pom.xml
 # Unfortunately the namesspaces has to be defined for pom.xml files
