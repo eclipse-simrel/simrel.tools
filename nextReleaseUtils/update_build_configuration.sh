@@ -26,7 +26,7 @@ xmlstarlet_bin="xmlstarlet"
 path_to_simrel_build_repo="../../org.eclipse.simrel.build"
 
 jenkinsfile="Jenkinsfile"
-jenkinsfile_reporeport="Jenkinsfile-reporeport"
+jenkinsfile_reporeport="Jenkinsfile-reporeports"
 pom_xml="pom.xml"
 simrel_aggr="simrel.aggr"
 
