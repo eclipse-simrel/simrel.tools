@@ -148,16 +148,34 @@ get_dir_list() {
   grep "^ 20" | tr -d ' '
 }
 
+get_dir_list2() {
+  local url="$1"
+  curl -s -L -H 'X-Cache-Bypass: true' "${url}" | grep "folder.svg" | sed "s/.*id='//g; s/'.*//g"
+}
+
 get_epp_releases() {
   for release in $(get_dir_list "https://download.eclipse.org/technology/epp/packages")
   do
-    echo "/technology/epp/packages/${release}"
+    for child in $(get_dir_list "https://download.eclipse.org/technology/epp/packages/${release}" | grep '^20')
+    do
+      echo "/technology/epp/packages/${release}/${child}"
+    done 
+  done 
+}
+
+get_eclipse_releases() {
+  for release in $(get_dir_list2 "https://download.eclipse.org/justj/?file=eclipse/updates" | grep '^4\.[2-9][0-9]$')
+  do
+    for child in $(get_dir_list2 "https://download.eclipse.org/justj/?file=eclipse/updates/${release}" | grep '^R-')
+    do
+      echo "/eclipse/updates/${release}/${child}"
+    done 
   done 
 }
 
 get_simrel_releases() {
   local releases_url="https://download.eclipse.org/releases"
-  for release in $(get_dir_list "${releases_url}")
+  for release in $(get_dir_list "${releases_url}" | grep '^20[2-9]')
   do
     # get list of release subdirs, take the last one, trim string
     # TODO: improve grep rexep
@@ -171,13 +189,9 @@ get_simrel_releases() {
 if [ -z "${urls}" ]; then
    # line breaks are not really handled nicely here, but it still works
    urls="\
-     /tools/orbit/downloads/drops/R20160520211859/repository/ \
      /cbi/updates/aggregator/ide/4.8/ \
      /cbi/updates/aggregator/headless/4.8/ \
-     /eclipse/updates/4.6/R-4.6-201606061100 \
-     /eclipse/updates/4.6/R-4.6.1-201609071200 \
-     /eclipse/updates/4.6/R-4.6.2-201611241400 \
-     /eclipse/updates/4.6/R-4.6.3-201703010400 \
+     $(get_eclipse_releases) \
      $(get_epp_releases) \
      $(get_simrel_releases)"
 fi
