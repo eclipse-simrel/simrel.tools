@@ -34,7 +34,7 @@ fi
 create_license_header() {
   local file="${1:-}"
   local year="2021"
-  cat <<EOF > ${file}
+  cat <<EOF > "${file}"
 #*******************************************************************************
 # Copyright (c) ${year} Eclipse Foundation and others.
 # This program and the accompanying materials are made available
@@ -52,7 +52,7 @@ create_route () {
   local host_name="${3:-}"
   local file_name="${release_name}/route.yml"
   create_license_header "${file_name}"
-  cat <<EOF >> ${file_name}
+  cat <<EOF >> "${file_name}"
 apiVersion: "route.openshift.io/v1"
 kind: "Route"
 metadata:
@@ -83,7 +83,7 @@ create_service () {
   local namespace_name="${2:-}"
   local file_name="${release_name}/service.yml"
   create_license_header "${file_name}"
-  cat <<EOF >> ${file_name}
+  cat <<EOF >> "${file_name}"
 apiVersion: "v1"
 kind: "Service"
 metadata:
@@ -113,7 +113,7 @@ create_deployment () {
   echo "Image name: ${infocenter_image}"
   
   create_license_header "${file_name}"
-  cat <<EOF >> ${file_name}
+  cat <<EOF >> "${file_name}"
 apiVersion: apps/v1
 kind: Deployment
 metadata:

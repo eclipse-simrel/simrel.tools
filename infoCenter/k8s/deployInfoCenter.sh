@@ -15,7 +15,7 @@ set -o nounset
 set -o pipefail
 
 # Parameters:
-release_name=${1:-}
+release_name="${1:-}"
 
 # Verify inputs
 if [[ -z "${release_name}" ]]; then
