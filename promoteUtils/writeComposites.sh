@@ -112,6 +112,8 @@ create_composite_repo() {
   else
     numberOfChildren=3
     echo -e "\n[INFO] Checkpoint, ${checkpoint}, was NOT found to be a final release."
+    numberOfChildren=1
+    echo -e "\n[INFO] Number of children will be set to 1 nevertheless."
   fi
 
   # xargs -d works on projects-storage.eclipse.org, but not on default jnlp agent!
