@@ -10,20 +10,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    infocenter.version: "2020-09"
+    infocenter.version: "2022-09"
   namespace: "infocenter"
-  name: "infocenter-2020-09"
+  name: "infocenter-2022-09"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      infocenter.version: "2020-09"
-  serviceName: "infocenter-2020-09"
+      infocenter.version: "2022-09"
+  serviceName: "infocenter-2022-09"
   template:
     metadata:
-      name: "infocenter-2020-09"
+      name: "infocenter-2022-09"
       labels:
-        infocenter.version: "2020-09"
+        infocenter.version: "2022-09"
     spec:
       affinity:
         nodeAffinity:
@@ -37,8 +37,8 @@ spec:
                 - fast
       terminationGracePeriodSeconds: 180
       containers:
-      - name: infocenter-2020-09
-        image: eclipsecbi/eclipse-infocenter:2020-09@sha256:a65a4e6418a92ded306c14d077d0f10c492164f23a8cc65cc7fd71666407f7b7
+      - name: infocenter-2022-09
+        image: eclipsecbi/eclipse-infocenter:2022-09@sha256:26def339a07fa6c0885fad3cf3c62df54fc17560f13ce88b7f842b683a89d905
         imagePullPolicy: IfNotPresent
         command:
           - /infocenter/startDockerInfoCenter.sh
