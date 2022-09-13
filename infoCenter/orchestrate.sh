@@ -156,10 +156,11 @@ commit_changes() {
 }
 
 adapt_nginx() {
+  echo
   echo "Adapt nginx config in puppet..."
   #Adapt nginx config in puppet (ssh://<username>@foundation.eclipse.org:29418/puppet/modules):
   #/modules/nginx/files/etc/nginx/conf.d/help.eclipse.org.common
-  echo "  - add new location:"
+  echo "  - add new location to /modules/nginx/files/etc/nginx/conf.d/help.eclipse.org.common:"
   echo
   echo "    #eclipse 4.xx (${RELEASE_NAME})"
   echo "    location /${RELEASE_NAME} {"
@@ -218,7 +219,7 @@ update_check_infocenter_job(){
   echo
   echo "Add new info center to the shell script in this job (and remove oldest):"
   echo "=> https://ci.eclipse.org/simrel/job/simrel.check_infocenter"
-  open_url "https://ci.eclipse.org/simrel/job/simrel.check_infocenter"
+  open_url "https://ci.eclipse.org/simrel/job/simrel.check_infocenter/configure"
   echo
   read -p "Press enter to continue or CTRL-C to stop the script"
 }
