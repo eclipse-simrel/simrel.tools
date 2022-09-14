@@ -39,7 +39,9 @@ open_infocenter_in_browser() {
   local url="https://help.eclipse.org/${release_name}"
   # This might require something like:
   wget -O - --tries=1 --header='X-Cache-Bypass: true' "${url}" > /dev/null
-  
+  # Update banner specifically
+  wget -O - --tries=1 --header='X-Cache-Bypass: true' "${url}/topic/org.foundation.helpbanner2/banner.html" > /dev/null
+
   # open url in browser
   open_url "${url}"
 }
@@ -204,8 +206,8 @@ update_latest_redirection(){
   cat "${route_latest_file}"
   #- Deploy the route
   oc apply -f "${route_latest_file}"
-  echo "Sleep for 10 seconds..."
-  sleep 10
+  echo "Sleep for 20 seconds..."
+  sleep 20
   echo "Check that https://help.eclipse.org/latest shows the latest version..."
   open_infocenter_in_browser "latest"
   echo "TODO:"
