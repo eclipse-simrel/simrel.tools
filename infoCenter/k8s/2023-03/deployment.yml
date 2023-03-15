@@ -38,7 +38,7 @@ spec:
       terminationGracePeriodSeconds: 180
       containers:
       - name: infocenter-2023-03
-        image: eclipsecbi/eclipse-infocenter:2023-03@sha256:a4e4074170c8781dd353eb9b38c6cbe5dd78eafa13ce6cd23307e29b8d8aeba2
+        image: eclipsecbi/eclipse-infocenter:2023-03@sha256:1681886a97cb1829ced704e3fe83438b31fcd820283b4237c8656d9ee7383ccd
         imagePullPolicy: IfNotPresent
         command:
           - /infocenter/startDockerInfoCenter.sh
