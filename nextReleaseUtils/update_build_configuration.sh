@@ -27,6 +27,7 @@ path_to_simrel_build_repo="../../org.eclipse.simrel.build"
 
 jenkinsfile="Jenkinsfile"
 jenkinsfile_reporeports="Jenkinsfile-reporeports"
+jenkinsfile_oomph_report="Jenkinsfile-oomph-report"
 pom_xml="pom.xml"
 simrel_aggr="simrel.aggr"
 
@@ -68,6 +69,7 @@ fi
 # Update TRAIN_NAME in Jenkinsfiles
 sed -i "s/TRAIN_NAME = \".*\"/TRAIN_NAME = \"${release_name}\"/g" "${path_to_simrel_build_repo}/${jenkinsfile}"
 sed -i "s/TRAIN_NAME = \".*\"/TRAIN_NAME = \"${release_name}\"/g" "${path_to_simrel_build_repo}/${jenkinsfile_reporeports}"
+sed -i "s/TRAIN_NAME = \".*\"/TRAIN_NAME = \"${release_name}\"/g" "${path_to_simrel_build_repo}/${jenkinsfile_oomph_report}"
 
 # Update pom.xml
 # Unfortunately the namesspaces has to be defined for pom.xml files
@@ -80,7 +82,7 @@ ${xmlstarlet_bin} ed -L -N p="${maven_namespace}" -u /p:project/p:properties/p:e
 sed -i -E "s/label=\"[0-9]{4}-[0-9]{2}\"/label=\"${release_name}\"/" "${path_to_simrel_build_repo}/${simrel_aggr}"
 
 pushd "${path_to_simrel_build_repo}"
-git add "${jenkinsfile}" "${jenkinsfile_reporeports}" "${pom_xml}" "${simrel_aggr}"
+git add "${jenkinsfile}" "${jenkinsfile_reporeports}" "${jenkinsfile_oomph_report}" "${pom_xml}" "${simrel_aggr}"
 popd
 
 echo "Do not forget to commit the changes!"
