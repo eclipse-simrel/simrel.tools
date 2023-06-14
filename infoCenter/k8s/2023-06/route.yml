@@ -10,15 +10,15 @@ apiVersion: "route.openshift.io/v1"
 kind: "Route"
 metadata:
   labels:
-    infocenter.version: "2021-06"
+    infocenter.version: "2023-06"
   namespace: "infocenter"
   annotations:
     haproxy.router.openshift.io/timeout: 60s
     haproxy.router.openshift.io/rewrite-target: /help
-  name: "infocenter-2021-06"
+  name: "infocenter-2023-06"
 spec:
   host: "help.eclipse.org"
-  path: "/2021-06"
+  path: "/2023-06"
   port:
     targetPort: "http"
   tls:
@@ -26,5 +26,5 @@ spec:
     termination: "edge"
   to:
     kind: "Service"
-    name: "infocenter-2021-06"
+    name: "infocenter-2023-06"
     weight: 100
