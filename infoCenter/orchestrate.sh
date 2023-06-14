@@ -166,12 +166,12 @@ adapt_nginx() {
   echo
   echo "    #eclipse 4.xx (${RELEASE_NAME})"
   echo "    location /${RELEASE_NAME} {"
-  echo "      rewrite ^/${RELEASE_NAME}/?\$ /${RELEASE_NAME}/index.jsp redirect;"
+  echo "      rewrite ^/${RELEASE_NAME}/?\$ /${RELEASE_NAME}/index.jsp permanent;"
   echo "      proxy_pass https://okd-ingress-tls\$request_uri;"
   echo "    }"
   echo
   echo "  - add redirection from oldest location to /latest"
-  echo "    - e.g. rewrite ^/2020-03(.*)\$ https://help.eclipse.org/latest\$1 redirect;"
+  echo "    - e.g. rewrite ^/2020-03(.*)\$ https://help.eclipse.org/latest\$1 permanent;"
   echo "  - remove oldest location"
   echo "  - commit changes"
   echo "    - commit message: \"Update infocenters\""
