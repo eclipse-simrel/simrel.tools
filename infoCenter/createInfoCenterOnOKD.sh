@@ -16,7 +16,7 @@ set -o pipefail
 
 # Parameters:
 release_name="${1:-}"
-url="${2:-}"
+sha256="${2:-}"
 
 # Verify inputs
 if [[ -z "${release_name}" ]]; then
@@ -24,18 +24,24 @@ if [[ -z "${release_name}" ]]; then
   exit 1
 fi
 
-if [[ -z "${url}" ]]; then
-  printf "ERROR: a url to the infocenter archive on SimRel JIPP must be given.\n"
+if [[ -z "${sha256}" ]]; then
+  printf "ERROR: a sha256 must be given.\n"
   exit 1
 fi
 
-
-pushd docker/
-wget -N "${url}"
-./build_infocenter_docker_img.sh "${release_name}"
-popd
-
 pushd k8s/
-./createInfoCenter_yaml.sh "${release_name}"
+./createInfoCenter_yaml.sh "${release_name}" "${sha256}"
 ./deployInfoCenter.sh "${release_name}"
 popd
+
+#TODO: actually check when pods are online
+# oc get pods -n infocenter | grep "infocenter-${release_name}"
+echo "Wait for pods to start..."
+sleep 30
+oc get pods -n infocenter
+
+#TODO: do you want to remove the oldest infocenter?
+oldest_release_name=""
+oc delete deployment "infocenter-${oldest_release_name}" -n infocenter
+oc delete service "infocenter-${oldest_release_name}" -n infocenter
+oc delete route "infocenter-${oldest_release_name}" -n infocenter
