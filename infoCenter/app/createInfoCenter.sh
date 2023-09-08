@@ -71,7 +71,7 @@ prepare() {
   fi
 
   # Extract eclipse-platform
-  tar xzf eclipse-platform*.tar.gz -C ${workdir}
+  tar xzf eclipse-platform*.tar.gz -C ${workdir} --warning=no-unknown-keyword
 
   # Copy eclipse/plugin_customization.ini
   echo "Copying plugin_customization.ini..."
