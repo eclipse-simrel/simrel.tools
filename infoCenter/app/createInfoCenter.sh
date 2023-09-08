@@ -71,7 +71,7 @@ prepare() {
   fi
 
   # Extract eclipse-platform
-  tar xzf eclipse-platform*.tar.gz -C ${workdir}
+  tar --warning=no-unknown-keyword xzf eclipse-platform*.tar.gz -C ${workdir}
 
   # Copy eclipse/plugin_customization.ini
   echo "Copying plugin_customization.ini..."
@@ -129,7 +129,7 @@ EOF
   scp "${ssh_remote}:${plugins_file}" .
   tar xf "${plugins_file}" -C "${workdir}/eclipse/dropins/plugins/"
   no_of_files=$(find "${workdir}/eclipse/dropins/plugins/" -name *.jar | wc -l)
-  printf "  Found ${no_of_files} JAR files.\n" 
+  printf "  Found ${no_of_files} JAR files.\n"
 }
 
 create_banner() {
@@ -149,7 +149,7 @@ create_banner() {
 
   if [[ ${past_release} == 'true' ]]; then
     sed -i "s/Current Release/Past Release/g" ${banner_path}
-    # add text  
+    # add text
     sed -i '/<div class="right">/i   <div class="center">\n    <h3>Please note, this is an outdated version of the Eclipse IDE documentation.<br \/>\n    For the latest version, please visit: <a href="https://help.eclipse.org/latest/" target="_parent">https://help.eclipse.org/latest/</a>\n    </h3>\n  </div>' ${banner_path}
   fi
 
