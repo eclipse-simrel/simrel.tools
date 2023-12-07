@@ -26,7 +26,7 @@ IFS=$'\n\t'
 
 RAW_OVERALL_DATE_START="$(date +%s )"
 baseEclipseAccessDir="/home/data/httpd/download.eclipse.org"
-baseEclipseDirSegment="eclipse/downloads/drops4/R-4.30-202312010110
+baseEclipseDirSegment="eclipse/downloads/drops4/R-4.30-202312010110"
 baseEclipse="eclipse-SDK-4.30-linux-gtk-x86_64.tar.gz"
 repoFileAccess="file:///home/data/httpd/download.eclipse.org/"
 repoHttpAccess="https://download.eclipse.org"
