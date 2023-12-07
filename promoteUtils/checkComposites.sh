@@ -26,8 +26,8 @@ IFS=$'\n\t'
 
 RAW_OVERALL_DATE_START="$(date +%s )"
 baseEclipseAccessDir="/home/data/httpd/download.eclipse.org"
-baseEclipseDirSegment="eclipse/downloads/drops4/R-4.27-202303020300"
-baseEclipse="eclipse-platform-4.27-linux-gtk-x86_64.tar.gz"
+baseEclipseDirSegment="eclipse/downloads/drops4/R-4.30-202312010110
+baseEclipse="eclipse-SDK-4.30-linux-gtk-x86_64.tar.gz"
 repoFileAccess="file:///home/data/httpd/download.eclipse.org/"
 repoHttpAccess="https://download.eclipse.org"
 
@@ -64,7 +64,7 @@ if [[ ! -d "${WORKSPACE}/eclipse" ]]; then
   # We assume we have scp access to 'downloads'. If not direct, at least via rsync.
   printf "Copying Eclipse platform archive via SCP..."
   scp "${SSH_REMOTE}:${baseEclipseAccessDir}/${baseEclipseDirSegment}/${baseEclipse}" .
-  tar -xzf "${baseEclipse}" -C "${WORKSPACE}"
+  tar --warning=no-unknown-keyword -xzf "${baseEclipse}" -C "${WORKSPACE}"
 fi
 
 printf "\n\tNote: see workspace for files of IU listings"
