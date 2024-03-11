@@ -164,7 +164,7 @@ get_epp_releases() {
 }
 
 get_eclipse_releases() {
-  for release in $(get_dir_list2 "https://download.eclipse.org/justj/?file=eclipse/updates" | grep '^4\.[2-9][0-9]$')
+  for release in $(get_dir_list2 "https://download.eclipse.org/justj/?file=eclipse/updates" | grep '^4\.[3-9][0-9]$')
   do
     for child in $(get_dir_list2 "https://download.eclipse.org/justj/?file=eclipse/updates/${release}" | grep '^R-')
     do
@@ -189,8 +189,6 @@ get_simrel_releases() {
 if [ -z "${urls}" ]; then
    # line breaks are not really handled nicely here, but it still works
    urls="\
-     /cbi/updates/aggregator/ide/4.8/ \
-     /cbi/updates/aggregator/headless/4.8/ \
      $(get_eclipse_releases) \
      $(get_epp_releases) \
      $(get_simrel_releases)"
