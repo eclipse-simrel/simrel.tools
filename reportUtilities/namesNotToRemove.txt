@@ -1,4 +1,0 @@
-Besides "genie",
-Another name not to remove from callisto-dev, is "Chris A", since he
-usually owns the "name the next release" pages on website. (See
-https://bugs.eclipse.org/bugs/show_bug.cgi?id=450186
