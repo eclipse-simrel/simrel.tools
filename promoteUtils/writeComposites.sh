@@ -42,7 +42,7 @@ write_header() {
   cat > "${outfile}" <<EOL
 <?xml version='1.0' encoding='UTF-8'?>
 <?compositeMetadataRepository version='1.0.0'?>
-<repository name='${name}' type='org.eclipse.equinox.internal.p2.metadata.repository.${type}' version='1.0.0'>
+<repository name='Eclipse SimRel ${name}' type='org.eclipse.equinox.internal.p2.metadata.repository.${type}' version='1.0.0'>
   <properties size='3'>
     <property name='p2.timestamp' value='${timestamp}'/>
     <property name='p2.compressed' value='true'/>
@@ -74,7 +74,7 @@ write_composite_repo() {
   local type="$3"
   local maxChildren="$4"
   local release="$5"
-  local repo_name="Eclipse Repository"
+  local repo_name="Eclipse SimRel ${name}"
 
   write_header "${outfile}" "${type}" "${repo_name}"
 
