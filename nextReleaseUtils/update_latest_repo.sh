@@ -21,20 +21,27 @@ IFS=$'\n\t'
 script_name="$(basename ${0})"
 
 release_name=${1:-}
+local_dir_name=${2:-}
 
 releases_root_dir="/home/data/httpd/download.eclipse.org/releases"
-local_dir_name="latest"
 timestamp=$(date +%s%3N)
 
 ssh_remote="genie.simrel@projects-storage.eclipse.org"
 
 usage() {
-  printf "Usage: %s release_name\n" "$script_name"
-  printf "\t%-16s release name (e.g. 2019-06).\n" "release_name"
+  printf "Usage: %s release_name local_dir_name\n" "$script_name"
+  printf "\t%-16s release name (e.g., 2024-03).\n" "release_name"
+  printf "\t%-16s local dir name (e.g., latest-03).\n" "local_dir_name"
 }
 
 if [[ -z "${release_name}" ]]; then
-  printf "ERROR: release name must not be empty\n"
+  printf "ERROR: release_name must not be empty\n"
+  usage
+  exit 1
+fi
+
+if [[ -z "${local_dir_name}" ]]; then
+  printf "ERROR:  local_dir_name must not be empty\n"
   usage
   exit 1
 fi
@@ -65,7 +72,7 @@ EOF
     <property name='p2.atomic.composite.loading' value='true'/>
   </properties>
   <children size='1'>
-    <child location='https://download.eclipse.org/releases/${release_name}/'/>
+    <child location='https://download.eclipse.org/releases/${release_name}'/>
   </children>
 </repository>
 EOG
@@ -81,7 +88,7 @@ EOG
     <property name='p2.atomic.composite.loading' value='true'/>
   </properties>
   <children size='1'>
-    <child location='https://download.eclipse.org/releases/${release_name}/'/>
+    <child location='https://download.eclipse.org/releases/${release_name}'/>
   </children>
 </repository>
 EOH
@@ -105,6 +112,7 @@ EOH
 create_latest_repo
 
 echo "SCPing to download server..."
+echo "scp -r ${local_dir_name} ${ssh_remote}:${releases_root_dir}"
 
 scp -r ${local_dir_name} ${ssh_remote}:${releases_root_dir}/
 
