@@ -74,7 +74,7 @@ write_composite_repo() {
   local type="$3"
   local maxChildren="$4"
   local release="$5"
-  local repo_name="Eclipse SimRel ${name}"
+  local repo_name="Eclipse SimRel ${release}"
 
   write_header "${outfile}" "${type}" "${repo_name}"
 
