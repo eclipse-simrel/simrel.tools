@@ -30,8 +30,8 @@ ssh_remote="genie.simrel@projects-storage.eclipse.org"
 
 usage() {
   printf "Usage: %s release_name local_dir_name\n" "$script_name"
-  printf "\t%-16s release name (e.g., 2024-03).\n" "release_name"
-  printf "\t%-16s local dir name (e.g., latest-03).\n" "local_dir_name"
+  printf "\t%-16s release name (e.g., 2024-09).\n" "release_name"
+  printf "\t%-16s local dir name (e.g., latest).\n" "local_dir_name"
 }
 
 if [[ -z "${release_name}" ]]; then

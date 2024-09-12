@@ -39,9 +39,9 @@ eclipse_repo_base_url="https://download.eclipse.org/eclipse/updates"
 
 usage() {
   printf "Usage: %s release_name reference_repo eclipse_repo_url\n" "${script_name}"
-  printf "\t%-16s next release name (e.g. 2024-06).\n" "release_name"
-  printf "\t%-16s reference repo (e.g. 'releases/2024-03/202403131000').\n" "reference_repo"
-  printf "\t%-16s Eclipse repo URL (e.g. '4.31/R-4.31-202402290520'), check https://download.eclipse.org/eclipse/updates.\n" "eclipse_repo_url"
+  printf "\t%-16s next release name (e.g. 2024-09).\n" "release_name"
+  printf "\t%-16s reference repo (e.g. 'releases/2024-06/202406121000').\n" "reference_repo"
+  printf "\t%-16s Eclipse repo URL (e.g. '4.32/R-4.32-202406010610'), check https://download.eclipse.org/eclipse/updates.\n" "eclipse_repo_url"
 }
 
 ## Verify inputs
@@ -49,19 +49,19 @@ usage() {
 #TODO: check number of arguments
 
 if [ "${release_name}" == "" ]; then
-  printf "ERROR: a release name must be given (e.g. 2024-03).\n"
+  printf "ERROR: a release name must be given (e.g. 2024-06).\n"
   usage
   exit 1
 fi
 
 if [ "${reference_repo}" == "" ]; then
-  printf "ERROR: a reference repo must be given (e.g. 'releases/2020-06/202006171000').\n"
+  printf "ERROR: a reference repo must be given (e.g. 'releases/2024-06/202406121000').\n"
   usage
   exit 1
 fi
 
 if [ "${eclipse_repo_url}" == "" ]; then
-  printf "ERROR: an Eclipse repo URL must be given (e.g. '4.31/R-4.31-202402290520').\n"
+  printf "ERROR: an Eclipse repo URL must be given (e.g. '4.32/R-4.32-202406010610').\n"
   usage
   exit 1
 fi
@@ -86,4 +86,4 @@ git add "${jenkinsfile}" "${jenkinsfile_reporeports}" "${jenkinsfile_oomph_repor
 popd
 
 echo "Do not forget to commit the changes!"
-echo "Commit message example: 'Update build configuration for next release cycle (2024-06)'"
+echo "Commit message example: 'Update build configuration for next release cycle (2024-09)'"
