@@ -69,7 +69,7 @@ fi
 # Update TRAIN_NAME in Jenkinsfiles
 sed -i "s/TRAIN_NAME = \".*\"/TRAIN_NAME = \"${release_name}\"/g" "${path_to_simrel_build_repo}/${jenkinsfile}"
 sed -i "s/TRAIN_NAME = \".*\"/TRAIN_NAME = \"${release_name}\"/g" "${path_to_simrel_build_repo}/${jenkinsfile_reporeports}"
-sed -i "s/TRAIN_NAME = \".*\"/TRAIN_NAME = \"${release_name}\"/g" "${path_to_simrel_build_repo}/${jenkinsfile_oomph_report}"
+sed -i "s/def trainLocation = '.*'/def trainLocation = 'staging\/${release_name}'/g" "${path_to_simrel_build_repo}/${jenkinsfile_oomph_report}"
 
 # Update pom.xml
 # Unfortunately the namesspaces has to be defined for pom.xml files
